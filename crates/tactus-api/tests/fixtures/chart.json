@@ -1,0 +1,375 @@
+{
+ "result": {
+  "id": "nQZt8a1C",
+  "type": "chart",
+  "typeForFrom": "chart",
+  "title": "Top tracks on Yandex Music right now",
+  "chartDescription": "Listeners per day",
+  "menu": {
+   "items": [
+    {
+     "title": "Russia",
+     "url": "russia",
+     "selected": true
+    },
+    {
+     "title": "Global chart",
+     "url": "world"
+    }
+   ]
+  },
+  "chart": {
+   "owner": {
+    "uid": 414787002,
+    "login": "yamusic-top",
+    "name": "Yandex Music",
+    "sex": "male",
+    "verified": true
+   },
+   "playlistUuid": "ch.448df3eb-daee-408a-a60a-252259db2f3b",
+   "available": true,
+   "uid": 414787002,
+   "kind": 1076,
+   "title": "Charts",
+   "description": "Top tracks on Yandex Music right now",
+   "revision": 0,
+   "snapshot": 1,
+   "trackCount": 100,
+   "visibility": "public",
+   "collective": false,
+   "created": "2026-10-23T07:08:51+00:00",
+   "modified": "2026-10-20T20:38:41+00:00",
+   "isBanner": false,
+   "isPremiere": false,
+   "durationMs": 16222090,
+   "tracks": [
+    {
+     "id": 153919218,
+     "track": {
+      "id": "153919218",
+      "realId": "153919218",
+      "title": "ДИНАСТИЯ",
+      "contentWarning": "explicit",
+      "trackSource": "OWN",
+      "available": true,
+      "availableForPremiumUsers": true,
+      "availableFullWithoutPermission": false,
+      "durationMs": 150420,
+      "artists": [
+       {
+        "id": 24322167,
+        "name": "VILLIAN",
+        "available": true,
+        "various": false,
+        "composer": false,
+        "genres": [],
+        "cutoutCover": {
+         "uri": "avatars.yandex.net/get-music-content/17730916/627bf5cc.c.1055182/%%"
+        }
+       },
+       {
+        "id": 13992820,
+        "name": "madk1d",
+        "available": true,
+        "various": false,
+        "composer": false,
+        "genres": [],
+        "cutoutCover": {
+         "uri": "avatars.yandex.net/get-music-content/16450533/86461f16.c.151581/%%"
+        }
+       }
+      ],
+      "albums": [
+       {
+        "id": 43177815,
+        "title": "Красивое Зло",
+        "metaType": "music",
+        "contentWarning": "explicit",
+        "year": 2026,
+        "releaseDate": "2026-07-24T00:00:00+03:00",
+        "coverUri": "avatars.yandex.net/get-music-content/17740720/822ddd48.a.43177815-1/%%",
+        "genre": "rusrap",
+        "listeningFinished": false,
+        "trackCount": 7,
+        "likesCount": 35559,
+        "recent": false,
+        "veryImportant": false,
+        "artists": [
+         {
+          "id": 24322167,
+          "name": "VILLIAN",
+          "available": true,
+          "various": false,
+          "composer": false,
+          "genres": [],
+          "cutoutCover": {
+           "uri": "avatars.yandex.net/get-music-content/17730916/627bf5cc.c.1055182/%%"
+          }
+         }
+        ],
+        "available": true,
+        "availableForPremiumUsers": true,
+        "availableForMobile": true,
+        "availablePartially": false,
+        "trackPosition": {
+         "volume": 1,
+         "index": 5
+        }
+       }
+      ],
+      "coverUri": "avatars.yandex.net/get-music-content/17740720/822ddd48.a.43177815-1/%%",
+      "lyricsAvailable": false,
+      "type": "music",
+      "rememberPosition": false,
+      "chart": {
+       "position": 1,
+       "progress": "same",
+       "listeners": 359204,
+       "shift": 0
+      }
+     },
+     "timestamp": "2026-07-27T18:07:32+00:00",
+     "playCount": 0,
+     "chart": {
+      "position": 1,
+      "progress": "same",
+      "listeners": 359204,
+      "shift": 0,
+      "bgColor": "#6A2012"
+     },
+     "recent": false
+    },
+    {
+     "id": 155379339,
+     "track": {
+      "id": "155379339",
+      "realId": "155379339",
+      "title": "Земляк",
+      "trackSource": "OWN",
+      "available": true,
+      "availableForPremiumUsers": true,
+      "availableFullWithoutPermission": false,
+      "durationMs": 162930,
+      "artists": [
+       {
+        "id": 13975526,
+        "name": "Koss",
+        "available": true,
+        "various": false,
+        "composer": false,
+        "genres": [],
+        "cutoutCover": {
+         "uri": "avatars.yandex.net/get-music-content/18132539/8e8069ac.c.142314/%%"
+        }
+       },
+       {
+        "id": 17698048,
+        "name": "ПЛУТТО",
+        "available": true,
+        "various": false,
+        "composer": false,
+        "genres": [],
+        "cutoutCover": {
+         "uri": "avatars.yandex.net/get-music-content/16496077/a0fa3e89.c.955183/%%"
+        }
+       }
+      ],
+      "albums": [
+       {
+        "id": 43790697,
+        "title": "Земляк",
+        "type": "single",
+        "metaType": "music",
+        "year": 2026,
+        "releaseDate": "2026-09-11T00:00:00+03:00",
+        "coverUri": "avatars.yandex.net/get-music-content/21498071/cdd48c52.a.43790697-1/%%",
+        "genre": "ruspop",
+        "listeningFinished": false,
+        "trackCount": 1,
+        "likesCount": 22430,
+        "recent": false,
+        "veryImportant": false,
+        "artists": [
+         {
+          "id": 13975526,
+          "name": "Koss",
+          "available": true,
+          "various": false,
+          "composer": false,
+          "genres": [],
+          "cutoutCover": {
+           "uri": "avatars.yandex.net/get-music-content/18132539/8e8069ac.c.142314/%%"
+          }
+         },
+         {
+          "id": 17698048,
+          "name": "ПЛУТТО",
+          "available": true,
+          "various": false,
+          "composer": false,
+          "genres": [],
+          "cutoutCover": {
+           "uri": "avatars.yandex.net/get-music-content/16496077/a0fa3e89.c.955183/%%"
+          }
+         }
+        ],
+        "available": true,
+        "availableForPremiumUsers": true,
+        "availableForMobile": true,
+        "availablePartially": false,
+        "trackPosition": {
+         "volume": 1,
+         "index": 1
+        }
+       }
+      ],
+      "coverUri": "avatars.yandex.net/get-music-content/21498071/cdd48c52.a.43790697-1/%%",
+      "lyricsAvailable": false,
+      "type": "music",
+      "rememberPosition": false,
+      "chart": {
+       "position": 2,
+       "progress": "same",
+       "listeners": 198750,
+       "shift": 0
+      }
+     },
+     "timestamp": "2026-09-20T17:17:55+00:00",
+     "playCount": 0,
+     "chart": {
+      "position": 2,
+      "progress": "same",
+      "listeners": 198750,
+      "shift": 0,
+      "bgColor": "#949494"
+     },
+     "recent": false
+    }
+   ],
+   "likesCount": 666079,
+   "trailer": {
+    "available": false
+   },
+   "similarPlaylists": [
+    {
+     "owner": {
+      "uid": 139954184,
+      "login": "music.partners",
+      "name": "Editors' choice",
+      "sex": "female",
+      "verified": true
+     },
+     "playlistUuid": "c973c70d-f23a-7235-29d5-07efa0eb2845",
+     "available": true,
+     "uid": 139954184,
+     "kind": 1029,
+     "title": "FM Hits",
+     "description": "Cover: Basta, Moya Mishel\nSongs from Russian radio charts",
+     "revision": 6612,
+     "snapshot": 2339,
+     "trackCount": 100,
+     "visibility": "public",
+     "collective": false,
+     "created": "2013-10-24T16:28:54+00:00",
+     "modified": "2026-09-29T14:40:02+00:00",
+     "backgroundColor": "",
+     "textColor": "#000000",
+     "image": "",
+     "isBanner": false,
+     "isPremiere": false,
+     "durationMs": 19597760,
+     "likesCount": 623405
+    },
+    {
+     "owner": {
+      "uid": 103372440,
+      "login": "music-blog",
+      "name": "Yandex Music",
+      "sex": "male",
+      "verified": true
+     },
+     "playlistUuid": "b48411c8-50ca-3916-9c73-93246084b9c4",
+     "available": true,
+     "uid": 103372440,
+     "kind": 1829,
+     "title": "Most Identified",
+     "description": "A chart of the songs that I recognized in the Music app or searched for using [Alice](https://alice.yandex.ru/music) — voice assistant Yandex.",
+     "revision": 2263,
+     "snapshot": 2324,
+     "trackCount": 50,
+     "visibility": "public",
+     "collective": false,
+     "created": "2018-04-19T11:39:25+00:00",
+     "modified": "2026-10-22T21:00:00+00:00",
+     "backgroundColor": "",
+     "textColor": "#000000",
+     "image": "",
+     "isBanner": false,
+     "isPremiere": false,
+     "durationMs": 9288640,
+     "likesCount": 132595,
+     "backgroundVideoId": "vplvj5ctohxcj32n7aba"
+    },
+    {
+     "owner": {
+      "uid": 103372440,
+      "login": "music-blog",
+      "name": "Yandex Music",
+      "sex": "male",
+      "verified": true
+     },
+     "playlistUuid": "b37e2370-39fc-9e4b-b5fd-3a95e698ff8a",
+     "available": true,
+     "uid": 103372440,
+     "kind": 2616,
+     "title": "Superlaunch",
+     "description": "Last weekend's most popular releases. Playlist updates every Monday",
+     "revision": 1689,
+     "snapshot": 4100,
+     "trackCount": 20,
+     "visibility": "public",
+     "collective": false,
+     "created": "2021-07-20T05:57:19+00:00",
+     "modified": "2026-10-05T11:53:07+00:00",
+     "backgroundColor": "",
+     "textColor": "#000000",
+     "image": "",
+     "isBanner": false,
+     "isPremiere": false,
+     "durationMs": 3375600,
+     "likesCount": 115922,
+     "backgroundVideoId": "vplv3lbiley6cs3gzchf"
+    },
+    {
+     "owner": {
+      "uid": 103372440,
+      "login": "music-blog",
+      "name": "Yandex Music",
+      "sex": "male",
+      "verified": true
+     },
+     "playlistUuid": "b1f9031c-ca03-ba48-89b0-562f360df099",
+     "available": true,
+     "uid": 103372440,
+     "kind": 2540,
+     "title": "Popular in Korea",
+     "revision": 78,
+     "snapshot": 115,
+     "trackCount": 100,
+     "visibility": "public",
+     "collective": false,
+     "created": "2021-04-22T13:50:49+00:00",
+     "modified": "2023-02-08T05:30:04+00:00",
+     "backgroundColor": "",
+     "textColor": "#000000",
+     "image": "",
+     "isBanner": false,
+     "isPremiere": false,
+     "durationMs": 23344090,
+     "likesCount": 15511
+    }
+   ],
+   "backgroundVideoId": "vplvcy7wbza25cne77y7"
+  }
+ }
+}

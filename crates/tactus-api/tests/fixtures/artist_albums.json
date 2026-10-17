@@ -1,0 +1,77 @@
+{
+ "result": {
+  "albums": [
+   {
+    "id": 39611356,
+    "title": "Woodstock 1994",
+    "metaType": "music",
+    "version": "HQ 2025 Remastered",
+    "year": 2025,
+    "releaseDate": "2025-12-05T00:00:00+03:00",
+    "coverUri": "avatars.yandex.net/get-music-content/16406615/57aa3a93.a.39611356-1/%%",
+    "genre": "thrashmetal",
+    "trackCount": 14,
+    "likesCount": 1395,
+    "recent": false,
+    "veryImportant": false,
+    "artists": [
+     {
+      "id": 3121,
+      "name": "Metallica",
+      "various": false,
+      "composer": false,
+      "available": true,
+      "genres": [],
+      "cutoutCover": {
+       "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+      }
+     }
+    ],
+    "available": true,
+    "availableForPremiumUsers": true,
+    "availableForMobile": true,
+    "availablePartially": false,
+    "listeningFinished": false
+   },
+   {
+    "id": 36667764,
+    "title": "2 x 4",
+    "type": "single",
+    "metaType": "music",
+    "version": "Live at Astoria 2, London, England / 23rd August 1995",
+    "contentWarning": "explicit",
+    "year": 2025,
+    "releaseDate": "2025-05-16T00:00:00+03:00",
+    "coverUri": "avatars.yandex.net/get-music-content/14728505/b2e029f3.a.36667764-2/%%",
+    "genre": "thrashmetal",
+    "trackCount": 1,
+    "likesCount": 277,
+    "recent": false,
+    "veryImportant": false,
+    "artists": [
+     {
+      "id": 3121,
+      "name": "Metallica",
+      "various": false,
+      "composer": false,
+      "available": true,
+      "genres": [],
+      "cutoutCover": {
+       "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+      }
+     }
+    ],
+    "available": true,
+    "availableForPremiumUsers": true,
+    "availableForMobile": true,
+    "availablePartially": false,
+    "listeningFinished": false
+   }
+  ],
+  "pager": {
+   "page": 0,
+   "perPage": 20,
+   "total": 56
+  }
+ }
+}

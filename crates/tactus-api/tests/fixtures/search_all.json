@@ -1,0 +1,498 @@
+{
+ "result": {
+  "misspellCorrected": false,
+  "nocorrect": false,
+  "searchRequestId": "music-web-mobile-production-music-70.mow.yp-c.yandex.net-1792739380866180-7896068183828672193-1792739380891",
+  "text": "metallica",
+  "best": {
+   "type": "artist",
+   "result": {
+    "name": "Metallica",
+    "various": false,
+    "composer": false,
+    "genres": [
+     "thrashmetal"
+    ],
+    "available": true,
+    "ticketsAvailable": false,
+    "id": 3121,
+    "regions": [
+     "RUSSIA",
+     "RUSSIA_PREMIUM"
+    ]
+   }
+  },
+  "playlists": {
+   "total": 71,
+   "perPage": 4,
+   "order": 1,
+   "results": [
+    {
+     "owner": {
+      "uid": 457553308,
+      "login": "yamusic-bestsongs",
+      "name": "Yandex Music",
+      "sex": "unknown",
+      "verified": true
+     },
+     "playlistUuid": "ar.cbacb0fd-1276-4e58-8a89-b768a75f9f95",
+     "available": true,
+     "uid": 457553308,
+     "kind": 3121,
+     "title": "Best of Metallica",
+     "description": "Metallica: top tracks",
+     "revision": 0,
+     "snapshot": 1,
+     "trackCount": 20,
+     "visibility": "public",
+     "collective": false,
+     "created": "2018-09-10T10:52:19+00:00",
+     "modified": "2026-10-03T08:59:45+00:00",
+     "isBanner": false,
+     "isPremiere": false,
+     "idForFrom": "artist_top",
+     "durationMs": 6636380,
+     "regions": [
+      "RUSSIA_PREMIUM"
+     ]
+    },
+    {
+     "owner": {
+      "uid": 414787002,
+      "login": "yamusic-top",
+      "name": "Yandex Music",
+      "sex": "male",
+      "verified": true
+     },
+     "playlistUuid": "ge.6d20b811-0be0-4d67-8f69-c53a8b16b8e0",
+     "available": true,
+     "uid": 414787002,
+     "kind": 1030,
+     "title": "Best of Heavy Metal",
+     "description": "Top metal hits to shake you up!",
+     "revision": 0,
+     "snapshot": 1,
+     "trackCount": 100,
+     "visibility": "public",
+     "collective": false,
+     "created": "2017-02-28T20:25:17+00:00",
+     "modified": "2026-10-10T16:34:24+00:00",
+     "isBanner": false,
+     "isPremiere": false,
+     "idForFrom": "genre_top",
+     "durationMs": 23638370,
+     "regions": [
+      "RUSSIA_PREMIUM"
+     ]
+    }
+   ]
+  },
+  "tracks": {
+   "total": 1889,
+   "perPage": 20,
+   "order": 4,
+   "results": [
+    {
+     "id": 128039848,
+     "realId": "128039848",
+     "title": "Metallica",
+     "version": "Acoustic Medley",
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableFullWithoutPermission": false,
+     "durationMs": 556560,
+     "artists": [
+      {
+       "id": 10759505,
+       "name": "TEMOR",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "genres": []
+      }
+     ],
+     "albums": [
+      {
+       "id": 32058103,
+       "title": "Metallica",
+       "type": "single",
+       "metaType": "music",
+       "version": "Acoustic Medley",
+       "year": 2024,
+       "releaseDate": "2024-07-07T00:00:00+03:00",
+       "coverUri": "avatars.yandex.net/get-music-content/9868087/5fb0ef3e.a.32058103-1/%%",
+       "genre": "alternative",
+       "trackCount": 1,
+       "likesCount": 114,
+       "recent": false,
+       "veryImportant": false,
+       "artists": [
+        {
+         "id": 10759505,
+         "name": "TEMOR",
+         "various": false,
+         "composer": false,
+         "available": true,
+         "genres": []
+        }
+       ],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForMobile": true,
+       "availablePartially": false,
+       "listeningFinished": false,
+       "trackPosition": {
+        "volume": 1,
+        "index": 1
+       },
+       "regions": [
+        "RUSSIA",
+        "RUSSIA_PREMIUM"
+       ],
+       "availableRegions": []
+      }
+     ],
+     "coverUri": "avatars.yandex.net/get-music-content/9868087/5fb0ef3e.a.32058103-1/%%",
+     "lyricsAvailable": false,
+     "type": "music",
+     "rememberPosition": false,
+     "trackSource": "OWN",
+     "availableAsRbt": true,
+     "explicit": false,
+     "regions": [
+      "RUSSIA",
+      "RUSSIA_PREMIUM"
+     ]
+    },
+    {
+     "id": 118270444,
+     "realId": "118270444",
+     "title": "METALLICA",
+     "contentWarning": "explicit",
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableFullWithoutPermission": false,
+     "durationMs": 107110,
+     "artists": [
+      {
+       "id": 10975815,
+       "name": "REMEDI",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "genres": []
+      }
+     ],
+     "albums": [
+      {
+       "id": 27765311,
+       "title": "METALLICA",
+       "type": "single",
+       "metaType": "music",
+       "contentWarning": "explicit",
+       "year": 2023,
+       "releaseDate": "2023-10-24T00:00:00+03:00",
+       "coverUri": "avatars.yandex.net/get-music-content/9867886/f4a806ab.a.27765311-1/%%",
+       "genre": "rap",
+       "trackCount": 1,
+       "likesCount": 64,
+       "recent": false,
+       "veryImportant": false,
+       "artists": [
+        {
+         "id": 10975815,
+         "name": "REMEDI",
+         "various": false,
+         "composer": false,
+         "available": true,
+         "genres": []
+        }
+       ],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForMobile": true,
+       "availablePartially": false,
+       "listeningFinished": false,
+       "trackPosition": {
+        "volume": 1,
+        "index": 1
+       },
+       "regions": [
+        "RUSSIA",
+        "RUSSIA_PREMIUM"
+       ],
+       "availableRegions": []
+      }
+     ],
+     "coverUri": "avatars.yandex.net/get-music-content/9867886/f4a806ab.a.27765311-1/%%",
+     "lyricsAvailable": false,
+     "type": "music",
+     "rememberPosition": false,
+     "trackSource": "OWN",
+     "availableAsRbt": true,
+     "explicit": true,
+     "regions": [
+      "RUSSIA",
+      "RUSSIA_PREMIUM"
+     ]
+    }
+   ]
+  },
+  "podcast_episodes": {
+   "total": 24,
+   "perPage": 20,
+   "order": 5,
+   "results": [
+    {
+     "id": 84205016,
+     "realId": "84205016",
+     "title": "1986 год. Metallica. Kreator. Slayer. Megadeth. Rage",
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableFullWithoutPermission": true,
+     "durationMs": 2818870,
+     "artists": [],
+     "albums": [
+      {
+       "id": 10898521,
+       "title": "Тяжеловато!",
+       "type": "podcast",
+       "metaType": "podcast",
+       "coverUri": "avatars.yandex.net/get-music-content/9737237/8f406453.a.10898521-8/%%",
+       "trackCount": 33,
+       "likesCount": 14971,
+       "recent": false,
+       "veryImportant": false,
+       "artists": [],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForMobile": true,
+       "availablePartially": false,
+       "listeningFinished": false,
+       "trackPosition": {
+        "volume": 2,
+        "index": 8
+       },
+       "regions": [
+        "RUSSIA",
+        "RUSSIA_PREMIUM"
+       ],
+       "availableRegions": []
+      }
+     ],
+     "coverUri": "avatars.yandex.net/get-music-content/9707577/d70f5e8c.t.84205016-1/%%",
+     "lyricsAvailable": false,
+     "type": "podcast-episode",
+     "rememberPosition": true,
+     "shortDescription": "1986 год — удар и ещё удар!\n\n\nОглушительный успех для трэш-метала. Metallica, Kreator, Megadeth и, конечно, Slayer! Объясню, как сюда втиснулись парни из Rage.\n\n\nКороче, меньше слов — скорее включайте главный хит второго сезона «Тяжеловато!».",
+     "podcastEpisodeType": "full",
+     "pubDate": "2021-05-31",
+     "trackSource": "OWN",
+     "availableAsRbt": true,
+     "explicit": false,
+     "regions": [
+      "RUSSIA",
+      "RUSSIA_PREMIUM"
+     ]
+    },
+    {
+     "id": 64970416,
+     "realId": "64970416",
+     "title": "S1E5. Фрэнк Клепаки и грохот Адского Марша",
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableFullWithoutPermission": true,
+     "durationMs": 1034030,
+     "artists": [],
+     "albums": [
+      {
+       "id": 10266445,
+       "title": "HansZimmerJukebox",
+       "type": "podcast",
+       "metaType": "podcast",
+       "coverUri": "avatars.yandex.net/get-music-content/2386207/18009350.a.10266445-2/%%",
+       "trackCount": 22,
+       "likesCount": 1734,
+       "recent": false,
+       "veryImportant": false,
+       "artists": [],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForMobile": true,
+       "availablePartially": false,
+       "listeningFinished": false,
+       "trackPosition": {
+        "volume": 1,
+        "index": 5
+       },
+       "regions": [
+        "RUSSIA",
+        "RUSSIA_PREMIUM"
+       ],
+       "availableRegions": []
+      }
+     ],
+     "coverUri": "avatars.yandex.net/get-music-content/2386207/18009350.a.10266445-2/%%",
+     "lyricsAvailable": false,
+     "type": "podcast-episode",
+     "rememberPosition": true,
+     "shortDescription": "Hell March — вступительная тема игры Command & Conquer Red Alert, написанная композитором Френком Клепаки. Это грозный трек, под который идеально командовать армией вторжения. В новом выпуске подкаста я расскажу о том, как был придуман главный рифф, какие приказы отдаются в треке, и при чем тут военные марши.\n\nВопросы и предложения в Telegram:",
+     "podcastEpisodeType": "full",
+     "pubDate": "2020-04-18",
+     "trackSource": "OWN",
+     "availableAsRbt": true,
+     "explicit": false,
+     "regions": [
+      "RUSSIA",
+      "RUSSIA_PREMIUM"
+     ]
+    }
+   ]
+  },
+  "albums": {
+   "total": 112,
+   "perPage": 10,
+   "order": 2,
+   "results": [
+    {
+     "id": 4766,
+     "title": "Metallica",
+     "metaType": "music",
+     "year": 1991,
+     "releaseDate": "2008-08-18T00:00:00+04:00",
+     "coverUri": "avatars.yandex.net/get-music-content/142001/791c50e6.a.4766-3/%%",
+     "genre": "classicmetal",
+     "trackCount": 12,
+     "likesCount": 58911,
+     "recent": false,
+     "veryImportant": false,
+     "artists": [
+      {
+       "id": 3121,
+       "name": "Metallica",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "genres": [],
+       "cutoutCover": {
+        "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+       }
+      }
+     ],
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableForMobile": true,
+     "availablePartially": false,
+     "listeningFinished": false,
+     "regions": [
+      "RUSSIA",
+      "RUSSIA_PREMIUM"
+     ],
+     "availableRegions": [
+      "ru",
+      "ua",
+      "by"
+     ]
+    },
+    {
+     "id": 3935312,
+     "title": "Metallica Through The Never",
+     "metaType": "music",
+     "version": "Music From The Motion Picture",
+     "contentWarning": "explicit",
+     "year": 2013,
+     "releaseDate": "2013-09-23T00:00:00+04:00",
+     "coverUri": "avatars.yandex.net/get-music-content/38044/96c1a78d.a.3935312-1/%%",
+     "genre": "thrashmetal",
+     "trackCount": 16,
+     "likesCount": 4785,
+     "recent": false,
+     "veryImportant": false,
+     "artists": [
+      {
+       "id": 3121,
+       "name": "Metallica",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "genres": [],
+       "cutoutCover": {
+        "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+       }
+      }
+     ],
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableForMobile": true,
+     "availablePartially": false,
+     "listeningFinished": false,
+     "regions": [
+      "RUSSIA",
+      "RUSSIA_PREMIUM"
+     ],
+     "availableRegions": [
+      "om",
+      "am",
+      "il",
+      "bh",
+      "sa",
+      "eg",
+      "kg",
+      "tj",
+      "md",
+      "az",
+      "ge",
+      "ua",
+      "iq",
+      "ru",
+      "uz",
+      "qa",
+      "kw",
+      "jo",
+      "tm",
+      "by",
+      "kz",
+      "ae"
+     ]
+    }
+   ]
+  },
+  "artists": {
+   "total": 14,
+   "perPage": 10,
+   "order": 0,
+   "results": [
+    {
+     "name": "Metallica",
+     "various": false,
+     "composer": false,
+     "genres": [
+      "thrashmetal"
+     ],
+     "available": true,
+     "ticketsAvailable": false,
+     "id": 3121,
+     "regions": [
+      "RUSSIA",
+      "RUSSIA_PREMIUM"
+     ]
+    },
+    {
+     "name": "Reimagined Metallica",
+     "various": false,
+     "composer": false,
+     "genres": [
+      "classicmetal"
+     ],
+     "available": true,
+     "ticketsAvailable": false,
+     "id": 25233307,
+     "regions": [
+      "RUSSIA",
+      "RUSSIA_PREMIUM"
+     ]
+    }
+   ]
+  }
+ }
+}

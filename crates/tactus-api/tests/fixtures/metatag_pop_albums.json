@@ -1,0 +1,219 @@
+{
+ "result": {
+  "id": "58e3c0796ebb3476087d190b",
+  "coverUri": "avatars.yandex.net/get-music-misc/29541/meta-tag.58e3c0796ebb3476087d190b.cover/%%",
+  "color": "#FF6665",
+  "title": {
+   "title": "Поп",
+   "fullTitle": "Поп"
+  },
+  "stationId": "genre:pop",
+  "pager": {
+   "total": 10972,
+   "page": 0,
+   "perPage": 25
+  },
+  "albums": [
+   {
+    "id": 16969949,
+    "title": "Миллениум X",
+    "metaType": "music",
+    "contentWarning": "explicit",
+    "year": 2021,
+    "releaseDate": "2021-07-22T00:00:00+03:00",
+    "coverUri": "avatars.yandex.net/get-music-content/5282321/917eff67.a.16969949-1/%%",
+    "ogImage": "avatars.yandex.net/get-music-content/5282321/917eff67.a.16969949-1/%%",
+    "genre": "ruspop",
+    "listeningFinished": false,
+    "trackCount": 9,
+    "likesCount": 18852,
+    "recent": false,
+    "veryImportant": false,
+    "artists": [
+     {
+      "id": 666984,
+      "name": "ARTIK & ASTI",
+      "available": true,
+      "various": false,
+      "composer": false,
+      "cover": {
+       "type": "from-artist-photos",
+       "prefix": "91c817e2.p.666984/",
+       "uri": "avatars.yandex.net/get-music-content/20189877/91c817e2.p.666984/%%"
+      },
+      "genres": [],
+      "disclaimers": []
+     }
+    ],
+    "labels": [
+     {
+      "id": 1034713,
+      "name": "Warner Music Russia"
+     }
+    ],
+    "available": true,
+    "availableForPremiumUsers": true,
+    "disclaimers": [
+     "explicit",
+     "exclamationIcon:671a23afcec5646906723a52",
+     "descriptionText:67370c8e13b92b0a60256675"
+    ],
+    "availableForOptions": [
+     "bookmate"
+    ],
+    "availableForMobile": true,
+    "availablePartially": false,
+    "bests": [
+     87659100,
+     79071659
+    ]
+   },
+   {
+    "id": 41920857,
+    "title": "Шадэ",
+    "type": "single",
+    "metaType": "music",
+    "year": 2026,
+    "releaseDate": "2026-05-08T00:00:00+03:00",
+    "coverUri": "avatars.yandex.net/get-music-content/16154377/525b9915.a.41920857-2/%%",
+    "ogImage": "avatars.yandex.net/get-music-content/16154377/525b9915.a.41920857-2/%%",
+    "genre": "ruspop",
+    "listeningFinished": false,
+    "trackCount": 1,
+    "likesCount": 147805,
+    "recent": false,
+    "veryImportant": false,
+    "artists": [
+     {
+      "id": 8809832,
+      "name": "By Индия",
+      "available": true,
+      "various": false,
+      "composer": false,
+      "cover": {
+       "type": "from-artist-photos",
+       "prefix": "bc7f3a5f.p.8809832/",
+       "uri": "avatars.yandex.net/get-music-content/15406468/bc7f3a5f.p.8809832/%%"
+      },
+      "genres": [],
+      "disclaimers": [],
+      "cutoutCover": {
+       "uri": "avatars.yandex.net/get-music-content/17730916/5e1df6af.c.969350/%%"
+      }
+     },
+     {
+      "id": 7251201,
+      "name": "Xcho",
+      "available": true,
+      "various": false,
+      "composer": false,
+      "cover": {
+       "type": "from-artist-photos",
+       "prefix": "ffaa7ca4.p.7251201/",
+       "uri": "avatars.yandex.net/get-music-content/9784575/ffaa7ca4.p.7251201/%%"
+      },
+      "genres": [],
+      "disclaimers": [],
+      "cutoutCover": {
+       "uri": "avatars.yandex.net/get-music-content/16496077/22760c04.c.121153/%%"
+      }
+     },
+     {
+      "id": 1636897,
+      "name": "MOT",
+      "available": true,
+      "various": false,
+      "composer": false,
+      "cover": {
+       "type": "from-artist-photos",
+       "prefix": "2f1d52c1.p.1636897/",
+       "uri": "avatars.yandex.net/get-music-content/20031403/2f1d52c1.p.1636897/%%"
+      },
+      "genres": [],
+      "disclaimers": [],
+      "cutoutCover": {
+       "uri": "avatars.yandex.net/get-music-content/17696724/7c8015d5.c.132938/%%"
+      }
+     }
+    ],
+    "labels": [
+     {
+      "id": 3671559,
+      "name": "Streaming Club"
+     }
+    ],
+    "available": true,
+    "availableForPremiumUsers": true,
+    "disclaimers": [],
+    "availableForOptions": [
+     "bookmate"
+    ],
+    "availableForMobile": true,
+    "availablePartially": false,
+    "bests": []
+   },
+   {
+    "id": 41976933,
+    "title": "ЭКСПОНАТ",
+    "type": "single",
+    "metaType": "music",
+    "year": 2026,
+    "releaseDate": "2026-05-15T00:00:00+03:00",
+    "coverUri": "avatars.yandex.net/get-music-content/20372582/82527af1.a.41976933-2/%%",
+    "ogImage": "avatars.yandex.net/get-music-content/20372582/82527af1.a.41976933-2/%%",
+    "genre": "ruspop",
+    "listeningFinished": false,
+    "trackCount": 1,
+    "likesCount": 93703,
+    "recent": false,
+    "veryImportant": false,
+    "artists": [
+     {
+      "id": 6767066,
+      "name": "MIA BOYKA",
+      "available": true,
+      "various": false,
+      "composer": false,
+      "cover": {
+       "type": "from-artist-photos",
+       "prefix": "53e4dab6.p.6767066/",
+       "uri": "avatars.yandex.net/get-music-content/19035207/53e4dab6.p.6767066/%%"
+      },
+      "genres": [],
+      "disclaimers": [],
+      "cutoutCover": {
+       "uri": "avatars.yandex.net/get-music-content/17681324/a7b578ef.c.995849/%%"
+      }
+     }
+    ],
+    "labels": [
+     {
+      "id": 5578208,
+      "name": "Sputnik Records"
+     }
+    ],
+    "available": true,
+    "availableForPremiumUsers": true,
+    "disclaimers": [],
+    "availableForOptions": [
+     "bookmate"
+    ],
+    "availableForMobile": true,
+    "availablePartially": false,
+    "bests": []
+   }
+  ],
+  "sortByValues": [
+   {
+    "value": "popular",
+    "title": "Сначала популярные",
+    "active": false
+   },
+   {
+    "value": "new",
+    "title": "Сначала новые",
+    "active": true
+   }
+  ]
+ }
+}

@@ -1,0 +1,310 @@
+{
+ "result": {
+  "region": "russia",
+  "trees": [
+   {
+    "root": {
+     "metaTag": {
+      "id": "58e3c0796ebb3476087d190b",
+      "coverUri": "avatars.yandex.net/get-music-misc/29541/meta-tag.58e3c0796ebb3476087d190b.cover/%%",
+      "color": "#FF6665",
+      "title": {
+       "title": "Поп",
+       "fullTitle": "Поп"
+      }
+     },
+     "playable": true
+    },
+    "leaves": [
+     {
+      "id": "58e3c0796ebb3476087d18fb",
+      "color": "#FF6665",
+      "title": {
+       "title": "Русская поп-музыка",
+       "fullTitle": "Русская поп-музыка"
+      }
+     },
+     {
+      "id": "58e3c0796ebb3476087d1942",
+      "color": "#FF6665",
+      "title": {
+       "title": "Диско",
+       "fullTitle": "Диско"
+      }
+     },
+     {
+      "id": "5d88a0d792f9a42c1c6afc64",
+      "color": "#FF6665",
+      "title": {
+       "title": "J-Pop",
+       "fullTitle": "J-Pop"
+      }
+     }
+    ]
+   },
+   {
+    "root": {
+     "metaTag": {
+      "id": "58e3c0996ebb3476087d199d",
+      "title": {
+       "title": "😉 Под настроение",
+       "fullTitle": "Музыка под настроение"
+      }
+     },
+     "playable": false
+    },
+    "leaves": [
+     {
+      "id": "58e3c0846ebb3476087d1977",
+      "color": "#CC3355",
+      "title": {
+       "title": "Агрессивное",
+       "fullTitle": "Агрессивное"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d1979",
+      "color": "#33A5CC",
+      "title": {
+       "title": "Грустное",
+       "fullTitle": "Грустная музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d196c",
+      "color": "#CC3C33",
+      "title": {
+       "title": "Красивое",
+       "fullTitle": "Красивая музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d1975",
+      "color": "#4333CC",
+      "title": {
+       "title": "Крутое",
+       "fullTitle": "Крутая музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d197a",
+      "color": "#3779BC",
+      "title": {
+       "title": "Мечтательное",
+       "fullTitle": "Мечтательное"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d1974",
+      "color": "#B133CC",
+      "title": {
+       "title": "Мистическое",
+       "fullTitle": "Мистическое"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d197c",
+      "color": "#B133CC",
+      "title": {
+       "title": "Мрачное",
+       "fullTitle": "Мрачное"
+      }
+     },
+     {
+      "id": "58e3c0996ebb3476087d19b3",
+      "color": "#CC3C33",
+      "title": {
+       "title": "Новогоднее",
+       "fullTitle": "Новогодняя музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d197e",
+      "color": "#CC8D33",
+      "title": {
+       "title": "Радостное",
+       "fullTitle": "Радостная музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d196e",
+      "color": "#33A5CC",
+      "title": {
+       "title": "Расслабленное",
+       "fullTitle": "Расслабленная музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d1973",
+      "color": "#3779BC",
+      "title": {
+       "title": "Сентиментальное",
+       "fullTitle": "Сентиментальная музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d196b",
+      "color": "#33A5CC",
+      "title": {
+       "title": "Спокойное",
+       "fullTitle": "Спокойная музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d1971",
+      "color": "#4333CC",
+      "title": {
+       "title": "Энергичное",
+       "fullTitle": "Энергичное"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d197b",
+      "color": "#CC6233",
+      "title": {
+       "title": "Эпичное",
+       "fullTitle": "Эпичная музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d196d",
+      "color": "#33CC8B",
+      "title": {
+       "title": "Весеннее",
+       "fullTitle": "Весенняя музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d1976",
+      "color": "#A0CC33",
+      "title": {
+       "title": "Летнее",
+       "fullTitle": "Летняя музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d197d",
+      "color": "#CC6233",
+      "title": {
+       "title": "Осеннее",
+       "fullTitle": "Осенняя музыка"
+      }
+     },
+     {
+      "id": "58e3c0846ebb3476087d197f",
+      "color": "#337FCC",
+      "title": {
+       "title": "Зимнее",
+       "fullTitle": "Зимняя музыка"
+      }
+     }
+    ]
+   },
+   {
+    "root": {
+     "metaTag": {
+      "id": "5ddc2610e7c903105b40bc3a",
+      "coverUri": "avatars.yandex.net/get-music-misc/2406661/meta-tag.5ddc2610e7c903105b40bc3a.cover/%%",
+      "color": "#3779BC",
+      "title": {
+       "title": "Рок",
+       "fullTitle": "Рок-музыка"
+      }
+     },
+     "playable": true
+    },
+    "leaves": [
+     {
+      "id": "58e3c0796ebb3476087d1920",
+      "color": "#3779BC",
+      "title": {
+       "title": "Русский рок",
+       "fullTitle": "Русский рок"
+      }
+     },
+     {
+      "id": "5ddcd572e7c903105b40c1c2",
+      "coverUri": "avatars.yandex.net/get-music-misc/29541/meta-tag.5ddcd572e7c903105b40c1c2.cover/%%",
+      "color": "#3779BC",
+      "title": {
+       "title": "Иностранный рок",
+       "fullTitle": "Иностранный рок"
+      }
+     },
+     {
+      "id": "58e3c0796ebb3476087d193e",
+      "color": "#3779BC",
+      "title": {
+       "title": "New Wave",
+       "fullTitle": "New Wave"
+      }
+     },
+     {
+      "id": "58e3c0796ebb3476087d194b",
+      "color": "#3779BC",
+      "title": {
+       "title": "Построк",
+       "fullTitle": "Построк"
+      }
+     },
+     {
+      "id": "58e3c0796ebb3476087d192b",
+      "color": "#3779BC",
+      "title": {
+       "title": "Прогрессивный рок",
+       "fullTitle": "Прогрессивный рок"
+      }
+     },
+     {
+      "id": "5ae4a268cfd69fb3b9cc74f9",
+      "color": "#3779BC",
+      "title": {
+       "title": "Стоунер-рок",
+       "fullTitle": "Стоунер-рок"
+      }
+     },
+     {
+      "id": "58e3c0796ebb3476087d1933",
+      "color": "#3779BC",
+      "title": {
+       "title": "Рок-н-ролл",
+       "fullTitle": "Рок-н-ролл"
+      }
+     },
+     {
+      "id": "5ad74f698fcca4e32ffd66c6",
+      "color": "#3779BC",
+      "title": {
+       "title": "Фолк-рок",
+       "fullTitle": "Фолк-рок"
+      }
+     },
+     {
+      "id": "5afd5898cfd69fe75bd53d88",
+      "color": "#3779BC",
+      "title": {
+       "title": "Хард-рок",
+       "fullTitle": "Хард-рок"
+      }
+     },
+     {
+      "id": "5efdadd51897ff1ec257bbe8",
+      "color": "#3779BC",
+      "title": {
+       "title": "Израильский рок",
+       "fullTitle": "Израильский рок"
+      }
+     },
+     {
+      "id": "5dc518840ce40e2bd3106349",
+      "color": "#3779BC",
+      "title": {
+       "title": "Турецкий рок",
+       "fullTitle": "Турецкий рок"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

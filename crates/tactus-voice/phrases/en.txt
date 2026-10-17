@@ -1,0 +1,67 @@
+# Tactus voice commands.
+# Format: command = phrase | phrase
+# (a|b) picks one word, [word] is optional, {number} is a number, {name} is a name.
+# "=> 10" at the end of a phrase supplies the number when none was said.
+
+play = play | resume | continue | play music | unpause | keep playing
+pause = pause | paws | pass | stop | hold on | wait | be quiet | shut up | silence
+stop = stop (playback|playing|the music)
+next = next [track|song] | skip [this] [track|song] | (play|go to) [the] next [track|song] | another (track|song)
+previous = previous [track|song] | (go back|back) [a|one] (track|song) | (play|go to) [the] previous [track|song] | last (track|song) | back
+volume-up = louder | (turn|crank) it up | volume up | (increase|raise) [the] volume | more volume
+volume-down = quieter | softer | (turn) it down | volume down | (decrease|lower|reduce) [the] volume | less volume
+volume = [set] [the] volume [to|two|too] {number} [percent]
+faster = faster | speed up | play faster
+slower = slower | slow down | play slower
+normal-speed = normal speed | (reset|regular) speed
+forward = (skip|jump|go|fast) (forward|ahead) {number} seconds | forward {number} seconds | (skip|jump|go|fast) (forward|ahead) => 10 | forward a minute => 60
+rewind = (go|jump|skip) back {number} seconds | rewind [by] {number} seconds | rewind => 10 | back a minute => 60
+
+repeat-off = (turn off|stop|disable) (repeat|repeating) | no repeat | repeat off
+repeat-one = repeat (this|this song|this track|the song|the track|one) | (loop|replay) this [song|track]
+repeat-all = repeat (all|everything|the queue|the playlist) | loop (all|everything|the queue)
+shuffle-on = shuffle [on|the queue|everything] | (turn on|enable) shuffle | play in random order
+shuffle-off = (turn off|disable|stop) shuffle | shuffle off | play in order
+
+sleep-minutes = (stop|sleep|turn off|stop playing) in {number} (minutes|minute) | sleep timer [for] {number} [minutes|minute] | (stop|sleep|turn off) in half an hour => 30 | (stop|sleep|turn off) in an hour => 60
+sleep-end-of-track = (stop|sleep|turn off) (after|at the end of) (this|the) (song|track)
+sleep-off = (cancel|turn off|stop) [the] sleep timer | (do not|don't) (stop|sleep)
+whats-playing = what (is|s) (playing|this [song|track]) | what song is this | who (is|s) (singing|this|playing) | what am i listening to
+
+play-artist = (play|put on|start) [some|music by|songs by] (artist|band|singer) {name} | play (music|songs|tracks) by {name}
+play-album = (play|put on|start) [the] album {name}
+play-playlist = (play|put on|start) [the|my] playlist {name}
+play-track = (play|put on|start) [the] (song|track) {name}
+play-name = (play|put on|start|i want to hear|let me hear) {name}
+play-likes = play (my likes|my liked songs|my favorites|my favourites|songs i like|my loved tracks) | play what i like
+play-wave = (play|start|put on) (my wave|the wave|radio|something) | my wave | play something for me
+play-calm = (play|put on) something (calm|relaxing|chill|quiet) | (play|put on) (calm|relaxing|chill) music
+play-energetic = (play|put on) something (energetic|upbeat|lively) | (play|put on) (energetic|upbeat) music
+play-fun = (play|put on) something (fun|happy|cheerful) | (play|put on) (fun|happy|cheerful) music
+play-sad = (play|put on) something sad | (play|put on) sad music
+
+like = (like|love) [this|this song|this track|it] | i (like|love) (this|this song|it) | (add|save) [this|it] to (favorites|favourites|likes|my likes)
+unlike = (unlike|remove like|remove from (favorites|favourites|likes)) [this|it]
+dislike = dislike [this|this song|this track|it] | i (don't|do not) like (this|this song|it) | (never|don't) play this again
+add-to-playlist = (add|save|put) [this|this song|this track|it] (to|in|into) [the|my] playlist {name}
+download = download [this|this song|this track|it] | save [this|it] offline
+go-to-album = (open|show|go to) [the] album | which album is this
+go-to-artist = (open|show|go to) [the] (artist|band)
+
+open-search = (open|show|go to) search
+open-wave = (open|show|go to) [my] wave
+open-for-you = (open|show|go to) (for you|recommendations)
+open-collection = (open|show|go to) [my] (collection|library)
+open-playlists = (open|show|go to) [my] playlists
+open-radio = (open|show|go to) (radio|stations)
+open-podcasts = (open|show|go to) (podcasts|books|audiobooks|podcasts and books)
+open-history = (open|show|go to) [my] history | what did i listen to
+open-queue = (open|show|go to) [the] queue | what (is|s) (next|coming up)
+open-lyrics = (open|show|go to) [the] lyrics | show the words
+open-downloads = (open|show|go to) [my] downloads
+search = (search|find|look) [for] {name}
+read-selection = (what is|what s|read) [the] (selected|selection)
+go-back = go back | (back|return) to [the] previous page
+help = what can i say | (what are the|list) commands | help | what can you do
+yes = yes | yeah | yep | sure | ok | okay | right | correct
+no = no | nope | cancel | never mind | not that | wrong

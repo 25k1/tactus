@@ -1,0 +1,220 @@
+{
+ "result": {
+  "track": {
+   "id": "1710808",
+   "realId": "1710808",
+   "title": "Bohemian Rhapsody",
+   "version": "Remastered 2011",
+   "available": true,
+   "availableForPremiumUsers": true,
+   "availableFullWithoutPermission": false,
+   "durationMs": 355890,
+   "artists": [
+    {
+     "id": 79215,
+     "name": "Queen",
+     "various": false,
+     "composer": false,
+     "available": true,
+     "genres": []
+    }
+   ],
+   "albums": [
+    {
+     "id": 227551,
+     "title": "The Platinum Collection",
+     "metaType": "music",
+     "version": "2011 Remaster",
+     "contentWarning": "explicit",
+     "year": 2000,
+     "releaseDate": "2011-01-01T00:00:00+03:00",
+     "coverUri": "avatars.yandex.net/get-music-content/4304260/c35255ac.a.227551-3/%%",
+     "genre": "rock",
+     "trackCount": 51,
+     "likesCount": 83552,
+     "recent": false,
+     "veryImportant": false,
+     "artists": [
+      {
+       "id": 79215,
+       "name": "Queen",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "genres": []
+      }
+     ],
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableForMobile": true,
+     "availablePartially": false,
+     "listeningFinished": false,
+     "trackPosition": {
+      "volume": 1,
+      "index": 1
+     }
+    }
+   ],
+   "coverUri": "avatars.yandex.net/get-music-content/4304260/c35255ac.a.227551-3/%%",
+   "lyricsAvailable": true,
+   "type": "music",
+   "rememberPosition": false,
+   "trackSource": "OWN"
+  },
+  "similarTracks": [
+   {
+    "id": "146024860",
+    "realId": "1710760",
+    "title": "Don't Stop Me Now",
+    "available": true,
+    "availableForPremiumUsers": true,
+    "availableFullWithoutPermission": false,
+    "durationMs": 209710,
+    "artists": [
+     {
+      "id": 79215,
+      "name": "Queen",
+      "various": false,
+      "composer": false,
+      "available": true,
+      "genres": []
+     }
+    ],
+    "albums": [
+     {
+      "id": 169485,
+      "title": "Best Of The Best",
+      "type": "compilation",
+      "metaType": "music",
+      "contentWarning": "explicit",
+      "year": 2010,
+      "releaseDate": "2010-01-01T00:00:00+03:00",
+      "coverUri": "avatars.yandex.net/get-music-content/42108/0cc0bc73.a.169485-1/%%",
+      "genre": "estrada",
+      "trackCount": 38,
+      "likesCount": 11498,
+      "recent": false,
+      "veryImportant": false,
+      "artists": [
+       {
+        "id": 171,
+        "name": "Various Artists",
+        "various": true,
+        "composer": false,
+        "available": true,
+        "genres": []
+       }
+      ],
+      "available": true,
+      "availableForPremiumUsers": true,
+      "availableForMobile": true,
+      "availablePartially": false,
+      "listeningFinished": false,
+      "trackPosition": {
+       "volume": 1,
+       "index": 1
+      }
+     }
+    ],
+    "coverUri": "avatars.yandex.net/get-music-content/42108/0cc0bc73.a.169485-1/%%",
+    "lyricsAvailable": true,
+    "type": "music",
+    "rememberPosition": false,
+    "trackSource": "OWN",
+    "substituted": {
+     "id": "146024860",
+     "realId": "146024860",
+     "title": "DON'T STOP ME NOW",
+     "version": "Cover",
+     "available": false,
+     "availableForPremiumUsers": false,
+     "availableFullWithoutPermission": false,
+     "durationMs": 209710,
+     "artists": [
+      {
+       "id": 25321607,
+       "name": "Jorvex",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "genres": []
+      }
+     ],
+     "albums": [],
+     "lyricsAvailable": false,
+     "type": "music",
+     "rememberPosition": false,
+     "trackSource": "OWN",
+     "error": "no-rights"
+    }
+   },
+   {
+    "id": "1309209",
+    "realId": "1309209",
+    "title": "We Will Rock You / We Are The Champions - Sound-A-Like",
+    "available": true,
+    "availableForPremiumUsers": true,
+    "availableFullWithoutPermission": false,
+    "durationMs": 303750,
+    "artists": [
+     {
+      "id": 289899,
+      "name": "Studio Group",
+      "various": false,
+      "composer": false,
+      "available": true,
+      "genres": []
+     },
+     {
+      "id": 979519,
+      "name": "The Olympian Orchestra",
+      "various": false,
+      "composer": false,
+      "available": true,
+      "genres": []
+     }
+    ],
+    "albums": [
+     {
+      "id": 499246,
+      "title": "Pass the Torch: Music for the 2012 Summer Olympics",
+      "type": "compilation",
+      "metaType": "music",
+      "year": 2012,
+      "releaseDate": "2012-06-15T00:00:00+04:00",
+      "coverUri": "avatars.yandex.net/get-music-content/28589/b1c5e6b0.a.499246-1/%%",
+      "genre": "pop",
+      "trackCount": 22,
+      "likesCount": 1,
+      "recent": false,
+      "veryImportant": false,
+      "artists": [
+       {
+        "id": 171,
+        "name": "Various Artists",
+        "various": true,
+        "composer": false,
+        "available": true,
+        "genres": []
+       }
+      ],
+      "available": true,
+      "availableForPremiumUsers": true,
+      "availableForMobile": true,
+      "availablePartially": false,
+      "listeningFinished": false,
+      "trackPosition": {
+       "volume": 1,
+       "index": 21
+      }
+     }
+    ],
+    "coverUri": "avatars.yandex.net/get-music-content/28589/b1c5e6b0.a.499246-1/%%",
+    "lyricsAvailable": false,
+    "type": "music",
+    "rememberPosition": false,
+    "trackSource": "OWN"
+   }
+  ]
+ }
+}

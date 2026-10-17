@@ -1,0 +1,37 @@
+{
+ "result": {
+  "pins": [
+   {
+    "type": "album_item",
+    "data": {
+     "id": 39611356,
+     "title": "Woodstock 1994",
+     "cover": {
+      "uri": "avatars.yandex.net/get-music-content/16406615/57aa3a93.a.39611356-1/%%"
+     }
+    }
+   },
+   {
+    "type": "artist_item",
+    "data": {
+     "id": 3121,
+     "name": "Metallica"
+    }
+   },
+   {
+    "type": "playlist_item",
+    "data": {
+     "uid": 103372440,
+     "kind": 2131,
+     "title": "Rock Forever"
+    }
+   },
+   {
+    "type": "wave_item",
+    "data": {
+     "title": "My Wave"
+    }
+   }
+  ]
+ }
+}

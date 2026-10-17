@@ -1,0 +1,464 @@
+{
+  "result": {
+    "artist": {
+      "id": "3121",
+      "name": "Metallica",
+      "various": false,
+      "composer": false,
+      "genres": [
+        "thrashmetal"
+      ],
+      "available": true,
+      "ticketsAvailable": false,
+      "likesCount": 3227861,
+      "description": {
+        "text": "American heavy metal band. It was formed in Los Angeles in 1981 by vocalist/guitarist James Hetfield and drummer Lars Ulrich, and has been based in San Francisco for most of its career. The band's fast tempos, instrumentals and aggressive musicianship made them one of the founding \"big four\" bands of thrash metal, alongside Megadeth, Anthrax, and Slayer. Metallica's current lineup comprises founding members and primary songwriters Hetfield and Ulrich, longtime lead guitarist Kirk Hammett, and bassist Robert Trujillo. Former members of the band are bassists Ron McGovney, Cliff Burton, and Jason Newsted, and guitarist Dave Mustaine, who formed Megadeth after being fired from Metallica in 1983.",
+        "uri": "http://en.wikipedia.org/wiki/Metallica"
+      },
+      "countries": [
+        "United States"
+      ],
+      "initDate": "1981-10-28",
+      "enWikipediaLink": "http://en.wikipedia.org/wiki/Metallica",
+      "dbAliases": [
+        "ьуефддшсф",
+        "vtnfkkbrf",
+        "металика",
+        "メタリカ",
+        "מטאליקה",
+        "Metalica",
+        "mettalica",
+        "METALLICA",
+        "ьуе",
+        "Металлика",
+        "metalica",
+        "金屬製品合唱團",
+        "metallica",
+        "Mettalica"
+      ],
+      "hasTrailer": true,
+      "trailer": {
+        "available": true
+      },
+      "links": [
+        {
+          "title": "metallica.com",
+          "href": "http://www.metallica.com/",
+          "type": "official"
+        },
+        {
+          "title": "metallica",
+          "href": "https://twitter.com/metallica",
+          "type": "social",
+          "socialNetwork": "twitter"
+        }
+      ]
+    },
+    "albums": [
+      {
+        "id": 18031896,
+        "title": "Metallica",
+        "metaType": "music",
+        "version": "Remastered Deluxe Box Set",
+        "contentWarning": "explicit",
+        "year": 1991,
+        "releaseDate": "1991-08-12T00:00:00+03:00",
+        "coverUri": "avatars.yandex.net/get-music-content/5236179/9195a36d.a.18031896-1/%%",
+        "genre": "classicmetal",
+        "trackCount": 193,
+        "likesCount": 23903,
+        "recent": false,
+        "veryImportant": false,
+        "artists": [
+          {
+            "id": 3121,
+            "name": "Metallica",
+            "various": false,
+            "composer": false,
+            "available": true,
+            "genres": [],
+            "cutoutCover": {
+              "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+            }
+          }
+        ],
+        "available": true,
+        "availableForPremiumUsers": true,
+        "availableForMobile": true,
+        "availablePartially": false,
+        "listeningFinished": false,
+        "duplicates": [
+          {
+            "id": 4766,
+            "title": "Metallica",
+            "metaType": "music",
+            "year": 1991,
+            "releaseDate": "2008-08-18T00:00:00+04:00",
+            "coverUri": "avatars.yandex.net/get-music-content/142001/791c50e6.a.4766-3/%%",
+            "genre": "classicmetal",
+            "trackCount": 12,
+            "likesCount": 58911,
+            "recent": false,
+            "veryImportant": false,
+            "artists": [
+              {
+                "id": 3121,
+                "name": "Metallica",
+                "various": false,
+                "composer": false,
+                "available": true,
+                "genres": [],
+                "cutoutCover": {
+                  "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+                }
+              }
+            ],
+            "available": true,
+            "availableForPremiumUsers": true,
+            "availableForMobile": true,
+            "availablePartially": false,
+            "listeningFinished": false
+          },
+          {
+            "id": 17909799,
+            "title": "Metallica",
+            "metaType": "music",
+            "version": "Remastered 2021",
+            "year": 1991,
+            "releaseDate": "1991-08-12T00:00:00+03:00",
+            "coverUri": "avatars.yandex.net/get-music-content/5309210/5405330e.a.17909799-1/%%",
+            "genre": "classicmetal",
+            "trackCount": 12,
+            "likesCount": 2660,
+            "recent": false,
+            "veryImportant": false,
+            "artists": [
+              {
+                "id": 3121,
+                "name": "Metallica",
+                "various": false,
+                "composer": false,
+                "available": true,
+                "genres": [],
+                "cutoutCover": {
+                  "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+                }
+              }
+            ],
+            "available": true,
+            "availableForPremiumUsers": true,
+            "availableForMobile": true,
+            "availablePartially": false,
+            "listeningFinished": false
+          }
+        ]
+      },
+      {
+        "id": 3935393,
+        "title": "Ride The Lightning",
+        "metaType": "music",
+        "version": "Deluxe / Remastered",
+        "contentWarning": "explicit",
+        "year": 1984,
+        "releaseDate": "1984-07-26T00:00:00+04:00",
+        "coverUri": "avatars.yandex.net/get-music-content/192707/f5c4bc17.a.3935393-2/%%",
+        "genre": "thrashmetal",
+        "trackCount": 64,
+        "likesCount": 41478,
+        "recent": false,
+        "veryImportant": false,
+        "artists": [
+          {
+            "id": 3121,
+            "name": "Metallica",
+            "various": false,
+            "composer": false,
+            "available": true,
+            "genres": [],
+            "cutoutCover": {
+              "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+            }
+          }
+        ],
+        "available": true,
+        "availableForPremiumUsers": true,
+        "availableForMobile": true,
+        "availablePartially": false,
+        "listeningFinished": false,
+        "duplicates": [
+          {
+            "id": 3935392,
+            "title": "Ride The Lightning",
+            "metaType": "music",
+            "version": "Remastered",
+            "year": 1984,
+            "releaseDate": "1984-07-27T00:00:00+04:00",
+            "coverUri": "avatars.yandex.net/get-music-content/103235/e2c67935.a.3935392-2/%%",
+            "genre": "thrashmetal",
+            "trackCount": 8,
+            "likesCount": 7423,
+            "recent": false,
+            "veryImportant": false,
+            "artists": [
+              {
+                "id": 3121,
+                "name": "Metallica",
+                "various": false,
+                "composer": false,
+                "available": true,
+                "genres": [],
+                "cutoutCover": {
+                  "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+                }
+              }
+            ],
+            "available": true,
+            "availableForPremiumUsers": true,
+            "availableForMobile": true,
+            "availablePartially": false,
+            "listeningFinished": false
+          }
+        ]
+      }
+    ],
+    "alsoAlbums": [
+      {
+        "id": 2028434,
+        "title": "Ronnie James Dio  - This Is Your Life",
+        "type": "compilation",
+        "metaType": "music",
+        "year": 2014,
+        "releaseDate": "2014-03-31T00:00:00+04:00",
+        "coverUri": "avatars.yandex.net/get-music-content/32236/39b30a9e.a.2028434-1/%%",
+        "genre": "metal",
+        "trackCount": 15,
+        "likesCount": 6170,
+        "recent": false,
+        "veryImportant": false,
+        "artists": [
+          {
+            "id": 171,
+            "name": "Various Artists",
+            "various": true,
+            "composer": false,
+            "available": true,
+            "genres": []
+          }
+        ],
+        "available": true,
+        "availableForPremiumUsers": true,
+        "availableForMobile": true,
+        "availablePartially": false,
+        "listeningFinished": false
+      },
+      {
+        "id": 38159858,
+        "title": "90's Rock Hits From The Broadcast Archives",
+        "type": "compilation",
+        "metaType": "music",
+        "version": "HQ 2025 Remastered",
+        "year": 2025,
+        "releaseDate": "2025-09-08T00:00:00+03:00",
+        "coverUri": "avatars.yandex.net/get-music-content/15401259/4cf20504.a.38159858-1/%%",
+        "genre": "rock",
+        "trackCount": 30,
+        "likesCount": 1144,
+        "recent": false,
+        "veryImportant": false,
+        "artists": [
+          {
+            "id": 171,
+            "name": "Various Artists",
+            "various": true,
+            "composer": false,
+            "available": true,
+            "genres": []
+          }
+        ],
+        "available": true,
+        "availableForPremiumUsers": true,
+        "availableForMobile": true,
+        "availablePartially": false,
+        "listeningFinished": false
+      }
+    ],
+    "popularTracks": [
+      {
+        "id": "90947898",
+        "realId": "90947898",
+        "title": "Nothing Else Matters",
+        "version": "Radio Edit",
+        "available": true,
+        "availableForPremiumUsers": true,
+        "availableFullWithoutPermission": false,
+        "durationMs": 300590,
+        "artists": [
+          {
+            "id": 3121,
+            "name": "Metallica",
+            "various": false,
+            "composer": false,
+            "available": true,
+            "genres": [],
+            "cutoutCover": {
+              "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+            }
+          }
+        ],
+        "albums": [
+          {
+            "id": 18031896,
+            "title": "Metallica",
+            "metaType": "music",
+            "version": "Remastered Deluxe Box Set",
+            "contentWarning": "explicit",
+            "year": 1991,
+            "releaseDate": "1991-08-12T00:00:00+03:00",
+            "coverUri": "avatars.yandex.net/get-music-content/5236179/9195a36d.a.18031896-1/%%",
+            "genre": "classicmetal",
+            "trackCount": 193,
+            "likesCount": 23903,
+            "recent": false,
+            "veryImportant": false,
+            "artists": [
+              {
+                "id": 3121,
+                "name": "Metallica",
+                "various": false,
+                "composer": false,
+                "available": true,
+                "genres": [],
+                "cutoutCover": {
+                  "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+                }
+              }
+            ],
+            "available": true,
+            "availableForPremiumUsers": true,
+            "availableForMobile": true,
+            "availablePartially": false,
+            "listeningFinished": false,
+            "trackPosition": {
+              "volume": 6,
+              "index": 15
+            }
+          }
+        ],
+        "coverUri": "avatars.yandex.net/get-music-content/5236179/9195a36d.a.18031896-1/%%",
+        "lyricsAvailable": true,
+        "type": "music",
+        "rememberPosition": false,
+        "trackSource": "OWN"
+      },
+      {
+        "id": "90947897",
+        "realId": "90947897",
+        "title": "The Unforgiven",
+        "version": "Radio Edit",
+        "available": true,
+        "availableForPremiumUsers": true,
+        "availableFullWithoutPermission": false,
+        "durationMs": 300970,
+        "artists": [
+          {
+            "id": 3121,
+            "name": "Metallica",
+            "various": false,
+            "composer": false,
+            "available": true,
+            "genres": [],
+            "cutoutCover": {
+              "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+            }
+          }
+        ],
+        "albums": [
+          {
+            "id": 18031896,
+            "title": "Metallica",
+            "metaType": "music",
+            "version": "Remastered Deluxe Box Set",
+            "contentWarning": "explicit",
+            "year": 1991,
+            "releaseDate": "1991-08-12T00:00:00+03:00",
+            "coverUri": "avatars.yandex.net/get-music-content/5236179/9195a36d.a.18031896-1/%%",
+            "genre": "classicmetal",
+            "trackCount": 193,
+            "likesCount": 23903,
+            "recent": false,
+            "veryImportant": false,
+            "artists": [
+              {
+                "id": 3121,
+                "name": "Metallica",
+                "various": false,
+                "composer": false,
+                "available": true,
+                "genres": [],
+                "cutoutCover": {
+                  "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+                }
+              }
+            ],
+            "available": true,
+            "availableForPremiumUsers": true,
+            "availableForMobile": true,
+            "availablePartially": false,
+            "listeningFinished": false,
+            "trackPosition": {
+              "volume": 6,
+              "index": 14
+            }
+          }
+        ],
+        "coverUri": "avatars.yandex.net/get-music-content/5236179/9195a36d.a.18031896-1/%%",
+        "lyricsAvailable": true,
+        "type": "music",
+        "rememberPosition": false,
+        "trackSource": "OWN"
+      }
+    ],
+    "similarArtists": [
+      {
+        "id": 3274,
+        "name": "Ozzy Osbourne",
+        "various": false,
+        "composer": false,
+        "available": true,
+        "genres": [
+          "classicmetal"
+        ],
+        "ticketsAvailable": false
+      },
+      {
+        "id": 48506,
+        "name": "Megadeth",
+        "various": false,
+        "composer": false,
+        "available": true,
+        "genres": [
+          "thrashmetal"
+        ],
+        "ticketsAvailable": false
+      }
+    ],
+    "playlists": [
+      {
+        "uid": 457553308,
+        "kind": 3121,
+        "title": "Best of Metallica",
+        "trackCount": 20
+      },
+      {
+        "uid": 460142547,
+        "kind": 3121,
+        "title": "Similar to Metallica",
+        "trackCount": 20
+      }
+    ],
+    "stats": {
+      "lastMonthListeners": 2870852,
+      "lastMonthListenersDelta": -184789
+    }
+  }
+}

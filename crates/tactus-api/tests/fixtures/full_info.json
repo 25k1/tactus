@@ -1,0 +1,673 @@
+{
+ "result": {
+  "track": {
+   "id": "1710808",
+   "realId": "1710808",
+   "title": "Bohemian Rhapsody",
+   "version": "Remastered 2011",
+   "major": {
+    "id": 0,
+    "name": "-"
+   },
+   "available": true,
+   "availableForPremiumUsers": true,
+   "availableFullWithoutPermission": false,
+   "availableForOptions": [
+    "bookmate"
+   ],
+   "disclaimers": [],
+   "storageDir": "",
+   "durationMs": 355890,
+   "fileSize": 0,
+   "r128": {
+    "i": -11.72,
+    "tp": 0.19
+   },
+   "fade": {
+    "inStart": 0.4,
+    "inStop": 1.5,
+    "outStart": 348.8,
+    "outStop": 352.3
+   },
+   "previewDurationMs": 30000,
+   "artists": [
+    {
+     "id": 79215,
+     "name": "Queen",
+     "various": false,
+     "composer": false,
+     "available": true,
+     "cover": {
+      "type": "from-artist-photos",
+      "uri": "avatars.yandex.net/get-music-content/32236/007e9eed.p.79215/%%",
+      "prefix": "007e9eed.p.79215/"
+     },
+     "genres": [],
+     "disclaimers": []
+    }
+   ],
+   "albums": [
+    {
+     "id": 227551,
+     "title": "The Platinum Collection",
+     "metaType": "music",
+     "version": "2011 Remaster",
+     "contentWarning": "explicit",
+     "year": 2000,
+     "releaseDate": "2011-01-01T00:00:00+03:00",
+     "coverUri": "avatars.yandex.net/get-music-content/4304260/c35255ac.a.227551-3/%%",
+     "ogImage": "avatars.yandex.net/get-music-content/4304260/c35255ac.a.227551-3/%%",
+     "genre": "rock",
+     "trackCount": 51,
+     "likesCount": 83552,
+     "recent": false,
+     "veryImportant": false,
+     "artists": [
+      {
+       "id": 79215,
+       "name": "Queen",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "cover": {
+        "type": "from-artist-photos",
+        "uri": "avatars.yandex.net/get-music-content/32236/007e9eed.p.79215/%%",
+        "prefix": "007e9eed.p.79215/"
+       },
+       "genres": [],
+       "disclaimers": []
+      }
+     ],
+     "labels": [
+      {
+       "id": 66274,
+       "name": "Universal International"
+      },
+      {
+       "id": 93945,
+       "name": "Queen"
+      }
+     ],
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableForOptions": [
+      "bookmate"
+     ],
+     "availableForMobile": true,
+     "availablePartially": false,
+     "bests": [
+      1710810,
+      1710811,
+      1710808
+     ],
+     "disclaimers": [
+      "explicit",
+      "exclamationIcon:671a23afcec5646906723a52",
+      "descriptionText:67370c8e13b92b0a60256675"
+     ],
+     "listeningFinished": false,
+     "trackPosition": {
+      "volume": 1,
+      "index": 1
+     }
+    },
+    {
+     "id": 5901220,
+     "title": "Bohemian Rhapsody",
+     "metaType": "music",
+     "version": "The Original Soundtrack",
+     "year": 2018,
+     "releaseDate": "2018-10-19T00:00:00+03:00",
+     "coverUri": "avatars.yandex.net/get-music-content/117546/c8c68f43.a.5901220-1/%%",
+     "ogImage": "avatars.yandex.net/get-music-content/117546/c8c68f43.a.5901220-1/%%",
+     "genre": "films",
+     "trackCount": 22,
+     "likesCount": 61790,
+     "recent": false,
+     "veryImportant": false,
+     "artists": [
+      {
+       "id": 79215,
+       "name": "Queen",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "cover": {
+        "type": "from-artist-photos",
+        "uri": "avatars.yandex.net/get-music-content/32236/007e9eed.p.79215/%%",
+        "prefix": "007e9eed.p.79215/"
+       },
+       "genres": [],
+       "disclaimers": []
+      }
+     ],
+     "labels": [
+      {
+       "id": 93945,
+       "name": "Queen"
+      }
+     ],
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableForOptions": [
+      "bookmate"
+     ],
+     "availableForMobile": true,
+     "availablePartially": false,
+     "bests": [
+      1710810,
+      2758009,
+      44092998
+     ],
+     "disclaimers": [],
+     "listeningFinished": false,
+     "trackPosition": {
+      "volume": 1,
+      "index": 7
+     }
+    },
+    {
+     "id": 2488661,
+     "title": "Greatest Hits",
+     "metaType": "music",
+     "version": "Remastered",
+     "contentWarning": "explicit",
+     "year": 1981,
+     "releaseDate": "2011-01-01T00:00:00+03:00",
+     "coverUri": "avatars.yandex.net/get-music-content/193823/e5084b0e.a.2488661-2/%%",
+     "ogImage": "avatars.yandex.net/get-music-content/193823/e5084b0e.a.2488661-2/%%",
+     "genre": "rock",
+     "trackCount": 17,
+     "likesCount": 22582,
+     "recent": false,
+     "veryImportant": false,
+     "artists": [
+      {
+       "id": 79215,
+       "name": "Queen",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "cover": {
+        "type": "from-artist-photos",
+        "uri": "avatars.yandex.net/get-music-content/32236/007e9eed.p.79215/%%",
+        "prefix": "007e9eed.p.79215/"
+       },
+       "genres": [],
+       "disclaimers": []
+      }
+     ],
+     "labels": [
+      {
+       "id": 66274,
+       "name": "Universal International"
+      },
+      {
+       "id": 93945,
+       "name": "Queen"
+      }
+     ],
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableForOptions": [
+      "bookmate"
+     ],
+     "availableForMobile": true,
+     "availablePartially": false,
+     "bests": [
+      1710810,
+      1710811,
+      1710808
+     ],
+     "disclaimers": [
+      "explicit",
+      "exclamationIcon:671a23afcec5646906723a52",
+      "descriptionText:67370c8e13b92b0a60256675"
+     ],
+     "listeningFinished": false,
+     "trackPosition": {
+      "volume": 1,
+      "index": 1
+     }
+    },
+    {
+     "id": 9619037,
+     "title": "Greatest Hits In Japan",
+     "metaType": "music",
+     "contentWarning": "explicit",
+     "year": 2020,
+     "releaseDate": "2020-01-15T00:00:00+03:00",
+     "coverUri": "avatars.yandex.net/get-music-content/2390047/2fac7c45.a.9619037-1/%%",
+     "ogImage": "avatars.yandex.net/get-music-content/2390047/2fac7c45.a.9619037-1/%%",
+     "genre": "rock",
+     "trackCount": 12,
+     "likesCount": 5260,
+     "recent": false,
+     "veryImportant": false,
+     "artists": [
+      {
+       "id": 79215,
+       "name": "Queen",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "cover": {
+        "type": "from-artist-photos",
+        "uri": "avatars.yandex.net/get-music-content/32236/007e9eed.p.79215/%%",
+        "prefix": "007e9eed.p.79215/"
+       },
+       "genres": [],
+       "disclaimers": []
+      }
+     ],
+     "labels": [
+      {
+       "id": 93945,
+       "name": "Queen"
+      }
+     ],
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableForOptions": [
+      "bookmate"
+     ],
+     "availableForMobile": true,
+     "availablePartially": false,
+     "bests": [
+      1710808,
+      2758009,
+      1710818
+     ],
+     "disclaimers": [
+      "explicit",
+      "exclamationIcon:671a23afcec5646906723a52",
+      "descriptionText:67370c8e13b92b0a60256675"
+     ],
+     "listeningFinished": false,
+     "trackPosition": {
+      "volume": 1,
+      "index": 7
+     }
+    },
+    {
+     "id": 215688,
+     "title": "A Night At The Opera",
+     "metaType": "music",
+     "version": "Deluxe Edition 2011 Remaster",
+     "year": 1975,
+     "releaseDate": "2011-01-01T00:00:00+03:00",
+     "coverUri": "avatars.yandex.net/get-music-content/41288/ef460cde.a.215688-1/%%",
+     "ogImage": "avatars.yandex.net/get-music-content/41288/ef460cde.a.215688-1/%%",
+     "genre": "rock",
+     "trackCount": 18,
+     "likesCount": 17955,
+     "recent": false,
+     "veryImportant": false,
+     "artists": [
+      {
+       "id": 79215,
+       "name": "Queen",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "cover": {
+        "type": "from-artist-photos",
+        "uri": "avatars.yandex.net/get-music-content/32236/007e9eed.p.79215/%%",
+        "prefix": "007e9eed.p.79215/"
+       },
+       "genres": [],
+       "disclaimers": []
+      }
+     ],
+     "labels": [
+      {
+       "id": 66274,
+       "name": "Universal International"
+      },
+      {
+       "id": 93945,
+       "name": "Queen"
+      }
+     ],
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableForOptions": [
+      "bookmate"
+     ],
+     "availableForMobile": true,
+     "availablePartially": false,
+     "bests": [
+      1710808,
+      1710815,
+      2181583
+     ],
+     "disclaimers": [],
+     "listeningFinished": false,
+     "trackPosition": {
+      "volume": 1,
+      "index": 11
+     }
+    },
+    {
+     "id": 215689,
+     "title": "A Night At The Opera",
+     "metaType": "music",
+     "version": "2011 Remaster",
+     "year": 1975,
+     "releaseDate": "2011-01-01T00:00:00+03:00",
+     "coverUri": "avatars.yandex.net/get-music-content/49876/0c4bc3a5.a.215689-1/%%",
+     "ogImage": "avatars.yandex.net/get-music-content/49876/0c4bc3a5.a.215689-1/%%",
+     "genre": "rock",
+     "trackCount": 12,
+     "likesCount": 2009,
+     "recent": false,
+     "veryImportant": false,
+     "artists": [
+      {
+       "id": 79215,
+       "name": "Queen",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "cover": {
+        "type": "from-artist-photos",
+        "uri": "avatars.yandex.net/get-music-content/32236/007e9eed.p.79215/%%",
+        "prefix": "007e9eed.p.79215/"
+       },
+       "genres": [],
+       "disclaimers": []
+      }
+     ],
+     "labels": [
+      {
+       "id": 66274,
+       "name": "Universal International"
+      },
+      {
+       "id": 93945,
+       "name": "Queen"
+      }
+     ],
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableForOptions": [
+      "bookmate"
+     ],
+     "availableForMobile": true,
+     "availablePartially": false,
+     "bests": [
+      1710808,
+      1710815,
+      2181583
+     ],
+     "disclaimers": [],
+     "listeningFinished": false,
+     "trackPosition": {
+      "volume": 1,
+      "index": 11
+     }
+    }
+   ],
+   "coverUri": "avatars.yandex.net/get-music-content/4304260/c35255ac.a.227551-3/%%",
+   "derivedColors": {
+    "average": "#888890",
+    "waveText": "#e0e0e0",
+    "miniPlayer": "#b5b5ba",
+    "accent": "#95959c"
+   },
+   "ogImage": "avatars.yandex.net/get-music-content/4304260/c35255ac.a.227551-3/%%",
+   "lyricsAvailable": true,
+   "type": "music",
+   "rememberPosition": false,
+   "trackSharingFlag": "COVER_ONLY",
+   "lyricsInfo": {
+    "hasAvailableSyncLyrics": false,
+    "hasAvailableTextLyrics": false
+   },
+   "trackSource": "OWN",
+   "specialAudioResources": [
+    "smart_preview"
+   ]
+  },
+  "similarTracks": [
+   {
+    "id": "146024860",
+    "realId": "1710760",
+    "title": "Don't Stop Me Now",
+    "major": {
+     "id": 0,
+     "name": "-"
+    },
+    "available": true,
+    "availableForPremiumUsers": true,
+    "availableFullWithoutPermission": false,
+    "availableForOptions": [
+     "bookmate"
+    ],
+    "disclaimers": [],
+    "storageDir": "",
+    "durationMs": 209710,
+    "fileSize": 0,
+    "r128": {
+     "i": -10.99,
+     "tp": -0.8
+    },
+    "fade": {
+     "inStart": 0.5,
+     "inStop": 1.5,
+     "outStart": 202.4,
+     "outStop": 207.4
+    },
+    "previewDurationMs": 30000,
+    "artists": [
+     {
+      "id": 79215,
+      "name": "Queen",
+      "various": false,
+      "composer": false,
+      "available": true,
+      "cover": {
+       "type": "from-artist-photos",
+       "uri": "avatars.yandex.net/get-music-content/32236/007e9eed.p.79215/%%",
+       "prefix": "007e9eed.p.79215/"
+      },
+      "genres": [],
+      "disclaimers": []
+     }
+    ],
+    "albums": [
+     {
+      "id": 169485,
+      "title": "Best Of The Best",
+      "type": "compilation",
+      "metaType": "music",
+      "contentWarning": "explicit",
+      "year": 2010,
+      "releaseDate": "2010-01-01T00:00:00+03:00",
+      "coverUri": "avatars.yandex.net/get-music-content/42108/0cc0bc73.a.169485-1/%%",
+      "ogImage": "avatars.yandex.net/get-music-content/42108/0cc0bc73.a.169485-1/%%",
+      "genre": "estrada",
+      "trackCount": 38,
+      "likesCount": 11498,
+      "recent": false,
+      "veryImportant": false,
+      "artists": [
+       {
+        "id": 171,
+        "name": "Various Artists",
+        "various": true,
+        "composer": false,
+        "available": true,
+        "cover": {
+         "type": "from-album-cover",
+         "uri": "avatars.yandex.net/get-music-content/4467280/4813bd90.a.15748586-1/%%",
+         "prefix": "4813bd90.a.15748586-1"
+        },
+        "genres": [],
+        "disclaimers": []
+       }
+      ],
+      "labels": [
+       {
+        "id": 66274,
+        "name": "Universal International"
+       }
+      ],
+      "available": true,
+      "availableForPremiumUsers": true,
+      "availableForOptions": [
+       "bookmate"
+      ],
+      "availableForMobile": true,
+      "availablePartially": false,
+      "bests": [
+       81570,
+       53412,
+       52100
+      ],
+      "disclaimers": [
+       "explicit",
+       "exclamationIcon:671a23afcec5646906723a52",
+       "descriptionText:67370c8e13b92b0a60256675"
+      ],
+      "listeningFinished": false,
+      "trackPosition": {
+       "volume": 1,
+       "index": 1
+      }
+     }
+    ],
+    "coverUri": "avatars.yandex.net/get-music-content/42108/0cc0bc73.a.169485-1/%%",
+    "derivedColors": {
+     "average": "#281428",
+     "waveText": "#fec1ff",
+     "miniPlayer": "#cf9fcf",
+     "accent": "#ba77bb"
+    },
+    "ogImage": "avatars.yandex.net/get-music-content/42108/0cc0bc73.a.169485-1/%%",
+    "lyricsAvailable": true,
+    "type": "music",
+    "rememberPosition": false,
+    "trackSharingFlag": "COVER_ONLY",
+    "lyricsInfo": {
+     "hasAvailableSyncLyrics": false,
+     "hasAvailableTextLyrics": false
+    },
+    "trackSource": "OWN",
+    "specialAudioResources": [
+     "smart_preview"
+    ],
+    "substituted": {
+     "id": "146024860",
+     "realId": "146024860",
+     "title": "DON'T STOP ME NOW",
+     "version": "Cover",
+     "available": false,
+     "availableForPremiumUsers": false,
+     "availableFullWithoutPermission": false,
+     "availableForOptions": [],
+     "disclaimers": [],
+     "storageDir": "",
+     "durationMs": 209710,
+     "fileSize": 0,
+     "r128": {
+      "i": -10.99,
+      "tp": -0.8
+     },
+     "fade": {
+      "inStart": 0.5,
+      "inStop": 1.5,
+      "outStart": 202.4,
+      "outStop": 207.4
+     },
+     "previewDurationMs": 30000,
+     "artists": [
+      {
+       "id": 25321607,
+       "name": "Jorvex",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "cover": {
+        "type": "from-album-cover",
+        "uri": "avatars.yandex.net/get-music-content/17659805/6a713c29.a.41038442-1/%%",
+        "prefix": "6a713c29.a.41038442-1"
+       },
+       "genres": [],
+       "disclaimers": []
+      }
+     ],
+     "albums": [],
+     "lyricsAvailable": false,
+     "type": "music",
+     "rememberPosition": false,
+     "trackSharingFlag": "COVER_ONLY",
+     "trackSource": "OWN",
+     "specialAudioResources": [
+      "smart_preview"
+     ],
+     "error": "no-rights"
+    }
+   }
+  ],
+  "otherVersions": {},
+  "aliases": [
+   "ボヘミアン・ラプソディ",
+   "ボヘミアンラプソディ",
+   "из трейлера Отряд самоубийц 2016",
+   "из трейлера Отряд самоубийц"
+  ],
+  "artists": [
+   {
+    "id": "79215",
+    "name": "Queen",
+    "various": false,
+    "composer": false,
+    "cover": {
+     "type": "from-artist-photos",
+     "uri": "avatars.yandex.net/get-music-content/32236/007e9eed.p.79215/%%",
+     "prefix": "007e9eed.p.79215/"
+    },
+    "ogImage": "avatars.yandex.net/get-music-content/32236/007e9eed.p.79215/%%",
+    "genres": [
+     "rock",
+     "hardrock",
+     "films"
+    ],
+    "counts": {
+     "tracks": 319,
+     "directAlbums": 45,
+     "alsoAlbums": 207,
+     "alsoTracks": 49
+    },
+    "available": true,
+    "disclaimers": [],
+    "ratings": {
+     "week": 332,
+     "month": 286,
+     "day": 397
+    },
+    "links": [
+     {
+      "title": "queenonline.com",
+      "href": "http://www.queenonline.com/",
+      "type": "official"
+     },
+     {
+      "title": "queenwillrock",
+      "href": "https://twitter.com/queenwillrock",
+      "type": "social",
+      "socialNetwork": "twitter"
+     },
+     {
+      "title": "user/queenofficial",
+      "href": "http://www.youtube.com/user/queenofficial",
+      "type": "social",
+      "socialNetwork": "youtube"
+     }
+    ],
+    "ticketsAvailable": false
+   }
+  ]
+ }
+}

@@ -1,0 +1,515 @@
+{
+ "result": {
+  "pumpkin": false,
+  "contentId": "1314834819",
+  "blocks": [
+   {
+    "id": "lD4JXCrI",
+    "type": "personal-playlists",
+    "typeForFrom": "personal-playlists",
+    "title": "Selected for You",
+    "data": {
+     "isWizardPassed": true
+    },
+    "entities": [
+     {
+      "id": "oQfcsE0s",
+      "type": "personal-playlist",
+      "data": {
+       "type": "recentTracks",
+       "notify": true,
+       "previewDescription": "New releases you can't miss",
+       "ready": true,
+       "data": {
+        "uid": 692529388,
+        "kind": 122388318,
+        "title": "Premiere",
+        "description": "The latest releases based on what you listen to",
+        "revision": 0,
+        "snapshot": 1,
+        "visibility": "public",
+        "collective": false,
+        "created": "2020-07-31T13:26:22+00:00",
+        "modified": "2026-10-22T21:00:00+00:00",
+        "available": true,
+        "isBanner": false,
+        "isPremiere": false,
+        "idForFrom": "recent_tracks",
+        "everPlayed": false,
+        "generatedPlaylistType": "recentTracks",
+        "coverWithoutText": {
+         "type": "pic",
+         "dir": "/get-music-user-playlist/27701/sm9mbrJDootdus/",
+         "version": "1730453320815",
+         "uri": "avatars.yandex.net/get-music-user-playlist/27701/sm9mbrJDootdus/%%?1730453320815",
+         "custom": true
+        },
+        "owner": {
+         "uid": 692529388,
+         "login": "yamusic-premiere",
+         "name": "yamusic-premiere",
+         "sex": "unknown",
+         "verified": true
+        },
+        "trackCount": 20,
+        "durationMs": 3686100
+       }
+      }
+     },
+     {
+      "id": "yPnCnNib",
+      "type": "personal-playlist",
+      "data": {
+       "type": "neverHeard",
+       "notify": true,
+       "previewDescription": "Tracks you haven't listened to yet",
+       "ready": true,
+       "data": {
+        "uid": 692528232,
+        "kind": 119931438,
+        "title": "Déjà Vu",
+        "description": "Tracks you might like that you haven't listened to yet",
+        "revision": 0,
+        "snapshot": 1,
+        "visibility": "public",
+        "collective": false,
+        "created": "2020-08-20T09:11:51+00:00",
+        "modified": "2026-10-22T03:00:00+00:00",
+        "available": true,
+        "isBanner": false,
+        "isPremiere": false,
+        "idForFrom": "never_heard",
+        "everPlayed": false,
+        "generatedPlaylistType": "neverHeard",
+        "coverWithoutText": {
+         "type": "pic",
+         "dir": "/get-music-user-playlist/11418140/sm9iyuT7nQZ00d/",
+         "version": "1730448968509",
+         "uri": "avatars.yandex.net/get-music-user-playlist/11418140/sm9iyuT7nQZ00d/%%?1730448968509",
+         "custom": true
+        },
+        "owner": {
+         "uid": 692528232,
+         "login": "yamusic-dejavu",
+         "name": "yamusic-dejavu",
+         "sex": "unknown",
+         "verified": true
+        },
+        "trackCount": 30,
+        "durationMs": 6548090
+       }
+      }
+     }
+    ]
+   },
+   {
+    "id": "WF5jhNaShcsTZ1hU",
+    "type": "new-releases",
+    "typeForFrom": "new-releases",
+    "title": "New Releases",
+    "description": "New tracks, albums, and compilations",
+    "entities": [
+     {
+      "id": "qhpowzHu",
+      "type": "album",
+      "data": {
+       "id": 44278018,
+       "title": "Делай по ТЗ (Хорал)",
+       "type": "single",
+       "metaType": "music",
+       "year": 2026,
+       "releaseDate": "2026-10-22T21:00:00+00:00",
+       "coverUri": "avatars.yandex.net/get-music-content/20322863/4dce3b5d.a.44278018-1/%%",
+       "genre": "rusrock",
+       "trackCount": 1,
+       "likesCount": 0,
+       "recent": false,
+       "veryImportant": false,
+       "artists": [
+        {
+         "id": 22150228,
+         "name": "Арчет",
+         "various": false,
+         "composer": false,
+         "genres": []
+        }
+       ],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForMobile": true,
+       "availablePartially": false
+      }
+     },
+     {
+      "id": "EKiXQBK1",
+      "type": "album",
+      "data": {
+       "id": 44341242,
+       "title": "Мама, только не старей",
+       "type": "single",
+       "metaType": "music",
+       "year": 2026,
+       "releaseDate": "2026-10-13T21:00:00+00:00",
+       "coverUri": "avatars.yandex.net/get-music-content/20189877/551f72be.a.44341242-1/%%",
+       "genre": "ruspop",
+       "trackCount": 2,
+       "likesCount": 10,
+       "recent": true,
+       "veryImportant": false,
+       "artists": [
+        {
+         "id": 3050748,
+         "name": "Март Бабаян",
+         "various": false,
+         "composer": false,
+         "genres": []
+        }
+       ],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForMobile": true,
+       "availablePartially": false
+      }
+     }
+    ]
+   },
+   {
+    "id": "xF1bMqO3tXOkSLXr",
+    "type": "new-playlists",
+    "typeForFrom": "new-playlists",
+    "title": "Popular playlists",
+    "description": "Music selected for you by our editorial team",
+    "entities": [
+     {
+      "id": "UzyfEfnC",
+      "type": "playlist",
+      "data": {
+       "uid": 103372440,
+       "kind": 1565,
+       "title": "Intellectual Muse",
+       "description": "Cover: Dmitriy Malikov",
+       "revision": 706,
+       "snapshot": 1198,
+       "visibility": "public",
+       "collective": false,
+       "created": "2017-03-06T18:53:10+00:00",
+       "modified": "2026-10-22T21:00:01+00:00",
+       "available": true,
+       "backgroundColor": "",
+       "textColor": "#000000",
+       "image": "",
+       "isBanner": false,
+       "isPremiere": false,
+       "owner": {
+        "uid": 103372440,
+        "login": "music-blog",
+        "name": "Yandex Music",
+        "sex": "male",
+        "verified": true
+       },
+       "trackCount": 249,
+       "likesCount": 196258,
+       "topArtist": [
+        {
+         "id": 22233,
+         "name": "Ludwig van Beethoven",
+         "various": false,
+         "composer": true,
+         "genres": []
+        },
+        {
+         "id": 2975833,
+         "name": "Алексей Архиповский",
+         "various": false,
+         "composer": false,
+         "genres": []
+        },
+        {
+         "id": 6645,
+         "name": "Chopin",
+         "various": false,
+         "composer": true,
+         "genres": []
+        }
+       ]
+      }
+     },
+     {
+      "id": "tj0IVAC9",
+      "type": "playlist",
+      "data": {
+       "uid": 103372440,
+       "kind": 2451,
+       "title": "Stars of Russian Pop",
+       "description": "Cover: Valeriya, Stas Pekha\nNew tracks on timeless topics from the biggest Russian pop stars",
+       "revision": 1341,
+       "snapshot": 2372,
+       "visibility": "public",
+       "collective": false,
+       "created": "2020-12-09T13:33:48+00:00",
+       "modified": "2026-10-22T21:00:00+00:00",
+       "available": true,
+       "backgroundColor": "",
+       "textColor": "#000000",
+       "image": "",
+       "isBanner": false,
+       "isPremiere": false,
+       "owner": {
+        "uid": 103372440,
+        "login": "music-blog",
+        "name": "Yandex Music",
+        "sex": "male",
+        "verified": true
+       },
+       "trackCount": 195,
+       "likesCount": 18034,
+       "topArtist": [
+        {
+         "id": 645061,
+         "name": "Сергей Любавин",
+         "various": false,
+         "composer": false,
+         "genres": []
+        },
+        {
+         "id": 419247,
+         "name": "Виктор Зинчук",
+         "various": false,
+         "composer": false,
+         "genres": []
+        },
+        {
+         "id": 5967795,
+         "name": "Ярослав Сумишевский",
+         "various": false,
+         "composer": false,
+         "genres": []
+        }
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "id": "4iRVvX0d",
+    "type": "chart",
+    "typeForFrom": "chart",
+    "title": "Chart",
+    "description": "Top tracks on Yandex Music right now",
+    "playContext": {
+     "uid": 414787002,
+     "kind": 1076,
+     "playlistUuid": null
+    },
+    "backgroundVideoId": "vplvcy7wbza25cne77y7",
+    "entities": [
+     {
+      "id": "s7rOZ0Hs",
+      "type": "chart-item",
+      "data": {
+       "track": {
+        "id": "153919218",
+        "realId": "153919218",
+        "trackSource": "OWN",
+        "title": "ДИНАСТИЯ",
+        "contentWarning": "explicit",
+        "available": true,
+        "availableForPremiumUsers": true,
+        "availableFullWithoutPermission": false,
+        "type": "music",
+        "rememberPosition": false,
+        "durationMs": 150420,
+        "artists": [
+         {
+          "id": 24322167,
+          "name": "VILLIAN",
+          "various": false,
+          "composer": false,
+          "genres": []
+         },
+         {
+          "id": 13992820,
+          "name": "madk1d",
+          "various": false,
+          "composer": false,
+          "genres": []
+         }
+        ],
+        "albums": [
+         {
+          "id": 43177815,
+          "title": "Красивое Зло",
+          "metaType": "music",
+          "contentWarning": "explicit",
+          "year": 2026,
+          "releaseDate": "2026-07-23T21:00:00+00:00",
+          "coverUri": "avatars.yandex.net/get-music-content/17740720/822ddd48.a.43177815-1/%%",
+          "genre": "rusrap",
+          "trackCount": 7,
+          "likesCount": 35559,
+          "recent": false,
+          "veryImportant": false,
+          "artists": [
+           {
+            "id": 24322167,
+            "name": "VILLIAN",
+            "various": false,
+            "composer": false,
+            "genres": []
+           }
+          ],
+          "available": true,
+          "availableForPremiumUsers": true,
+          "availableForMobile": true,
+          "availablePartially": false,
+          "trackPosition": {
+           "volume": 1,
+           "index": 5
+          }
+         }
+        ],
+        "coverUri": "avatars.yandex.net/get-music-content/17740720/822ddd48.a.43177815-1/%%",
+        "lyricsAvailable": false,
+        "chart": {
+         "position": 1,
+         "progress": "same",
+         "listeners": 359053,
+         "shift": 0
+        }
+       },
+       "chart": {
+        "position": 1,
+        "progress": "same",
+        "listeners": 359053,
+        "shift": 0
+       }
+      }
+     },
+     {
+      "id": "fQeOjOjc",
+      "type": "chart-item",
+      "data": {
+       "track": {
+        "id": "155379339",
+        "realId": "155379339",
+        "trackSource": "OWN",
+        "title": "Земляк",
+        "available": true,
+        "availableForPremiumUsers": true,
+        "availableFullWithoutPermission": false,
+        "type": "music",
+        "rememberPosition": false,
+        "durationMs": 162930,
+        "artists": [
+         {
+          "id": 13975526,
+          "name": "Koss",
+          "various": false,
+          "composer": false,
+          "genres": []
+         },
+         {
+          "id": 17698048,
+          "name": "ПЛУТТО",
+          "various": false,
+          "composer": false,
+          "genres": []
+         }
+        ],
+        "albums": [
+         {
+          "id": 43790697,
+          "title": "Земляк",
+          "type": "single",
+          "metaType": "music",
+          "year": 2026,
+          "releaseDate": "2026-09-10T21:00:00+00:00",
+          "coverUri": "avatars.yandex.net/get-music-content/21498071/cdd48c52.a.43790697-1/%%",
+          "genre": "ruspop",
+          "trackCount": 1,
+          "likesCount": 22430,
+          "recent": false,
+          "veryImportant": false,
+          "artists": [
+           {
+            "id": 13975526,
+            "name": "Koss",
+            "various": false,
+            "composer": false,
+            "genres": []
+           },
+           {
+            "id": 17698048,
+            "name": "ПЛУТТО",
+            "various": false,
+            "composer": false,
+            "genres": []
+           }
+          ],
+          "available": true,
+          "availableForPremiumUsers": true,
+          "availableForMobile": true,
+          "availablePartially": false,
+          "trackPosition": {
+           "volume": 1,
+           "index": 1
+          }
+         }
+        ],
+        "coverUri": "avatars.yandex.net/get-music-content/21498071/cdd48c52.a.43790697-1/%%",
+        "lyricsAvailable": false,
+        "chart": {
+         "position": 2,
+         "progress": "same",
+         "listeners": 198482,
+         "shift": 0
+        }
+       },
+       "chart": {
+        "position": 2,
+        "progress": "same",
+        "listeners": 198482,
+        "shift": 0
+       }
+      }
+     }
+    ]
+   },
+   {
+    "id": "qNm3uB5w",
+    "type": "mixes",
+    "typeForFrom": "mixes",
+    "title": "Mixes",
+    "description": "Playlists by genre, activity, and mood",
+    "entities": [
+     {
+      "id": "a8j6ki7f",
+      "type": "mix-link",
+      "data": {
+       "title": "Editor's choice",
+       "url": "/post/5d776caa24c49852264d102d",
+       "urlScheme": "yandexmusic://post/5d776caa24c49852264d102d",
+       "textColor": "#ffffff",
+       "backgroundColor": "transparent",
+       "backgroundImageUri": "avatars.yandex.net/get-music-misc/2413828/mix.5d9b5f2451c8385312d775f9.background-image.1744964367175/%%",
+       "coverWhite": "avatars.yandex.net/get-music-misc/30221/mix.5d9b5f2451c8385312d775f9.cover-white.1570463694655/%%"
+      }
+     },
+     {
+      "id": "4zs9iZel",
+      "type": "mix-link",
+      "data": {
+       "title": "By genre",
+       "url": "/tag/newbies",
+       "urlScheme": "yandexmusic://metatags/genres",
+       "textColor": "#ffffff",
+       "backgroundColor": "transparent",
+       "backgroundImageUri": "avatars.yandex.net/get-music-misc/30221/mix.61166d0609987a6e489c8b1a.background-image.1638772567481/%%",
+       "coverWhite": "avatars.yandex.net/get-music-misc/2413828/mix.61166d0609987a6e489c8b1a.cover-white.1628859763281/%%"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

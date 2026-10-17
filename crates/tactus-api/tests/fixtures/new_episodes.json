@@ -1,0 +1,209 @@
+{
+ "result": {
+  "title": "Новые выпуски",
+  "blocks": [
+   {
+    "id": "test_1",
+    "title": "Время и деньги",
+    "description": "Попробуйте начать с этого подкаста",
+    "type": "promotion",
+    "typeForFrom": "bookshelf-promotion",
+    "entities": [
+     {
+      "type": "album",
+      "album": {
+       "id": 18837614,
+       "title": "Время и деньги",
+       "type": "podcast",
+       "metaType": "podcast",
+       "contentWarning": "explicit",
+       "year": 2022,
+       "coverUri": "avatars.yandex.net/get-music-content/19035207/7e294c2d.a.18837614-13/%%",
+       "ogImage": "avatars.yandex.net/get-music-content/19035207/7e294c2d.a.18837614-13/%%",
+       "genre": "podcasts",
+       "trackCount": 99,
+       "likesCount": 214676,
+       "recent": false,
+       "veryImportant": false,
+       "artists": [],
+       "labels": [
+        {
+         "id": 1910918,
+         "name": "Либо/Либо"
+        },
+        {
+         "id": 2615544,
+         "name": "Яндекс Музыка"
+        }
+       ],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForOptions": [
+        "bookmate"
+       ],
+       "availableForMobile": true,
+       "availablePartially": false,
+       "bests": [
+        147236835,
+        156276842,
+        147518484
+       ],
+       "shortDescription": "Подкаст о роли бизнеса в истории",
+       "description": "Это подкаст «Время и деньги» студии Либо/Либо о роли бизнеса в истории. В предыдущих четырёх сезонах мы рассказывали о ресурсах, предпринимателях и деловых схемах — то есть о том, как и из чего люди делали деньги.\n\nЭто сезон про людей, которые хотят заработать. Ноль процентов осуждения, сто процентов понимания. И при этом зарабатывать — это не значит ходить в офис пять дней в неделю. Заработать можно с помощью свадьбы, крепкой веры, ну или очень приятной наружности. Герои этого сезона — монахи и крестьяне, писатели и советские официанты — и конечно же всё как всегда: история России от Средних Веков до Новейшего Времени.",
+       "disclaimers": [
+        "explicit",
+        "exclamationIcon:671a23afcec5646906723a52",
+        "descriptionText:67370c8e13b92b0a60256675"
+       ],
+       "listeningFinished": false,
+       "durationSec": 208859,
+       "durationLeft": 208810
+      },
+      "track": {
+       "id": "93477416",
+       "realId": "93477416",
+       "title": "Трейлер. Студия Либо/Либо запускает новый исторический подкаст о роли бизнеса в истории",
+       "contentWarning": "explicit",
+       "major": {
+        "id": 0,
+        "name": "-"
+       },
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableFullWithoutPermission": true,
+       "availableForOptions": [
+        "bookmate"
+       ],
+       "disclaimers": [
+        "explicit",
+        "exclamationIcon:671a23afcec5646906723a52",
+        "descriptionText:67370c8e13b92b0a60256675"
+       ],
+       "storageDir": "51327_109b74ca.36526310.1.609676",
+       "durationMs": 69670,
+       "fileSize": 0,
+       "r128": {
+        "i": -11.43,
+        "tp": -0.13
+       },
+       "fade": {
+        "inStart": 0.2,
+        "inStop": 1.5,
+        "outStart": 68.1,
+        "outStop": 69.4
+       },
+       "previewDurationMs": 30000,
+       "artists": [],
+       "albums": [
+        {
+         "id": 18837614,
+         "title": "Время и деньги",
+         "type": "podcast",
+         "metaType": "podcast",
+         "contentWarning": "explicit",
+         "year": 2022,
+         "coverUri": "avatars.yandex.net/get-music-content/19035207/7e294c2d.a.18837614-13/%%",
+         "ogImage": "avatars.yandex.net/get-music-content/19035207/7e294c2d.a.18837614-13/%%",
+         "genre": "podcasts",
+         "trackCount": 99,
+         "likesCount": 214676,
+         "recent": false,
+         "veryImportant": false,
+         "artists": [],
+         "labels": [
+          {
+           "id": 1910918,
+           "name": "Либо/Либо"
+          },
+          {
+           "id": 2615544,
+           "name": "Яндекс Музыка"
+          }
+         ],
+         "available": true,
+         "availableForPremiumUsers": true,
+         "availableForOptions": [
+          "bookmate"
+         ],
+         "availableForMobile": true,
+         "availablePartially": false,
+         "bests": [
+          147236835,
+          156276842,
+          147518484
+         ],
+         "disclaimers": [
+          "explicit",
+          "exclamationIcon:671a23afcec5646906723a52",
+          "descriptionText:67370c8e13b92b0a60256675"
+         ],
+         "listeningFinished": false,
+         "trackPosition": {
+          "volume": 1,
+          "index": 1
+         }
+        }
+       ],
+       "coverUri": "avatars.yandex.net/get-music-content/6447985/80bff1a9.t.93477416-2/%%",
+       "derivedColors": {
+        "average": "#c73838",
+        "waveText": "#ffc1c1",
+        "miniPlayer": "#e08f8f",
+        "accent": "#d25f5f"
+       },
+       "ogImage": "avatars.yandex.net/get-music-content/6447985/80bff1a9.t.93477416-2/%%",
+       "lyricsAvailable": false,
+       "type": "podcast-episode",
+       "rememberPosition": true,
+       "shortDescription": "Подкаст о роли бизнеса в истории",
+       "podcastEpisodeType": "full",
+       "pubDate": "2021-10-19",
+       "trackSharingFlag": "COVER_ONLY",
+       "lyricsInfo": {
+        "hasAvailableSyncLyrics": false,
+        "hasAvailableTextLyrics": false
+       },
+       "trackSource": "OWN"
+      },
+      "listeningDate": "2026-10-23T12:43:57Z"
+     }
+    ]
+   },
+   {
+    "id": "episodes",
+    "title": "Время и деньги",
+    "type": "new-episodes",
+    "typeForFrom": "new-episodes",
+    "entities": [
+     {
+      "type": "track",
+      "track": {
+       "id": "156276842",
+       "realId": "156276842",
+       "title": "Жемчуг. Перламутровая лихорадка средневековья",
+       "durationMs": 2327300,
+       "type": "podcast-episode",
+       "rememberPosition": true,
+       "pubDate": "2026-09-25",
+       "albums": [
+        {
+         "id": 18837614,
+         "title": "Время и деньги",
+         "metaType": "podcast",
+         "year": 2022,
+         "genre": "podcasts"
+        }
+       ],
+       "artists": [],
+       "coverUri": "avatars.yandex.net/get-music-content/20322863/f8f6d1b0.t.156276842-1/%%",
+       "r128": {
+        "i": -10.39,
+        "tp": -0.54
+       }
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

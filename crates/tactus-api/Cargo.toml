@@ -1,0 +1,25 @@
+[package]
+name = "tactus-api"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[features]
+fake = []
+
+[dependencies]
+yandex-music.workspace = true
+reqwest.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+chrono.workspace = true
+tungstenite = { workspace = true, features = ["native-tls"] }
+
+[dev-dependencies]
+proptest.workspace = true
+
+[lints]
+workspace = true

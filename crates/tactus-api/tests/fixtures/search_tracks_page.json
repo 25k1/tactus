@@ -1,0 +1,170 @@
+{
+ "result": {
+  "type": "track",
+  "page": 1,
+  "perPage": 20,
+  "text": "metallica",
+  "searchRequestId": "music-web-mobile-production-music-99.mow.yp-c.yandex.net-1792747752750856-2060517445109801865-1792747752764",
+  "tracks": {
+   "total": 1842,
+   "perPage": 20,
+   "order": 0,
+   "results": [
+    {
+     "id": 39479,
+     "realId": "39479",
+     "title": "The Unforgiven II",
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableFullWithoutPermission": false,
+     "durationMs": 396440,
+     "artists": [
+      {
+       "id": 3121,
+       "name": "Metallica",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "genres": [],
+       "cutoutCover": {
+        "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+       }
+      }
+     ],
+     "albums": [
+      {
+       "id": 3267,
+       "title": "Reload",
+       "metaType": "music",
+       "contentWarning": "explicit",
+       "year": 1997,
+       "releaseDate": "2008-08-18T00:00:00+04:00",
+       "coverUri": "avatars.yandex.net/get-music-content/49876/66163301.a.3267-2/%%",
+       "genre": "classicmetal",
+       "trackCount": 13,
+       "likesCount": 28103,
+       "recent": false,
+       "veryImportant": false,
+       "artists": [
+        {
+         "id": 3121,
+         "name": "Metallica",
+         "various": false,
+         "composer": false,
+         "available": true,
+         "genres": [],
+         "cutoutCover": {
+          "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+         }
+        }
+       ],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForMobile": true,
+       "availablePartially": false,
+       "listeningFinished": false,
+       "trackPosition": {
+        "volume": 1,
+        "index": 4
+       },
+       "regions": [
+        "GEORGIA",
+        "GEORGIA_PREMIUM"
+       ],
+       "availableRegions": []
+      }
+     ],
+     "coverUri": "avatars.yandex.net/get-music-content/49876/66163301.a.3267-2/%%",
+     "lyricsAvailable": true,
+     "type": "music",
+     "rememberPosition": false,
+     "trackSource": "OWN",
+     "availableAsRbt": true,
+     "explicit": false,
+     "regions": [
+      "GEORGIA",
+      "GEORGIA_PREMIUM"
+     ]
+    },
+    {
+     "id": 32307604,
+     "realId": "32307604",
+     "title": "Seek & Destroy",
+     "version": "Remastered",
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableFullWithoutPermission": false,
+     "durationMs": 414720,
+     "artists": [
+      {
+       "id": 3121,
+       "name": "Metallica",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "genres": [],
+       "cutoutCover": {
+        "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+       }
+      }
+     ],
+     "albums": [
+      {
+       "id": 3935387,
+       "title": "Kill 'Em All",
+       "metaType": "music",
+       "version": "Remastered",
+       "contentWarning": "explicit",
+       "year": 1983,
+       "releaseDate": "1983-07-24T00:00:00+04:00",
+       "coverUri": "avatars.yandex.net/get-music-content/108289/03fe1887.a.3935387-2/%%",
+       "genre": "thrashmetal",
+       "trackCount": 10,
+       "likesCount": 6326,
+       "recent": false,
+       "veryImportant": false,
+       "artists": [
+        {
+         "id": 3121,
+         "name": "Metallica",
+         "various": false,
+         "composer": false,
+         "available": true,
+         "genres": [],
+         "cutoutCover": {
+          "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+         }
+        }
+       ],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForMobile": true,
+       "availablePartially": false,
+       "listeningFinished": false,
+       "trackPosition": {
+        "volume": 1,
+        "index": 9
+       },
+       "regions": [
+        "GEORGIA",
+        "GEORGIA_PREMIUM"
+       ],
+       "availableRegions": []
+      }
+     ],
+     "coverUri": "avatars.yandex.net/get-music-content/108289/03fe1887.a.3935387-2/%%",
+     "lyricsAvailable": true,
+     "type": "music",
+     "rememberPosition": false,
+     "trackSource": "OWN",
+     "availableAsRbt": true,
+     "explicit": false,
+     "regions": [
+      "GEORGIA",
+      "GEORGIA_PREMIUM"
+     ]
+    }
+   ]
+  }
+ }
+}

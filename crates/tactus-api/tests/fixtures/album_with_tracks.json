@@ -1,0 +1,256 @@
+{
+ "result": {
+  "id": 39611356,
+  "title": "Woodstock 1994",
+  "metaType": "music",
+  "version": "HQ 2025 Remastered",
+  "year": 2025,
+  "releaseDate": "2025-12-05T00:00:00+03:00",
+  "coverUri": "avatars.yandex.net/get-music-content/16406615/57aa3a93.a.39611356-1/%%",
+  "genre": "thrashmetal",
+  "metaTagId": "6182ba54b5746f3ce033237a",
+  "trackCount": 14,
+  "likesCount": 1395,
+  "recent": false,
+  "veryImportant": false,
+  "artists": [
+   {
+    "id": 3121,
+    "name": "Metallica",
+    "various": false,
+    "composer": false,
+    "available": true,
+    "genres": [],
+    "cutoutCover": {
+     "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+    }
+   }
+  ],
+  "available": true,
+  "availableForPremiumUsers": true,
+  "availableForMobile": true,
+  "availablePartially": false,
+  "hasTrailer": true,
+  "trailer": {
+   "available": true
+  },
+  "sortOrder": "asc",
+  "volumes": [
+   [
+    {
+     "id": "145945314",
+     "realId": "145945314",
+     "title": "The Ecstasy of Gold / Breadfan",
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableFullWithoutPermission": false,
+     "durationMs": 342350,
+     "artists": [
+      {
+       "id": 3121,
+       "name": "Metallica",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "genres": [],
+       "cutoutCover": {
+        "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+       }
+      }
+     ],
+     "albums": [
+      {
+       "id": 39611356,
+       "title": "Woodstock 1994",
+       "metaType": "music",
+       "version": "HQ 2025 Remastered",
+       "year": 2025,
+       "releaseDate": "2025-12-05T00:00:00+03:00",
+       "coverUri": "avatars.yandex.net/get-music-content/16406615/57aa3a93.a.39611356-1/%%",
+       "genre": "thrashmetal",
+       "trackCount": 14,
+       "likesCount": 1395,
+       "recent": false,
+       "veryImportant": false,
+       "artists": [
+        {
+         "id": 3121,
+         "name": "Metallica",
+         "various": false,
+         "composer": false,
+         "available": true,
+         "genres": [],
+         "cutoutCover": {
+          "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+         }
+        }
+       ],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForMobile": true,
+       "availablePartially": false,
+       "hasTrailer": false,
+       "trackPosition": {
+        "volume": 1,
+        "index": 1
+       }
+      }
+     ],
+     "coverUri": "avatars.yandex.net/get-music-content/16406615/57aa3a93.a.39611356-1/%%",
+     "lyricsAvailable": false,
+     "best": true,
+     "type": "music",
+     "rememberPosition": false,
+     "trackSource": "OWN"
+    },
+    {
+     "id": "145945315",
+     "realId": "145945315",
+     "title": "Master of Puppets",
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableFullWithoutPermission": false,
+     "durationMs": 197670,
+     "artists": [
+      {
+       "id": 3121,
+       "name": "Metallica",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "genres": [],
+       "cutoutCover": {
+        "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+       }
+      }
+     ],
+     "albums": [
+      {
+       "id": 39611356,
+       "title": "Woodstock 1994",
+       "metaType": "music",
+       "version": "HQ 2025 Remastered",
+       "year": 2025,
+       "releaseDate": "2025-12-05T00:00:00+03:00",
+       "coverUri": "avatars.yandex.net/get-music-content/16406615/57aa3a93.a.39611356-1/%%",
+       "genre": "thrashmetal",
+       "trackCount": 14,
+       "likesCount": 1395,
+       "recent": false,
+       "veryImportant": false,
+       "artists": [
+        {
+         "id": 3121,
+         "name": "Metallica",
+         "various": false,
+         "composer": false,
+         "available": true,
+         "genres": [],
+         "cutoutCover": {
+          "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+         }
+        }
+       ],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForMobile": true,
+       "availablePartially": false,
+       "hasTrailer": false,
+       "trackPosition": {
+        "volume": 1,
+        "index": 2
+       }
+      }
+     ],
+     "coverUri": "avatars.yandex.net/get-music-content/16406615/57aa3a93.a.39611356-1/%%",
+     "lyricsAvailable": true,
+     "best": false,
+     "type": "music",
+     "rememberPosition": false,
+     "trackSource": "OWN"
+    },
+    {
+     "id": "145945316",
+     "realId": "145945316",
+     "title": "Wherever I May Roam",
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableFullWithoutPermission": false,
+     "durationMs": 450850,
+     "artists": [
+      {
+       "id": 3121,
+       "name": "Metallica",
+       "various": false,
+       "composer": false,
+       "available": true,
+       "genres": [],
+       "cutoutCover": {
+        "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+       }
+      }
+     ],
+     "albums": [
+      {
+       "id": 39611356,
+       "title": "Woodstock 1994",
+       "metaType": "music",
+       "version": "HQ 2025 Remastered",
+       "year": 2025,
+       "releaseDate": "2025-12-05T00:00:00+03:00",
+       "coverUri": "avatars.yandex.net/get-music-content/16406615/57aa3a93.a.39611356-1/%%",
+       "genre": "thrashmetal",
+       "trackCount": 14,
+       "likesCount": 1395,
+       "recent": false,
+       "veryImportant": false,
+       "artists": [
+        {
+         "id": 3121,
+         "name": "Metallica",
+         "various": false,
+         "composer": false,
+         "available": true,
+         "genres": [],
+         "cutoutCover": {
+          "uri": "avatars.yandex.net/get-music-content/17655650/4a27a571.c.989695/%%"
+         }
+        }
+       ],
+       "available": true,
+       "availableForPremiumUsers": true,
+       "availableForMobile": true,
+       "availablePartially": false,
+       "hasTrailer": false,
+       "trackPosition": {
+        "volume": 1,
+        "index": 3
+       }
+      }
+     ],
+     "coverUri": "avatars.yandex.net/get-music-content/16406615/57aa3a93.a.39611356-1/%%",
+     "lyricsAvailable": true,
+     "best": false,
+     "type": "music",
+     "rememberPosition": false,
+     "trackSource": "OWN"
+    }
+   ]
+  ],
+  "duplicates": [
+   {
+    "id": 4808558,
+    "title": "Master Of Puppets",
+    "version": "Remastered",
+    "year": 1986,
+    "trackCount": 8,
+    "artists": [
+     {
+      "id": 3121,
+      "name": "Metallica"
+     }
+    ]
+   }
+  ]
+ }
+}

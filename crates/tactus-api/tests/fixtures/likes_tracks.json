@@ -1,0 +1,21 @@
+{
+ "result": {
+  "library": {
+   "uid": 1000,
+   "revision": 789,
+   "playlistUuid": "lk.e5994594-398a-4a60-a7f1-1821deb104bd",
+   "tracks": [
+    {
+     "id": "1710808",
+     "albumId": 227551,
+     "timestamp": "2026-01-01T00:00:00+00:00"
+    },
+    {
+     "id": "1710816",
+     "albumId": 227551,
+     "timestamp": "2026-01-01T00:00:00+00:00"
+    }
+   ]
+  }
+ }
+}

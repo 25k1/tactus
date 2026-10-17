@@ -1,0 +1,25 @@
+{
+ "result": {
+  "uid": 1000,
+  "lastFmScrobblingEnabled": false,
+  "facebookScrobblingEnabled": false,
+  "shuffleEnabled": false,
+  "addNewTrackOnPlaylistTop": true,
+  "volumePercents": 75,
+  "userMusicVisibility": "PUBLIC",
+  "userSocialVisibility": "PUBLIC",
+  "adsDisabled": true,
+  "modified": "2026-10-20T03:13:40Z",
+  "rbtDisabled": false,
+  "theme": "default",
+  "promosDisabled": false,
+  "autoPlayRadio": true,
+  "syncQueueEnabled": true,
+  "explicitForbidden": false,
+  "childModEnabled": true,
+  "wizardIsPassed": true,
+  "userCollectionHue": 25,
+  "childModeChangedByUser": false,
+  "aiContentReductionEnabled": false
+ }
+}

@@ -1,0 +1,3 @@
+// Application icon and manifest (Common Controls v6 is required by wxWidgets).
+1 ICON "tactus.ico"
+1 24 "tactus.manifest"

@@ -1,0 +1,192 @@
+{
+ "result": [
+  {
+   "station": {
+    "id": {
+     "type": "genre",
+     "tag": "pop"
+    },
+    "name": "Pop",
+    "idForFrom": "genre-pop"
+   },
+   "settings": {
+    "language": "any",
+    "mood": 2,
+    "energy": 2,
+    "diversity": "default"
+   },
+   "settings2": {
+    "language": "any",
+    "moodEnergy": "all",
+    "diversity": "default"
+   },
+   "adParams": {
+    "partnerId": "146552",
+    "categoryId": "0",
+    "pageRef": "http://music.yandex.ru",
+    "targetRef": "http://music.yandex.ru",
+    "genreId": 11,
+    "genreName": "pop",
+    "otherParams": "genre:pop",
+    "adVolume": 5
+   },
+   "rupTitle": "My Vibe",
+   "rupDescription": "The broadcast adapts to any music genre and your personal taste. Make it your own!"
+  },
+  {
+   "station": {
+    "id": {
+     "type": "micro-genre",
+     "tag": "bit-8"
+    },
+    "name": "8-bit music",
+    "idForFrom": "micro-genre-bit8"
+   },
+   "settings": {
+    "language": "any",
+    "mood": 2,
+    "energy": 2,
+    "diversity": "default"
+   },
+   "settings2": {
+    "language": "any",
+    "moodEnergy": "all",
+    "diversity": "default"
+   },
+   "adParams": {
+    "partnerId": "146552",
+    "categoryId": "0",
+    "pageRef": "http://music.yandex.ru",
+    "targetRef": "http://music.yandex.ru",
+    "otherParams": "micro-genre:bit-8",
+    "adVolume": 5
+   },
+   "rupTitle": "",
+   "rupDescription": ""
+  },
+  {
+   "station": {
+    "id": {
+     "type": "mix-by-micro-genre",
+     "tag": "57"
+    },
+    "name": "EBM",
+    "idForFrom": "mix-by-micro-genre-57"
+   },
+   "settings": {
+    "language": "any",
+    "mood": 2,
+    "energy": 2,
+    "diversity": "default"
+   },
+   "settings2": {
+    "language": "any",
+    "moodEnergy": "all",
+    "diversity": "default"
+   },
+   "adParams": {
+    "partnerId": "146552",
+    "categoryId": "0",
+    "pageRef": "http://music.yandex.ru",
+    "targetRef": "http://music.yandex.ru",
+    "otherParams": "mix-by-micro-genre:57",
+    "adVolume": 5
+   },
+   "rupTitle": "",
+   "rupDescription": ""
+  },
+  {
+   "station": {
+    "id": {
+     "type": "mix-by-genre",
+     "tag": "174"
+    },
+    "name": "EDM",
+    "idForFrom": "mix-by-genre-174"
+   },
+   "settings": {
+    "language": "any",
+    "mood": 2,
+    "energy": 2,
+    "diversity": "default"
+   },
+   "settings2": {
+    "language": "any",
+    "moodEnergy": "all",
+    "diversity": "default"
+   },
+   "adParams": {
+    "partnerId": "146552",
+    "categoryId": "0",
+    "pageRef": "http://music.yandex.ru",
+    "targetRef": "http://music.yandex.ru",
+    "otherParams": "mix-by-genre:174",
+    "adVolume": 5
+   },
+   "rupTitle": "",
+   "rupDescription": ""
+  },
+  {
+   "station": {
+    "id": {
+     "type": "mix-by-activity",
+     "tag": "2"
+    },
+    "name": "Running",
+    "idForFrom": "mix-by-activity-2"
+   },
+   "settings": {
+    "language": "any",
+    "mood": 2,
+    "energy": 2,
+    "diversity": "default"
+   },
+   "settings2": {
+    "language": "any",
+    "moodEnergy": "all",
+    "diversity": "default"
+   },
+   "adParams": {
+    "partnerId": "146552",
+    "categoryId": "0",
+    "pageRef": "http://music.yandex.ru",
+    "targetRef": "http://music.yandex.ru",
+    "otherParams": "mix-by-activity:2",
+    "adVolume": 5
+   },
+   "rupTitle": "",
+   "rupDescription": ""
+  },
+  {
+   "station": {
+    "id": {
+     "type": "mix-by-tempo",
+     "tag": "3"
+    },
+    "name": "Intense running",
+    "idForFrom": "mix-by-tempo-3"
+   },
+   "settings": {
+    "language": "any",
+    "mood": 2,
+    "energy": 2,
+    "diversity": "default"
+   },
+   "settings2": {
+    "language": "any",
+    "moodEnergy": "all",
+    "diversity": "default"
+   },
+   "adParams": {
+    "partnerId": "146552",
+    "categoryId": "0",
+    "pageRef": "http://music.yandex.ru",
+    "targetRef": "http://music.yandex.ru",
+    "otherParams": "mix-by-tempo:3",
+    "adVolume": 5
+   },
+   "rupTitle": "",
+   "rupDescription": ""
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "waves": [
+  {
+   "id": "mix",
+   "title": "top",
+   "items": [
+    {
+     "title": "Cheerful",
+     "header": "My Vibe by mood",
+     "stationId": "mood:happy",
+     "seeds": [
+      "mood:happy"
+     ]
+    },
+    {
+     "title": "Russian",
+     "header": "My Vibe by language",
+     "stationId": "local-language:russian",
+     "seeds": [
+      "local-language:russian"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "language",
+   "title": "by language",
+   "items": [
+    {
+     "title": "Russian",
+     "header": "My Vibe by language",
+     "stationId": "local-language:russian",
+     "seeds": [
+      "local-language:russian"
+     ]
+    },
+    {
+     "title": "Wordless",
+     "header": "My Vibe by language",
+     "stationId": "local-language:instrumental",
+     "seeds": [
+      "local-language:instrumental"
+     ]
+    }
+   ]
+  }
+ ]
+}

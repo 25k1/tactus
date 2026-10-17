@@ -1,0 +1,25 @@
+{
+ "result": {
+  "best": {
+   "type": "artist",
+   "text": "metallica",
+   "result": {
+    "id": "3121",
+    "name": "Metallica",
+    "various": false,
+    "composer": false,
+    "genres": [
+     "thrashmetal"
+    ],
+    "available": true,
+    "ticketsAvailable": false
+   }
+  },
+  "suggestions": [
+   "metallica",
+   "metallica tribute band",
+   "metalolom",
+   "metal music"
+  ]
+ }
+}

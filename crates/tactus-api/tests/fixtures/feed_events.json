@@ -1,0 +1,140 @@
+{
+  "result": {
+    "days": [
+      {
+        "day": "2026-10-20",
+        "tracksToPlay": [],
+        "events": [
+          {
+            "id": "e1",
+            "type": "albums",
+            "typeForFrom": "new-albums",
+            "title": "Metallica — new albums!",
+            "albums": [
+              {
+                "album": {
+                  "id": 39611356,
+                  "title": "Woodstock 1994",
+                  "metaType": "music",
+                  "year": 2025,
+                  "trackCount": 10,
+                  "artists": [
+                    {
+                      "id": 3121,
+                      "name": "Metallica"
+                    }
+                  ]
+                }
+              },
+              {
+                "album": {
+                  "id": 36667764,
+                  "title": "2 x 4",
+                  "metaType": "music",
+                  "year": 2025,
+                  "trackCount": 10,
+                  "artists": [
+                    {
+                      "id": 3121,
+                      "name": "Metallica"
+                    }
+                  ],
+                  "type": "single"
+                }
+              }
+            ]
+          },
+          {
+            "id": "e2",
+            "type": "artists",
+            "typeForFrom": "recommended-similar-artists",
+            "title": "If you like Metallica",
+            "artists": [
+              {
+                "artist": {
+                  "id": "48506",
+                  "name": "Megadeth",
+                  "genres": [
+                    "metal"
+                  ]
+                }
+              },
+              {
+                "artist": {
+                  "id": "3274",
+                  "name": "Ozzy Osbourne",
+                  "genres": [
+                    "metal"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "day": "2026-10-19",
+        "tracksToPlay": [],
+        "events": [
+          {
+            "id": "e3",
+            "type": "albums",
+            "typeForFrom": "new-albums-of-favorite-genre",
+            "genre": "metal",
+            "title": "New in metal",
+            "albums": [
+              {
+                "album": {
+                  "id": 2028434,
+                  "title": "This Is Your Life",
+                  "metaType": "music",
+                  "year": 2014,
+                  "trackCount": 10,
+                  "artists": [
+                    {
+                      "id": 171,
+                      "name": "Various Artists"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "e4",
+            "type": "artists",
+            "typeForFrom": "recommended-artists-with-artists-from-history",
+            "title": "People who like what you like listen to",
+            "artists": [
+              {
+                "artist": {
+                  "id": "48506",
+                  "name": "Megadeth",
+                  "genres": [
+                    "metal"
+                  ]
+                }
+              },
+              {
+                "artist": {
+                  "id": "3285",
+                  "name": "Black Sabbath",
+                  "genres": [
+                    "metal"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "e5",
+            "type": "promotion",
+            "typeForFrom": "promotion",
+            "title": "Ad"
+          }
+        ]
+      }
+    ],
+    "generatedPlaylists": []
+  }
+}

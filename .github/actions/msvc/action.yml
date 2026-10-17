@@ -1,0 +1,25 @@
+name: MSVC
+description: Import the Visual Studio x64 developer environment, including its bundled CMake and Ninja
+
+runs:
+  using: composite
+  steps:
+    - shell: pwsh
+      run: |
+        $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+        if (-not $vs) { throw "Visual Studio with the x64 C++ tools was not found" }
+        $before = @{}
+        Get-ChildItem env: | ForEach-Object { $before[$_.Name] = $_.Value }
+        $known = $env:PATH -split ';'
+        $paths = [System.Collections.Generic.List[string]]::new()
+        cmd /c "`"$vs\VC\Auxiliary\Build\vcvars64.bat`" >nul && set" | ForEach-Object {
+          if ($_ -notmatch '^([^=]+)=(.*)$') { return }
+          $name, $value = $Matches[1], $Matches[2]
+          if ($name -eq 'PATH') {
+            $value -split ';' | Where-Object { $_ -and $_ -notin $known } | ForEach-Object { $paths.Add($_) }
+          } elseif ($before[$name] -ne $value) {
+            "$name=$value" >> $env:GITHUB_ENV
+          }
+        }
+        $paths.Reverse()
+        $paths | ForEach-Object { $_ >> $env:GITHUB_PATH }

@@ -1,0 +1,13 @@
+{
+ "result": {
+  "account": {
+   "uid": 1000,
+   "login": "listener",
+   "displayName": "Listener",
+   "fullName": "Listener"
+  },
+  "plus": {
+   "hasPlus": true
+  }
+ }
+}

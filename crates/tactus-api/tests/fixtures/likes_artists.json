@@ -1,0 +1,34 @@
+{
+ "result": [
+  {
+   "name": "Metallica",
+   "various": false,
+   "composer": false,
+   "genres": [
+    "thrashmetal"
+   ],
+   "available": true,
+   "ticketsAvailable": false,
+   "id": 3121,
+   "regions": [
+    "RUSSIA",
+    "RUSSIA_PREMIUM"
+   ]
+  },
+  {
+   "name": "Reimagined Metallica",
+   "various": false,
+   "composer": false,
+   "genres": [
+    "classicmetal"
+   ],
+   "available": true,
+   "ticketsAvailable": false,
+   "id": 25233307,
+   "regions": [
+    "RUSSIA",
+    "RUSSIA_PREMIUM"
+   ]
+  }
+ ]
+}

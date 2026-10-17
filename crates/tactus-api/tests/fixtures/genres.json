@@ -1,0 +1,79 @@
+{
+ "result": [
+  {
+   "id": "all",
+   "weight": 2,
+   "composerTop": false,
+   "title": "Микс",
+   "fullTitle": "Музыка всех жанров",
+   "showInMenu": true,
+   "subGenres": []
+  },
+  {
+   "id": "pop",
+   "weight": 1,
+   "composerTop": false,
+   "urlPart": "pop",
+   "title": "Поп",
+   "color": "#ff6665",
+   "showInMenu": true,
+   "subGenres": [
+    {
+     "id": "ruspop",
+     "weight": 1,
+     "composerTop": false,
+     "urlPart": "ruspop",
+     "title": "Русская поп-музыка",
+     "fullTitle": "Русская поп-музыка",
+     "color": "#ff6665",
+     "hideInRegions": [
+      181
+     ],
+     "showInMenu": true
+    },
+    {
+     "id": "disco",
+     "weight": 1,
+     "composerTop": false,
+     "urlPart": "disco",
+     "title": "Диско",
+     "color": "#ff6665",
+     "showInMenu": true
+    }
+   ]
+  },
+  {
+   "id": "allrock",
+   "weight": 1,
+   "composerTop": false,
+   "urlPart": "allrock",
+   "title": "Рок",
+   "fullTitle": "Рок",
+   "color": "#3779bc",
+   "showInMenu": true,
+   "subGenres": [
+    {
+     "id": "rusrock",
+     "weight": 1,
+     "composerTop": false,
+     "urlPart": "rusrock",
+     "title": "Русский рок",
+     "color": "#3779bc",
+     "hideInRegions": [
+      181
+     ],
+     "showInMenu": true
+    },
+    {
+     "id": "rnr",
+     "weight": 1,
+     "composerTop": false,
+     "urlPart": "rock-n-roll",
+     "title": "Рок-н-ролл",
+     "color": "#3779bc",
+     "showInMenu": true
+    }
+   ]
+  }
+ ]
+}

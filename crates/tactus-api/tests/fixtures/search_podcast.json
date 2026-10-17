@@ -1,0 +1,63 @@
+{
+ "result": {
+  "type": "podcast",
+  "page": 0,
+  "perPage": 10,
+  "text": "podcast",
+  "searchRequestId": "music-web-mobile-production-music-25.klg.yp-c.yandex.net-1792739382250756-3234018364785235934-1792739382264",
+  "podcasts": {
+   "total": 9113,
+   "perPage": 10,
+   "order": 0,
+   "results": [
+    {
+     "id": 26989905,
+     "title": "Подкасты для мотивации",
+     "type": "podcast",
+     "metaType": "podcast",
+     "coverUri": "avatars.yandex.net/get-music-content/10703962/2b62d128.a.26989905-1/%%",
+     "genre": "podcasts",
+     "trackCount": 15,
+     "likesCount": 4340,
+     "recent": false,
+     "veryImportant": false,
+     "artists": [],
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableForMobile": true,
+     "availablePartially": false,
+     "listeningFinished": false,
+     "regions": [
+      "RUSSIA",
+      "RUSSIA_PREMIUM"
+     ],
+     "availableRegions": []
+    },
+    {
+     "id": 33524461,
+     "title": "PODCAST++",
+     "type": "podcast",
+     "metaType": "podcast",
+     "contentWarning": "explicit",
+     "coverUri": "avatars.yandex.net/get-music-content/14247687/1ca5e8d2.a.33524461-1/%%",
+     "genre": "podcasts",
+     "trackCount": 19,
+     "likesCount": 224,
+     "recent": false,
+     "veryImportant": false,
+     "artists": [],
+     "available": true,
+     "availableForPremiumUsers": true,
+     "availableForMobile": true,
+     "availablePartially": false,
+     "listeningFinished": false,
+     "regions": [
+      "RUSSIA",
+      "RUSSIA_PREMIUM"
+     ],
+     "availableRegions": []
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,129 @@
+{
+ "result": {
+  "batchId": "1792739206106808-12858959329320849221",
+  "tracks": [
+   {
+    "id": "1710808",
+    "realId": "1710808",
+    "title": "Bohemian Rhapsody",
+    "version": "Remastered 2011",
+    "available": true,
+    "availableForPremiumUsers": true,
+    "availableFullWithoutPermission": false,
+    "durationMs": 355890,
+    "artists": [
+     {
+      "id": 79215,
+      "name": "Queen",
+      "various": false,
+      "composer": false,
+      "available": true,
+      "genres": []
+     }
+    ],
+    "albums": [
+     {
+      "id": 227551,
+      "title": "The Platinum Collection",
+      "metaType": "music",
+      "version": "2011 Remaster",
+      "contentWarning": "explicit",
+      "year": 2000,
+      "releaseDate": "2011-01-01T00:00:00+03:00",
+      "coverUri": "avatars.yandex.net/get-music-content/4304260/c35255ac.a.227551-3/%%",
+      "genre": "rock",
+      "trackCount": 51,
+      "likesCount": 83552,
+      "recent": false,
+      "veryImportant": false,
+      "artists": [
+       {
+        "id": 79215,
+        "name": "Queen",
+        "various": false,
+        "composer": false,
+        "available": true,
+        "genres": []
+       }
+      ],
+      "available": true,
+      "availableForPremiumUsers": true,
+      "availableForMobile": true,
+      "availablePartially": false,
+      "listeningFinished": false,
+      "trackPosition": {
+       "volume": 1,
+       "index": 1
+      }
+     }
+    ],
+    "coverUri": "avatars.yandex.net/get-music-content/4304260/c35255ac.a.227551-3/%%",
+    "lyricsAvailable": true,
+    "type": "music",
+    "rememberPosition": false,
+    "trackSource": "OWN"
+   },
+   {
+    "id": "1710816",
+    "realId": "1710816",
+    "title": "We Are The Champions",
+    "version": "Remastered 2011",
+    "available": true,
+    "availableForPremiumUsers": true,
+    "availableFullWithoutPermission": false,
+    "durationMs": 186980,
+    "artists": [
+     {
+      "id": 79215,
+      "name": "Queen",
+      "various": false,
+      "composer": false,
+      "available": true,
+      "genres": []
+     }
+    ],
+    "albums": [
+     {
+      "id": 227551,
+      "title": "The Platinum Collection",
+      "metaType": "music",
+      "version": "2011 Remaster",
+      "contentWarning": "explicit",
+      "year": 2000,
+      "releaseDate": "2011-01-01T00:00:00+03:00",
+      "coverUri": "avatars.yandex.net/get-music-content/4304260/c35255ac.a.227551-3/%%",
+      "genre": "rock",
+      "trackCount": 51,
+      "likesCount": 83552,
+      "recent": false,
+      "veryImportant": false,
+      "artists": [
+       {
+        "id": 79215,
+        "name": "Queen",
+        "various": false,
+        "composer": false,
+        "available": true,
+        "genres": []
+       }
+      ],
+      "available": true,
+      "availableForPremiumUsers": true,
+      "availableForMobile": true,
+      "availablePartially": false,
+      "listeningFinished": false,
+      "trackPosition": {
+       "volume": 1,
+       "index": 17
+      }
+     }
+    ],
+    "coverUri": "avatars.yandex.net/get-music-content/4304260/c35255ac.a.227551-3/%%",
+    "lyricsAvailable": true,
+    "type": "music",
+    "rememberPosition": false,
+    "trackSource": "OWN"
+   }
+  ]
+ }
+}

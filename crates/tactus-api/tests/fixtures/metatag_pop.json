@@ -1,0 +1,612 @@
+{
+ "result": {
+  "id": "58e3c0796ebb3476087d190b",
+  "coverUri": "avatars.yandex.net/get-music-misc/29541/meta-tag.58e3c0796ebb3476087d190b.cover/%%",
+  "color": "#FF6665",
+  "title": {
+   "title": "Поп",
+   "fullTitle": "Поп"
+  },
+  "stationId": "genre:pop",
+  "customWaveAnimationUrl": "https://music-custom-wave-media.s3.yandex.net/base.json",
+  "tracks": [],
+  "artists": [
+   {
+    "id": "666984",
+    "name": "ARTIK & ASTI",
+    "various": false,
+    "composer": false,
+    "cover": {
+     "type": "from-artist-photos",
+     "prefix": "91c817e2.p.666984/",
+     "uri": "avatars.yandex.net/get-music-content/20189877/91c817e2.p.666984/%%"
+    },
+    "ogImage": "avatars.yandex.net/get-music-content/20189877/91c817e2.p.666984/%%",
+    "genres": [
+     "ruspop"
+    ],
+    "counts": {
+     "tracks": 127,
+     "directAlbums": 40,
+     "alsoAlbums": 14,
+     "alsoTracks": 15
+    },
+    "available": true,
+    "ratings": {
+     "week": 11,
+     "month": 9,
+     "day": 14
+    },
+    "disclaimers": [],
+    "links": [
+     {
+      "title": "artikasti.com",
+      "href": "https://artikasti.com",
+      "type": "official"
+     },
+     {
+      "title": "artikasti",
+      "href": "http://vk.ru/artikasti",
+      "type": "social",
+      "socialNetwork": "vk"
+     },
+     {
+      "title": "artikasti",
+      "href": "https://www.youtube.com/artikasti",
+      "type": "social",
+      "socialNetwork": "youtube"
+     },
+     {
+      "title": "artikastifamily",
+      "href": "https://t.me/artikastifamily",
+      "type": "social",
+      "socialNetwork": "telegram"
+     }
+    ],
+    "ticketsAvailable": false
+   },
+   {
+    "id": "5007577",
+    "name": "Zivert",
+    "various": false,
+    "composer": false,
+    "cover": {
+     "type": "from-artist-photos",
+     "prefix": "427d593a.p.5007577/",
+     "uri": "avatars.yandex.net/get-music-content/9837405/427d593a.p.5007577/%%"
+    },
+    "ogImage": "avatars.yandex.net/get-music-content/9837405/427d593a.p.5007577/%%",
+    "genres": [
+     "ruspop"
+    ],
+    "counts": {
+     "tracks": 110,
+     "directAlbums": 52,
+     "alsoAlbums": 8,
+     "alsoTracks": 8
+    },
+    "available": true,
+    "ratings": {
+     "week": 12,
+     "month": 10,
+     "day": 17
+    },
+    "disclaimers": [],
+    "links": [
+     {
+      "title": "zivert.com",
+      "href": "https://www.zivert.com",
+      "type": "official"
+     },
+     {
+      "title": "@_zivert",
+      "href": "https://www.tiktok.com/@_zivert",
+      "type": "social",
+      "socialNetwork": "tiktok"
+     },
+     {
+      "title": "channel/UCSSBxO-_qQgZq4tZhMQF1bQ/",
+      "href": "https://www.youtube.com/channel/UCSSBxO-_qQgZq4tZhMQF1bQ/",
+      "type": "social",
+      "socialNetwork": "youtube"
+     },
+     {
+      "title": "zivert_new",
+      "href": "https://t.me/zivert_new",
+      "type": "social",
+      "socialNetwork": "telegram"
+     },
+     {
+      "title": "zivert_public",
+      "href": "https://vk.ru/zivert_public",
+      "type": "social",
+      "socialNetwork": "vk"
+     },
+     {
+      "title": "zivert_public",
+      "href": "https://dzen.ru/zivert_public",
+      "type": "social",
+      "socialNetwork": "zen"
+     }
+    ],
+    "ticketsAvailable": false
+   },
+   {
+    "id": "10181860",
+    "name": "Akmal'",
+    "various": false,
+    "composer": false,
+    "cover": {
+     "type": "from-artist-photos",
+     "prefix": "9b8c30e1.p.10181860/",
+     "uri": "avatars.yandex.net/get-music-content/20840698/9b8c30e1.p.10181860/%%"
+    },
+    "ogImage": "avatars.yandex.net/get-music-content/20840698/9b8c30e1.p.10181860/%%",
+    "genres": [
+     "ruspop"
+    ],
+    "counts": {
+     "tracks": 58,
+     "directAlbums": 36,
+     "alsoAlbums": 4,
+     "alsoTracks": 5
+    },
+    "available": true,
+    "ratings": {
+     "week": 35,
+     "month": 31,
+     "day": 38
+    },
+    "disclaimers": [],
+    "links": [
+     {
+      "title": "@_akmal_2323",
+      "href": "https://www.tiktok.com/@_akmal_2323?",
+      "type": "social",
+      "socialNetwork": "tiktok"
+     },
+     {
+      "title": "akmalsvami",
+      "href": "https://vk.ru/akmalsvami",
+      "type": "social",
+      "socialNetwork": "vk"
+     },
+     {
+      "title": "akmaltgshka",
+      "href": "https://t.me/akmaltgshka",
+      "type": "social",
+      "socialNetwork": "telegram"
+     },
+     {
+      "title": "channel/UCRNj_5QPDKO8W8AS3VjZ6yg",
+      "href": "https://www.youtube.com/channel/UCRNj_5QPDKO8W8AS3VjZ6yg",
+      "type": "social",
+      "socialNetwork": "youtube"
+     }
+    ],
+    "ticketsAvailable": false
+   }
+  ],
+  "composers": [],
+  "albums": [
+   {
+    "id": 16969949,
+    "title": "Миллениум X",
+    "metaType": "music",
+    "contentWarning": "explicit",
+    "year": 2021,
+    "releaseDate": "2021-07-22T00:00:00+03:00",
+    "coverUri": "avatars.yandex.net/get-music-content/5282321/917eff67.a.16969949-1/%%",
+    "ogImage": "avatars.yandex.net/get-music-content/5282321/917eff67.a.16969949-1/%%",
+    "genre": "ruspop",
+    "listeningFinished": false,
+    "trackCount": 9,
+    "likesCount": 18852,
+    "recent": false,
+    "veryImportant": false,
+    "artists": [
+     {
+      "id": 666984,
+      "name": "ARTIK & ASTI",
+      "available": true,
+      "various": false,
+      "composer": false,
+      "cover": {
+       "type": "from-artist-photos",
+       "prefix": "91c817e2.p.666984/",
+       "uri": "avatars.yandex.net/get-music-content/20189877/91c817e2.p.666984/%%"
+      },
+      "genres": [],
+      "disclaimers": []
+     }
+    ],
+    "labels": [
+     {
+      "id": 1034713,
+      "name": "Warner Music Russia"
+     }
+    ],
+    "available": true,
+    "availableForPremiumUsers": true,
+    "disclaimers": [
+     "explicit",
+     "exclamationIcon:671a23afcec5646906723a52",
+     "descriptionText:67370c8e13b92b0a60256675"
+    ],
+    "availableForOptions": [
+     "bookmate"
+    ],
+    "availableForMobile": true,
+    "availablePartially": false,
+    "bests": [
+     87659100,
+     79071659
+    ]
+   },
+   {
+    "id": 41920857,
+    "title": "Шадэ",
+    "type": "single",
+    "metaType": "music",
+    "year": 2026,
+    "releaseDate": "2026-05-08T00:00:00+03:00",
+    "coverUri": "avatars.yandex.net/get-music-content/16154377/525b9915.a.41920857-2/%%",
+    "ogImage": "avatars.yandex.net/get-music-content/16154377/525b9915.a.41920857-2/%%",
+    "genre": "ruspop",
+    "listeningFinished": false,
+    "trackCount": 1,
+    "likesCount": 147805,
+    "recent": false,
+    "veryImportant": false,
+    "artists": [
+     {
+      "id": 8809832,
+      "name": "By Индия",
+      "available": true,
+      "various": false,
+      "composer": false,
+      "cover": {
+       "type": "from-artist-photos",
+       "prefix": "bc7f3a5f.p.8809832/",
+       "uri": "avatars.yandex.net/get-music-content/15406468/bc7f3a5f.p.8809832/%%"
+      },
+      "genres": [],
+      "disclaimers": [],
+      "cutoutCover": {
+       "uri": "avatars.yandex.net/get-music-content/17730916/5e1df6af.c.969350/%%"
+      }
+     },
+     {
+      "id": 7251201,
+      "name": "Xcho",
+      "available": true,
+      "various": false,
+      "composer": false,
+      "cover": {
+       "type": "from-artist-photos",
+       "prefix": "ffaa7ca4.p.7251201/",
+       "uri": "avatars.yandex.net/get-music-content/9784575/ffaa7ca4.p.7251201/%%"
+      },
+      "genres": [],
+      "disclaimers": [],
+      "cutoutCover": {
+       "uri": "avatars.yandex.net/get-music-content/16496077/22760c04.c.121153/%%"
+      }
+     },
+     {
+      "id": 1636897,
+      "name": "MOT",
+      "available": true,
+      "various": false,
+      "composer": false,
+      "cover": {
+       "type": "from-artist-photos",
+       "prefix": "2f1d52c1.p.1636897/",
+       "uri": "avatars.yandex.net/get-music-content/20031403/2f1d52c1.p.1636897/%%"
+      },
+      "genres": [],
+      "disclaimers": [],
+      "cutoutCover": {
+       "uri": "avatars.yandex.net/get-music-content/17696724/7c8015d5.c.132938/%%"
+      }
+     }
+    ],
+    "labels": [
+     {
+      "id": 3671559,
+      "name": "Streaming Club"
+     }
+    ],
+    "available": true,
+    "availableForPremiumUsers": true,
+    "disclaimers": [],
+    "availableForOptions": [
+     "bookmate"
+    ],
+    "availableForMobile": true,
+    "availablePartially": false,
+    "bests": []
+   },
+   {
+    "id": 41976933,
+    "title": "ЭКСПОНАТ",
+    "type": "single",
+    "metaType": "music",
+    "year": 2026,
+    "releaseDate": "2026-05-15T00:00:00+03:00",
+    "coverUri": "avatars.yandex.net/get-music-content/20372582/82527af1.a.41976933-2/%%",
+    "ogImage": "avatars.yandex.net/get-music-content/20372582/82527af1.a.41976933-2/%%",
+    "genre": "ruspop",
+    "listeningFinished": false,
+    "trackCount": 1,
+    "likesCount": 93703,
+    "recent": false,
+    "veryImportant": false,
+    "artists": [
+     {
+      "id": 6767066,
+      "name": "MIA BOYKA",
+      "available": true,
+      "various": false,
+      "composer": false,
+      "cover": {
+       "type": "from-artist-photos",
+       "prefix": "53e4dab6.p.6767066/",
+       "uri": "avatars.yandex.net/get-music-content/19035207/53e4dab6.p.6767066/%%"
+      },
+      "genres": [],
+      "disclaimers": [],
+      "cutoutCover": {
+       "uri": "avatars.yandex.net/get-music-content/17681324/a7b578ef.c.995849/%%"
+      }
+     }
+    ],
+    "labels": [
+     {
+      "id": 5578208,
+      "name": "Sputnik Records"
+     }
+    ],
+    "available": true,
+    "availableForPremiumUsers": true,
+    "disclaimers": [],
+    "availableForOptions": [
+     "bookmate"
+    ],
+    "availableForMobile": true,
+    "availablePartially": false,
+    "bests": []
+   }
+  ],
+  "promotions": [],
+  "features": [],
+  "playlists": [
+   {
+    "owner": {
+     "uid": 103372440,
+     "login": "music-blog",
+     "name": "Яндекс Музыка",
+     "sex": "male",
+     "verified": true
+    },
+    "playlistUuid": "735d36b3-0af1-a3b4-915e-f2ca1d22743a",
+    "available": true,
+    "uid": 103372440,
+    "kind": 2440,
+    "title": "Громкие новинки: поп",
+    "description": "На обложке: BEARWOLF\r\nТреки, которые будут звучать повсюду",
+    "descriptionFormatted": "На обложке: BEARWOLF\r\nТреки, которые будут звучать повсюду",
+    "revision": 6613,
+    "snapshot": 8815,
+    "trackCount": 80,
+    "visibility": "public",
+    "collective": false,
+    "created": "2020-11-25T12:59:46+00:00",
+    "modified": "2026-10-23T06:54:45+00:00",
+    "backgroundColor": "",
+    "textColor": "#000000",
+    "image": "",
+    "isBanner": false,
+    "isPremiere": false,
+    "durationMs": 34003050,
+    "cover": {
+     "type": "pic",
+     "dir": "/get-music-user-playlist/19252516/103372440.2440.14301/",
+     "version": "1792662314301",
+     "uri": "avatars.yandex.net/get-music-user-playlist/19252516/103372440.2440.14301/%%?1792662314301",
+     "custom": true
+    },
+    "ogImage": "avatars.yandex.net/get-music-user-playlist/19252516/103372440.2440.14301/%%?1792662314301",
+    "tags": [
+     {
+      "id": "5795cf1793aee1813dc8e182",
+      "value": "pop"
+     },
+     {
+      "id": "5bbc9eca5367660064a8cc12",
+      "value": "new_playlists"
+     },
+     {
+      "id": "5f71f30c35d493161b4393fa",
+      "value": "2020s"
+     },
+     {
+      "id": "5c11f00a3f9b6400bb44263b",
+      "value": "ruspop"
+     },
+     {
+      "id": "5ae445f6cfd69fb3b9cc6dfd",
+      "value": "top"
+     },
+     {
+      "id": "64998efe1651b44a5f14736b",
+      "value": "newsmashinghits"
+     }
+    ],
+    "backgroundImageUrl": "avatars.yandex.net/get-music-user-playlist/19252516/103372440.2440.rnd-186753611.playlist-branding/%%",
+    "customWave": {
+     "title": "Громкие новинки: поп",
+     "animationUrl": "https://music-custom-wave-media.s3.yandex.net/base.json",
+     "position": "default",
+     "header": "Моя волна по плейлисту",
+     "backgroundImageUrl": "avatars.mds.yandex.net/get-music-misc/28052/custom-wave-default-playlist-background.image/%%"
+    }
+   },
+   {
+    "owner": {
+     "uid": 103372440,
+     "login": "music-blog",
+     "name": "Яндекс Музыка",
+     "sex": "male",
+     "verified": true
+    },
+    "playlistUuid": "9e7470e7-5cc7-8cec-831d-aca6b230551c",
+    "available": true,
+    "uid": 103372440,
+    "kind": 1103,
+    "title": "100 поп-хитов",
+    "description": "На обложке: Pabllo Vittar, Sevdaliza, Yseult\r\nГлавные поп-гимны последних нескольких лет\r\n",
+    "descriptionFormatted": "На обложке: Pabllo Vittar, Sevdaliza, Yseult\r\nГлавные поп-гимны последних нескольких лет\r\n",
+    "revision": 335,
+    "snapshot": 563,
+    "trackCount": 100,
+    "visibility": "public",
+    "collective": false,
+    "created": "2013-11-29T08:35:01+00:00",
+    "modified": "2026-04-13T08:41:03+00:00",
+    "backgroundColor": "",
+    "textColor": "#000000",
+    "image": "",
+    "isBanner": false,
+    "isPremiere": false,
+    "durationMs": 38016930,
+    "cover": {
+     "type": "pic",
+     "dir": "/get-music-user-playlist/34120/103372440.1103.73918/",
+     "version": "1737368573918",
+     "uri": "avatars.yandex.net/get-music-user-playlist/34120/103372440.1103.73918/%%?1737368573918",
+     "custom": true
+    },
+    "ogImage": "avatars.yandex.net/get-music-user-playlist/34120/103372440.1103.73918/%%?1737368573918",
+    "tags": [
+     {
+      "id": "5795cf1793aee1813dc8e182",
+      "value": "pop"
+     },
+     {
+      "id": "5ef4aa4254e50141f3bdf6ed",
+      "value": "100hits"
+     },
+     {
+      "id": "5ebeafcd501c1e482a6f9247",
+      "value": "mixofgenres"
+     },
+     {
+      "id": "63186a89418d646f1001675e",
+      "value": "popular"
+     }
+    ],
+    "backgroundImageUrl": "avatars.yandex.net/get-music-user-playlist/51766/103372440.1103.rnd-1081913589.playlist-branding/%%",
+    "customWave": {
+     "title": "100 поп-хитов",
+     "animationUrl": "https://music-custom-wave-media.s3.yandex.net/base.json",
+     "position": "default",
+     "header": "Моя волна по плейлисту",
+     "backgroundImageUrl": "avatars.mds.yandex.net/get-music-misc/28052/custom-wave-default-playlist-background.image/%%"
+    }
+   },
+   {
+    "owner": {
+     "uid": 103372440,
+     "login": "music-blog",
+     "name": "Яндекс Музыка",
+     "sex": "male",
+     "verified": true
+    },
+    "playlistUuid": "ca2b7e4c-4ca0-080a-ea7f-fcec774d302d",
+    "available": true,
+    "uid": 103372440,
+    "kind": 1002,
+    "title": "Вечная поп-музыка",
+    "description": "На обложке: a-ha\r\nВсе те, кто нашёл формулу идеального хита.\r\n",
+    "descriptionFormatted": "На обложке: a-ha\r\nВсе те, кто нашёл формулу идеального хита.\r\n",
+    "revision": 148,
+    "snapshot": 300,
+    "trackCount": 168,
+    "visibility": "public",
+    "collective": true,
+    "created": "2013-01-17T18:46:35+00:00",
+    "modified": "2023-09-08T10:36:05+00:00",
+    "isBanner": false,
+    "isPremiere": false,
+    "durationMs": 39439370,
+    "cover": {
+     "type": "pic",
+     "dir": "/get-music-user-playlist/11371754/103372440.1002.67196/",
+     "version": "1737712367196",
+     "uri": "avatars.yandex.net/get-music-user-playlist/11371754/103372440.1002.67196/%%?1737712367196",
+     "custom": true
+    },
+    "ogImage": "avatars.yandex.net/get-music-user-playlist/11371754/103372440.1002.67196/%%?1737712367196",
+    "tags": [
+     {
+      "id": "5795cf1793aee1813dc8e182",
+      "value": "pop"
+     },
+     {
+      "id": "5ebeafcd501c1e482a6f9247",
+      "value": "mixofgenres"
+     },
+     {
+      "id": "5795ce8f77d30f7fda41bca0",
+      "value": "classics"
+     }
+    ],
+    "backgroundImageUrl": "avatars.yandex.net/get-music-user-playlist/69910/103372440.1002.rnd-444765562.playlist-branding/%%",
+    "customWave": {
+     "title": "Вечная поп-музыка",
+     "animationUrl": "https://music-custom-wave-media.s3.yandex.net/base.json",
+     "position": "default",
+     "header": "Моя волна по плейлисту",
+     "backgroundImageUrl": "avatars.mds.yandex.net/get-music-misc/28052/custom-wave-default-playlist-background.image/%%"
+    }
+   }
+  ],
+  "tracksSortByValues": [
+   {
+    "value": "popular",
+    "title": "Сначала популярные",
+    "active": true
+   },
+   {
+    "value": "new",
+    "title": "Сначала новые",
+    "active": false
+   }
+  ],
+  "albumsSortByValues": [
+   {
+    "value": "popular",
+    "title": "Сначала популярные",
+    "active": false
+   },
+   {
+    "value": "new",
+    "title": "Сначала новые",
+    "active": true
+   }
+  ],
+  "playlistsSortByValues": [
+   {
+    "value": "popular",
+    "title": "Сначала популярные",
+    "active": true
+   },
+   {
+    "value": "new",
+    "title": "Сначала новые",
+    "active": false
+   }
+  ]
+ }
+}
