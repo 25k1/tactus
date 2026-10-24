@@ -400,6 +400,10 @@ hotkey-clear = &Очистить
 hotkey-reset = &Сбросить по умолчанию
 hotkey-none = Нет
 hotkey-prompt = Сочетание для действия «{ $action }»:
+key-capture-prompt = Нажмите новое сочетание клавиш для «{ $action }». Enter сохраняет, Escape отменяет.
+key-capture-field = Новое сочетание клавиш
+key-capture-type = Ввести вручную
+key-capture-unusable = Эту клавишу здесь использовать нельзя
 hotkey-invalid = { $key } не подходит как глобальное сочетание.
 hotkey-show-window = Показать или скрыть Tactus
 

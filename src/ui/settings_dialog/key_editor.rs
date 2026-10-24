@@ -1,4 +1,62 @@
 use super::*;
+use crate::ui::command::accelerator;
+use crate::ui::key_capture::{self, Captured, KeyPress};
+
+#[derive(Clone, Copy)]
+pub(super) enum KeyKind {
+    Shortcut,
+    Hotkey,
+}
+
+impl KeyKind {
+    fn normalize(self, text: &str) -> Option<String> {
+        match self {
+            KeyKind::Shortcut => accelerator(text),
+            KeyKind::Hotkey => Hotkey::parse(text).map(|hotkey| hotkey.to_string()),
+        }
+    }
+
+    fn describe(self, press: KeyPress) -> Option<String> {
+        match self {
+            KeyKind::Shortcut => press.accelerator(),
+            KeyKind::Hotkey => press.hotkey(),
+        }
+    }
+
+    fn invalid(self, key: &str) -> String {
+        match self {
+            KeyKind::Shortcut => fl!("shortcut-invalid", key = key),
+            KeyKind::Hotkey => fl!("hotkey-invalid", key = key),
+        }
+    }
+}
+
+pub(super) fn ask_key(ui: &Rc<Ui>, dialog: &Dialog, kind: KeyKind, action: &str, current: &str) -> Option<String> {
+    let title = fl!("hotkey-change");
+    ui.hotkeys.borrow_mut().take();
+    let speaker = ui.clone();
+    let captured = key_capture::capture(
+        dialog,
+        &title,
+        &fl!("key-capture-prompt", action = action),
+        current,
+        move |press| kind.describe(press),
+        move |text| speaker.speech.say(text, true),
+    );
+    ui.set_hotkeys();
+    match captured {
+        Captured::Key(key) => Some(key),
+        Captured::Cancel => None,
+        Captured::Type => {
+            let text = dialogs::ask_text(&ui.frame, &fl!("hotkey-prompt", action = action), &title, current)?;
+            let key = kind.normalize(&text);
+            if key.is_none() {
+                dialogs::warn(dialog, &kind.invalid(&text), &title);
+            }
+            key
+        }
+    }
+}
 
 #[derive(Clone, Copy)]
 pub(super) struct KeyEditor {

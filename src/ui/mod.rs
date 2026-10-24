@@ -4,6 +4,7 @@ mod browser;
 mod command;
 mod dialogs;
 mod events;
+mod key_capture;
 mod login;
 mod lyrics;
 mod media_list;

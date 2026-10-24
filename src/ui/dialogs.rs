@@ -5,7 +5,7 @@ use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 use wxdragon::prelude::*;
 
-fn caption(text: &str) -> String {
+pub fn caption(text: &str) -> String {
     text.replace('&', "")
 }
 

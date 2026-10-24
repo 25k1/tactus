@@ -140,6 +140,16 @@ fn key_name(code: u32) -> String {
 }
 
 impl Hotkey {
+    pub fn new(modifiers: u32, key: u32) -> Option<Hotkey> {
+        let standalone = matches!(key, 0x70..=0x87 | 0xAD..=0xB3 | 0x13);
+        (!key_name(key).is_empty() && (modifiers != 0 || standalone)).then_some(Hotkey { modifiers, key })
+    }
+
+    pub fn pressed(held: [bool; 4], key: u32) -> Option<Hotkey> {
+        let modifiers = MODIFIERS.iter().zip(held).filter(|(_, on)| *on).fold(0, |all, ((_, flag), _)| all | flag);
+        Self::new(modifiers, key)
+    }
+
     pub fn parse(text: &str) -> Option<Hotkey> {
         let mut modifiers = 0;
         let mut key = None;
@@ -157,9 +167,7 @@ impl Hotkey {
                 return None;
             }
         }
-        let key = key?;
-        let standalone = matches!(key, 0x70..=0x87 | 0xAD..=0xB3 | 0x13);
-        (modifiers != 0 || standalone).then_some(Hotkey { modifiers, key })
+        Self::new(modifiers, key?)
     }
 }
 
@@ -187,6 +195,14 @@ mod tests {
         assert_eq!(Hotkey::parse("Win+F5").unwrap().to_string(), "Win+F5");
         assert_eq!(Hotkey::parse("Alt+PageDown").unwrap().to_string(), "Alt+PageDown");
         assert_eq!(Hotkey::parse("MediaPlayPause").unwrap().to_string(), "MediaPlayPause");
+    }
+
+    #[test]
+    fn builds_hotkeys_from_pressed_keys() {
+        assert_eq!(Hotkey::pressed([true, true, true, false], 0xBE).unwrap().to_string(), "Ctrl+Alt+Shift+Period");
+        assert_eq!(Hotkey::pressed([false; 4], 0xB3).unwrap().to_string(), "MediaPlayPause");
+        assert_eq!(Hotkey::pressed([false; 4], u32::from(b'K')), None);
+        assert_eq!(Hotkey::pressed([true, false, false, false], 0xDE), None);
     }
 
     #[test]

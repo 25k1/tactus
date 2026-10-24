@@ -391,6 +391,10 @@ hotkey-clear = &გასუფთავება
 hotkey-reset = ნაგულისხმევზე &დაბრუნება
 hotkey-none = არცერთი
 hotkey-prompt = მალსახმობი მოქმედებისთვის „{ $action }“:
+key-capture-prompt = დააჭირეთ კლავიშთა ახალ კომბინაციას: { $action }. Enter ინახავს, Escape აუქმებს.
+key-capture-field = კლავიშთა ახალი კომბინაცია
+key-capture-type = ხელით აკრეფა
+key-capture-unusable = ამ კლავიშის გამოყენება აქ შეუძლებელია
 hotkey-invalid = { $key } არ არის სწორი გლობალური მალსახმობი.
 hotkey-show-window = Tactus-ის ჩვენება ან დამალვა
 

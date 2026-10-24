@@ -1,4 +1,4 @@
-use super::key_editor::KeyEditor;
+use super::key_editor::{KeyEditor, KeyKind, ask_key};
 use super::*;
 use std::collections::BTreeMap;
 
@@ -34,7 +34,7 @@ fn rows(bindings: &BTreeMap<GlobalAction, String>) -> Vec<(String, Option<String
 }
 
 impl Hotkeys {
-    pub(super) fn new(notebook: &Notebook, old: &Settings, frame: Frame, dialog: Dialog) -> Self {
+    pub(super) fn new(notebook: &Notebook, old: &Settings, ui: &Rc<Ui>, dialog: Dialog) -> Self {
         let (panel, sizer) = page(notebook, &fl!("settings-hotkeys"));
         let enabled = check(&panel, &fl!("settings-hotkeys-enabled"), old.global_hotkeys);
         add(&sizer, &enabled);
@@ -52,17 +52,14 @@ impl Hotkeys {
         };
         let selected = move || editor.selected().and_then(|row| GlobalAction::ALL.get(row)).copied();
         {
-            let (bindings, update) = (bindings.clone(), update.clone());
+            let (bindings, update, ui) = (bindings.clone(), update.clone(), ui.clone());
             editor.change.on_click(move |_| {
                 let Some(action) = selected() else { return };
                 let current = action.key_in(&bindings.borrow()).unwrap_or_default();
-                let prompt = fl!("hotkey-prompt", action = hotkey_label(action));
-                let Some(text) = dialogs::ask_text(&frame, &prompt, &fl!("hotkey-change"), &current) else { return };
-                match Hotkey::parse(&text) {
-                    Some(hotkey) => update(&|map| {
-                        map.insert(action, hotkey.to_string());
-                    }),
-                    None => dialogs::warn(&dialog, &fl!("hotkey-invalid", key = text), &fl!("hotkey-change")),
+                if let Some(key) = ask_key(&ui, &dialog, KeyKind::Hotkey, &hotkey_label(action), &current) {
+                    update(&|map| {
+                        map.insert(action, key.clone());
+                    });
                 }
             });
         }

@@ -115,8 +115,8 @@ impl Ui {
             Box::new(speech::Speech::new(&notebook, &old, self.speech.backend_name())),
             Box::new(voice::Voice::new(&notebook, &old, self)),
             Box::new(lists::Lists::new(&notebook, &old)),
-            Box::new(shortcuts::Shortcuts::new(&notebook, &old, self.frame, dialog)),
-            Box::new(hotkeys::Hotkeys::new(&notebook, &old, self.frame, dialog)),
+            Box::new(shortcuts::Shortcuts::new(&notebook, &old, self, dialog)),
+            Box::new(hotkeys::Hotkeys::new(&notebook, &old, self, dialog)),
             Box::new(downloads::Downloads::new(&notebook, &old)),
             Box::new(remote::Remote::new(&notebook, &old)),
         ];

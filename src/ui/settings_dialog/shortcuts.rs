@@ -1,6 +1,6 @@
-use super::key_editor::KeyEditor;
+use super::key_editor::{KeyEditor, KeyKind, ask_key};
 use super::*;
-use crate::ui::command::{Binding, Keymap, accelerator};
+use crate::ui::command::{Binding, Keymap};
 
 pub(super) struct Shortcuts {
     keymap: Rc<RefCell<Keymap>>,
@@ -11,7 +11,7 @@ fn rows(keymap: &Keymap) -> Vec<(String, Option<String>)> {
 }
 
 impl Shortcuts {
-    pub(super) fn new(notebook: &Notebook, old: &Settings, frame: Frame, dialog: Dialog) -> Self {
+    pub(super) fn new(notebook: &Notebook, old: &Settings, ui: &Rc<Ui>, dialog: Dialog) -> Self {
         let (panel, sizer) = page(notebook, &fl!("settings-shortcuts"));
         let editor = KeyEditor::new(&panel, &sizer, &fl!("settings-shortcuts"));
         add(&sizer, &label(&panel, &fl!("settings-shortcuts-hint")));
@@ -27,19 +27,15 @@ impl Shortcuts {
             }
         };
         {
-            let (keymap, update) = (keymap.clone(), update.clone());
+            let (keymap, update, ui) = (keymap.clone(), update.clone(), ui.clone());
             editor.change.on_click(move |_| {
                 let Some(binding) = selected() else { return };
                 let current = keymap.borrow().key(binding).unwrap_or_default();
-                let prompt = fl!("hotkey-prompt", action = binding.label());
-                let Some(text) = dialogs::ask_text(&frame, &prompt, &fl!("hotkey-change"), &current) else { return };
-                let Some(key) = accelerator(&text) else {
-                    return dialogs::warn(&dialog, &fl!("shortcut-invalid", key = text), &fl!("hotkey-change"));
-                };
+                let Some(key) = ask_key(&ui, &dialog, KeyKind::Shortcut, &binding.label(), &current) else { return };
                 let owner = keymap.borrow().owner(&key, binding);
                 if let Some(owner) = owner {
                     let question = fl!("shortcut-taken", key = key.as_str(), action = owner.label());
-                    if !dialogs::confirm(&frame, &question, &fl!("hotkey-change")) {
+                    if !dialogs::confirm(&ui.frame, &question, &fl!("hotkey-change")) {
                         return;
                     }
                 }

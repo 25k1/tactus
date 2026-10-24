@@ -391,6 +391,10 @@ hotkey-clear = C&lear
 hotkey-reset = &Reset to defaults
 hotkey-none = None
 hotkey-prompt = Shortcut for { $action }:
+key-capture-prompt = Press the new key combination for { $action }. Enter saves it, Escape cancels.
+key-capture-field = New key combination
+key-capture-type = Type it instead
+key-capture-unusable = This key can't be used here
 hotkey-invalid = { $key } is not a valid global hotkey.
 hotkey-show-window = Show or hide Tactus
 
