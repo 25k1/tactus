@@ -27,6 +27,8 @@ pub enum SectionKind {
     Categories,
     NewEpisodes,
     Pinned,
+    Moments,
+    Generated,
     Other,
 }
 

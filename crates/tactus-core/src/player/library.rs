@@ -13,6 +13,7 @@ impl Player {
         let mut undo = Vec::new();
         let changes: Vec<Change> = targets
             .into_iter()
+            .filter(|target| !matches!(target, Target::Track(track) if tactus_api::is_generated(&track.id)))
             .filter(|target| self.has(target, relation) != on)
             .map(|target| {
                 undo.push((target.clone(), relation, !on));
@@ -40,6 +41,7 @@ impl Player {
         for (target, relation, on) in &changes {
             self.library.apply(target, *relation, *on);
         }
+        self.wave_relation_feedback(&changes);
         self.emit(Event::Library);
         let request = changes.clone();
         self.spawn(
@@ -225,6 +227,7 @@ impl Player {
     }
 
     pub fn download(&mut self, tracks: Vec<Track>, numbered: bool) {
+        let tracks: Vec<Track> = tracks.into_iter().filter(|track| !tactus_api::is_generated(&track.id)).collect();
         let Some(service) = self.service.clone() else {
             return self.fail(Error::SignedOut);
         };

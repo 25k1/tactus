@@ -81,7 +81,7 @@ impl Assistant {
                 None
             }
             Intent::PlayWave => {
-                player.start_wave(vec![MY_WAVE.to_owned()]);
+                player.start_my_wave();
                 None
             }
             Intent::PlayMood(mood) => {

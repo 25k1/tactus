@@ -62,6 +62,10 @@ menu-dislike = &არ მომწონს
 menu-add-to-playlist = დასაკრავ სიაში &დამატება…
 menu-download = &ჩამოტვირთვა
 menu-radio = ჩემი &ტალღა ამ ტრეკით
+menu-my-wave = &ჩემი ტალღის ჩართვა
+menu-last-wave = &ბოლო ტალღის ჩართვა
+menu-wave-settings = ჩემი ტალღის პარამეტრე&ბი…
+menu-reset-last-wave = ბოლო ტალღის დაბრუნება ჩემ ტალღა&ზე
 menu-similar = &მსგავსი ტრეკები
 menu-go-to-album = &ალბომზე გადასვლა
 menu-go-to-artist = &შემსრულებელზე გადასვლა
@@ -184,6 +188,7 @@ wave-russian = რუსული
 wave-foreign = უცხოური
 wave-instrumental = სიტყვების გარეშე
 wave-start = &ჩემი ტალღის ჩართვა
+wave-settings-hint = ეს პარამეტრები ჩემი ტალღის ყოველ ჩართვაზე მოქმედებს.
 
 player-previous = &წინა
 player-play = &დაკვრა
@@ -270,6 +275,8 @@ notice-download-queued = { $count ->
 notice-downloaded = ჩამოიტვირთა { $title }
 notice-download-failed = ვერ ჩამოიტვირთა { $title }: { $error }
 notice-wave-started = რადიო ჩაირთო
+notice-last-wave-reset = ბოლო ტალღა დაბრუნდა ჩემ ტალღაზე
+generated-unavailable = გენერირებული მუსიკისთვის მიუწვდომელია
 notice-search-results = { $count ->
     [0] ვერაფერი მოიძებნა
     [one] 1 შედეგი
@@ -561,6 +568,8 @@ toast-new-episodes = { $count ->
    *[other] { $count } ახალი ეპიზოდი
 }
 section-pinned = მიმაგრებული
+section-moments = საქმიანობა და განწყობა
+section-generated = გენერირებული მუსიკა
 action-pin = კოლექციაში &მიმაგრება
 action-unpin = &მოხსნა
 notice-pinned = მიმაგრებულია

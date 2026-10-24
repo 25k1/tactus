@@ -30,6 +30,7 @@ pub fn notice(notice: &Notice) -> String {
             fl!("notice-download-failed", title = title.as_str(), error = error.as_str())
         }
         Notice::WaveStarted => fl!("notice-wave-started"),
+        Notice::LastWaveReset => fl!("notice-last-wave-reset"),
         Notice::SearchResults(count) => fl!("notice-search-results", count = (*count)),
         Notice::AccountUpdated => fl!("notice-account-updated"),
         Notice::MoreLoaded(count) => fl!("notice-more-loaded", count = (*count)),

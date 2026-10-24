@@ -91,6 +91,26 @@ pub trait PlaybackService {
         Ok(())
     }
 
+    fn wave_settings(&self) -> Result<WaveSettings> {
+        Err(Error::Unsupported)
+    }
+
+    fn last_wave(&self) -> Result<LastWave> {
+        Err(Error::Unsupported)
+    }
+
+    fn reset_last_wave(&self) -> Result<()> {
+        Err(Error::Unsupported)
+    }
+
+    fn generated_stream(&self, _station: &str) -> Result<GeneratedStream> {
+        Err(Error::Unsupported)
+    }
+
+    fn generated_feedback(&self, _station: &str, _stream: &str, _event: StreamEvent) -> Result<()> {
+        Ok(())
+    }
+
     fn active_queue(&self) -> Result<Option<RemoteQueue>> {
         Ok(None)
     }

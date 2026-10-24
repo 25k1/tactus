@@ -133,4 +133,52 @@ impl PlaybackService for FakeService {
         self.record(format!("more {session} {}", queue.len()));
         Ok(WaveBatch { session: session.to_owned(), batch: "batch2".into(), tracks: tracks(&["w4", "w5"]) })
     }
+
+    fn wave_feedback(&self, session: &str, _batch: &str, event: &WaveEvent) -> Result<()> {
+        self.record(format!("feedback {session} {event:?}"));
+        Ok(())
+    }
+
+    fn wave_settings(&self) -> Result<WaveSettings> {
+        let option = |name: &str, seed: &str, any: bool| WaveOption { name: name.into(), seed: seed.into(), any };
+        Ok(WaveSettings {
+            contexts: vec![Station {
+                seed: "activity:workout".into(),
+                name: "Workout".into(),
+                category: "activity".into(),
+            }],
+            settings: vec![WaveSetting {
+                key: "language".into(),
+                name: "Language".into(),
+                options: vec![
+                    option("Russian", "settingLanguage:russian", false),
+                    option("Any", "settingLanguage:any", true),
+                ],
+            }],
+        })
+    }
+
+    fn last_wave(&self) -> Result<LastWave> {
+        Ok(LastWave { name: "Rock".into(), seeds: vec!["genre:rock".into()] })
+    }
+
+    fn reset_last_wave(&self) -> Result<()> {
+        self.record("reset last wave".into());
+        Ok(())
+    }
+
+    fn generated_stream(&self, station: &str) -> Result<GeneratedStream> {
+        Ok(GeneratedStream {
+            station: station.to_owned(),
+            id: format!("stream-{station}"),
+            url: format!("fake://{station}.m3u8"),
+            title: "Inspiration".into(),
+            subtitle: "Neural network".into(),
+        })
+    }
+
+    fn generated_feedback(&self, station: &str, stream: &str, event: StreamEvent) -> Result<()> {
+        self.record(format!("stream {station} {stream} {}", event.name()));
+        Ok(())
+    }
 }

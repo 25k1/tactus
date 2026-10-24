@@ -3,6 +3,7 @@ use crate::ui::bar::PlayerView;
 use crate::ui::command::{Binding, PLAYER_MENU, command_menu};
 use crate::ui::key_capture::KeyPress;
 use crate::ui::mini_player::MiniPlayer;
+use crate::ui::wave_settings;
 
 impl Ui {
     pub(crate) fn each_player(&self, update: impl Fn(&dyn PlayerView, &Player)) {
@@ -10,6 +11,16 @@ impl Ui {
         update(&self.bar, &player);
         if let Some(mini) = self.mini.borrow().as_ref() {
             update(mini, &player);
+        }
+    }
+
+    pub(super) fn edit_wave_settings(self: &Rc<Self>) {
+        let (options, current) = {
+            let player = self.player.borrow();
+            (player.wave_options().cloned(), player.settings.wave_seeds.clone())
+        };
+        if let Some(seeds) = wave_settings::edit(&self.frame, options.as_ref(), &current) {
+            self.act(|player| player.set_wave_seeds(seeds));
         }
     }
 

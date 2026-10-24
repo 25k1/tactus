@@ -106,6 +106,11 @@ impl Player {
     }
 
     pub fn start_wave(&mut self, seeds: Vec<String>) {
+        if let [seed] = seeds.as_slice()
+            && tactus_api::is_generated(seed)
+        {
+            return self.play_generated(seed.clone());
+        }
         self.begin_wave(seeds, true);
     }
 
@@ -187,7 +192,7 @@ impl Player {
 
     pub(super) fn sync_new_queue(&mut self, context: &str) {
         self.remote_queue = None;
-        if !self.settings.sync_queue || self.settings.ynison {
+        if !self.settings.sync_queue || self.settings.ynison || self.is_generated_playing() {
             return;
         }
         let (tracks, index, context) = (self.queue.tracks().to_vec(), self.queue.index(), context.to_owned());

@@ -90,6 +90,75 @@ pub enum WaveEvent {
     TrackStarted { track_id: String },
     TrackFinished { track_id: String, seconds: f64 },
     Skip { track_id: String, seconds: f64 },
+    Like { track_id: String },
+    Unlike { track_id: String },
+    Dislike { track_id: String, seconds: f64 },
+    Undislike { track_id: String },
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct WaveOption {
+    pub name: String,
+    pub seed: String,
+    pub any: bool,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct WaveSetting {
+    pub key: String,
+    pub name: String,
+    pub options: Vec<WaveOption>,
+}
+
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct WaveSettings {
+    pub contexts: Vec<Station>,
+    pub settings: Vec<WaveSetting>,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct LastWave {
+    pub name: String,
+    pub seeds: Vec<String>,
+}
+
+pub const GENERATED_STATIONS: [&str; 4] =
+    ["generative:focus", "generative:energy", "generative:calm", "generative:relax"];
+
+pub fn is_generated(id: &str) -> bool {
+    id.starts_with("generative:")
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct GeneratedStream {
+    pub station: String,
+    pub id: String,
+    pub url: String,
+    pub title: String,
+    pub subtitle: String,
+}
+
+impl GeneratedStream {
+    pub fn track(&self) -> Track {
+        Track { id: self.station.clone(), title: self.title.clone(), artist: self.subtitle.clone(), ..Track::default() }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum StreamEvent {
+    Started,
+    Play,
+    Pause,
+}
+
+impl StreamEvent {
+    pub fn name(self) -> &'static str {
+        match self {
+            StreamEvent::Started => "streamStarted",
+            StreamEvent::Play => "streamPlay",
+            StreamEvent::Pause => "streamPause",
+        }
+    }
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]

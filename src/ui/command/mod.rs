@@ -47,6 +47,10 @@ pub enum Command {
     AddToPlaylist,
     Download,
     Wave,
+    MyWave,
+    WaveSettings,
+    LastWave,
+    ResetLastWave,
     Similar,
     GoToAlbum,
     GoToArtist,
@@ -78,7 +82,7 @@ pub enum Command {
 }
 
 impl Command {
-    const ALL: [Command; 56] = [
+    const ALL: [Command; 60] = [
         Command::NewPlaylist,
         Command::OpenLink,
         Command::PromoCode,
@@ -107,6 +111,10 @@ impl Command {
         Command::AddToPlaylist,
         Command::Download,
         Command::Wave,
+        Command::MyWave,
+        Command::WaveSettings,
+        Command::LastWave,
+        Command::ResetLastWave,
         Command::Similar,
         Command::GoToAlbum,
         Command::GoToArtist,
@@ -190,6 +198,10 @@ impl Command {
             Command::AddToPlaylist => fl!("menu-add-to-playlist"),
             Command::Download => fl!("menu-download"),
             Command::Wave => fl!("menu-radio"),
+            Command::MyWave => fl!("menu-my-wave"),
+            Command::WaveSettings => fl!("menu-wave-settings"),
+            Command::LastWave => fl!("menu-last-wave"),
+            Command::ResetLastWave => fl!("menu-reset-last-wave"),
             Command::Similar => fl!("menu-similar"),
             Command::GoToAlbum => fl!("menu-go-to-album"),
             Command::GoToArtist => fl!("menu-go-to-artist"),
@@ -249,6 +261,8 @@ impl Command {
             Command::AddToPlaylist => "Ctrl+Shift+P",
             Command::Download => "Ctrl+D",
             Command::Wave => "Ctrl+Shift+W",
+            Command::WaveSettings => "Ctrl+Shift+V",
+            Command::LastWave => "Ctrl+Shift+Y",
             Command::Similar => "Ctrl+Shift+S",
             Command::GoToAlbum => "Ctrl+Shift+A",
             Command::GoToArtist => "Ctrl+Shift+R",

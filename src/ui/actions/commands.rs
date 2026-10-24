@@ -37,6 +37,10 @@ impl Ui {
                 self.announce_feedback(Announcement::Playback);
             }
             Command::Stop => self.act(Player::stop),
+            Command::MyWave => self.act(Player::start_my_wave),
+            Command::LastWave => self.act(Player::play_last_wave),
+            Command::ResetLastWave => self.act(Player::reset_last_wave),
+            Command::WaveSettings => self.edit_wave_settings(),
             Command::PlayerControls => self.toggle_player_controls(),
             Command::MiniPlayer => self.toggle_mini_player(),
             Command::Next => self.act(Player::next),
@@ -158,6 +162,9 @@ impl Ui {
                 let Some(track) = track else {
                     return self.announce(Announcement::Errors, &fl!("now-playing-nothing"), true);
                 };
+                if tactus_api::is_generated(&track.id) {
+                    return self.announce(Announcement::Errors, &fl!("generated-unavailable"), true);
+                }
                 let action = match command {
                     Command::TrackInfo => ItemAction::TrackInfo,
                     Command::Like => {

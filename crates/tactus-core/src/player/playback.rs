@@ -33,7 +33,16 @@ impl Player {
     fn fetcher(&self, id: &str) -> impl FnOnce(&dyn MusicService, u64) -> Result<Loaded> + Send + 'static {
         let (local, quality, loader, id) =
             (self.offline.source(id), self.settings.stream_quality, self.loader.clone(), id.to_owned());
+        let generated = tactus_api::is_generated(&id).then(|| self.generated_stream.clone());
         move |service, _| {
+            if let Some(slot) = generated {
+                let stream = service.generated_stream(&id)?;
+                let _ = service.generated_feedback(&id, &stream.id, tactus_api::StreamEvent::Started);
+                if let Ok(mut current) = slot.lock() {
+                    current.clone_from(&stream.id);
+                }
+                return loader(&tactus_api::AudioSource { url: stream.url, codec: tactus_api::Codec::Mp3 });
+            }
             loader(&match local {
                 Some(source) => source,
                 None => service.audio_source(&id, quality)?,
@@ -242,6 +251,8 @@ impl Player {
         self.playing = playing;
         if self.audio.is_loaded() {
             self.audio.set_playing(playing);
+            let event = if playing { tactus_api::StreamEvent::Play } else { tactus_api::StreamEvent::Pause };
+            self.generated_feedback(event);
         } else if playing {
             return self.open_current(true, self.position_ms);
         }
@@ -311,6 +322,9 @@ impl Player {
     }
 
     pub fn previous(&mut self) {
+        if self.is_generated_playing() {
+            return;
+        }
         if self.position_ms > 3_000 {
             return self.seek(0);
         }
@@ -321,7 +335,7 @@ impl Player {
     }
 
     pub(super) fn finish_current(&mut self, skipped: bool) {
-        let Some(track) = self.track.clone() else {
+        let Some(track) = self.track.clone().filter(|track| !tactus_api::is_generated(&track.id)) else {
             return;
         };
         let seconds = self.audio.position().as_secs_f64();
@@ -342,6 +356,12 @@ impl Player {
     }
 
     pub(super) fn advance(&mut self, manual: bool) {
+        if self.is_generated_playing() {
+            if !manual {
+                self.open_current(true, 0);
+            }
+            return;
+        }
         self.finish_current(manual);
         let repeat = self.settings.repeat;
         let timer = self.sleep_timer();

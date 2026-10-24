@@ -17,6 +17,7 @@ mod text;
 mod tray;
 mod view_model;
 mod voice;
+mod wave_settings;
 mod widgets;
 
 use crate::platform::hotkeys::{HotkeyEvent, Hotkeys};

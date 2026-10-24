@@ -3,29 +3,8 @@ use super::view_model::{Content, PageButton, Sort, Status, arrange};
 use super::widgets::*;
 use crate::i18n::fl;
 use std::cell::RefCell;
-use tactus_core::player::{MY_WAVE, wave};
 use tactus_core::settings::Column;
 use wxdragon::prelude::*;
-
-fn wave_settings() -> [(String, Vec<(String, &'static str)>); 3] {
-    fn options<const N: usize>(labels: [String; N], seeds: [&'static str; N]) -> Vec<(String, &'static str)> {
-        std::iter::once((fl!("wave-any"), "")).chain(labels.into_iter().zip(seeds)).collect()
-    }
-    [
-        (
-            fl!("wave-character"),
-            options([fl!("wave-favorite"), fl!("wave-discover"), fl!("wave-popular")], wave::CHARACTERS),
-        ),
-        (
-            fl!("wave-mood"),
-            options([fl!("wave-active"), fl!("wave-fun"), fl!("wave-calm"), fl!("wave-sad")], wave::MOODS),
-        ),
-        (
-            fl!("wave-language"),
-            options([fl!("wave-russian"), fl!("wave-foreign"), fl!("wave-instrumental")], wave::LANGUAGES),
-        ),
-    ]
-}
 
 pub struct Browser {
     pub panel: Panel,
@@ -33,8 +12,8 @@ pub struct Browser {
     pub search: ComboBox,
     pub search_button: Button,
     wave_panel: Panel,
-    wave_choices: Vec<Choice>,
     pub wave_start: Button,
+    pub wave_settings: Button,
     heading: StaticText,
     description: TextCtrl,
     pub buttons: Vec<(PageButton, Button)>,
@@ -63,15 +42,10 @@ impl Browser {
 
         let wave_panel = Panel::builder(&panel).build();
         let wave_row = row();
-        let wave_choices: Vec<Choice> = wave_settings()
-            .into_iter()
-            .map(|(name, options)| {
-                let labels: Vec<String> = options.into_iter().map(|(label, _)| label).collect();
-                field(&wave_row, &wave_panel, &name, false, || choice(&wave_panel, &labels, 0))
-            })
-            .collect();
         let wave_start = button(&wave_panel, &fl!("wave-start"));
+        let wave_settings = button(&wave_panel, &fl!("menu-wave-settings"));
         wave_row.add(&wave_start, 0, SizerFlag::AlignCenterVertical | SizerFlag::All, 6);
+        wave_row.add(&wave_settings, 0, SizerFlag::AlignCenterVertical | SizerFlag::All, 6);
         wave_panel.set_sizer(wave_row, true);
 
         let heading = label(&panel, "");
@@ -113,8 +87,8 @@ impl Browser {
             search,
             search_button,
             wave_panel,
-            wave_choices,
             wave_start,
+            wave_settings,
             heading,
             description,
             buttons,
@@ -126,16 +100,6 @@ impl Browser {
             list_label,
             list,
         }
-    }
-
-    pub fn wave_seeds(&self) -> Vec<String> {
-        let mut seeds = vec![MY_WAVE.to_owned()];
-        for (control, (_, options)) in self.wave_choices.iter().zip(wave_settings()) {
-            if let Some((_, seed)) = options.get(selection(control)).filter(|(_, seed)| !seed.is_empty()) {
-                seeds.push((*seed).to_owned());
-            }
-        }
-        seeds
     }
 
     pub fn sort_order(&self) -> Sort {

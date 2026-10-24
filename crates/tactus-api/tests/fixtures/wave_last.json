@@ -1,0 +1,15 @@
+{
+  "result": {
+    "description": "My Vibe",
+    "idForFrom": "user-onyourwave",
+    "name": "My Vibe",
+    "promo": {
+      "notificationHash": "-2010603780",
+      "notificationStationId": "genre:dance"
+    },
+    "seeds": [
+      "user:onyourwave"
+    ],
+    "stationId": "user:onyourwave"
+  }
+}

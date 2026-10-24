@@ -89,10 +89,9 @@ impl Ui {
             *ui.pending_suggestion.borrow_mut() = (text.chars().count() >= 2).then(|| (text, Instant::now()));
         });
         let ui = self.clone();
-        browser.wave_start.on_click(move |_| {
-            let seeds = ui.browser.wave_seeds();
-            ui.act(|player| player.start_wave(seeds));
-        });
+        browser.wave_start.on_click(move |_| ui.execute(Command::MyWave));
+        let ui = self.clone();
+        browser.wave_settings.on_click(move |_| ui.execute(Command::WaveSettings));
         for (kind, control) in &browser.buttons {
             let (ui, kind) = (self.clone(), *kind);
             control.on_click(move |_| ui.on_page_button(kind));

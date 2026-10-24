@@ -145,6 +145,7 @@ impl Player {
                         }
                     },
                 );
+                player.load_wave_options();
                 player.restore();
                 if player.settings.ynison && !player.has_remote() {
                     player.connect_ynison();
@@ -177,11 +178,11 @@ impl Player {
                         player.emit(Event::Queue);
                         player.open_current(autoplay, 0);
                     }
-                    _ => player.begin_wave(vec![MY_WAVE.to_owned()], autoplay),
+                    _ => player.begin_wave(player.my_wave(), autoplay),
                 },
             );
         } else {
-            self.begin_wave(vec![MY_WAVE.to_owned()], autoplay);
+            self.begin_wave(self.my_wave(), autoplay);
         }
     }
 

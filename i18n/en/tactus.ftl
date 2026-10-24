@@ -62,6 +62,10 @@ menu-dislike = &Dislike
 menu-add-to-playlist = &Add to playlist…
 menu-download = Do&wnload
 menu-radio = My &Wave from this track
+menu-my-wave = Play &My Wave
+menu-last-wave = Play &last wave
+menu-wave-settings = M&y Wave settings…
+menu-reset-last-wave = R&eset last wave to My Wave
 menu-similar = Si&milar tracks
 menu-go-to-album = Go to al&bum
 menu-go-to-artist = Go to ar&tist
@@ -184,6 +188,7 @@ wave-russian = Russian
 wave-foreign = Foreign
 wave-instrumental = Without words
 wave-start = Start &My Wave
+wave-settings-hint = These settings apply whenever My Wave starts.
 
 player-previous = Pre&vious
 player-play = Pl&ay
@@ -270,6 +275,8 @@ notice-download-queued = { $count ->
 notice-downloaded = Downloaded { $title }
 notice-download-failed = Could not download { $title }: { $error }
 notice-wave-started = Radio started
+notice-last-wave-reset = Last wave reset to My Wave
+generated-unavailable = Not available for generated music
 notice-search-results = { $count ->
     [0] Nothing found
     [one] 1 result
@@ -561,6 +568,8 @@ toast-new-episodes = { $count ->
    *[other] { $count } new episodes
 }
 section-pinned = Pinned
+section-moments = Activities and moods
+section-generated = Generated music
 action-pin = Pi&n to the collection
 action-unpin = U&npin
 notice-pinned = Pinned

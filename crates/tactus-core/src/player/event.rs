@@ -36,6 +36,7 @@ pub enum Notice {
     Downloaded(String),
     DownloadFailed { title: String, error: String },
     WaveStarted,
+    LastWaveReset,
     SearchResults(usize),
     MoreLoaded(usize),
     Sleep(Option<SleepTimer>),
@@ -78,7 +79,8 @@ impl Notice {
             | Notice::Undone
             | Notice::Played { .. }
             | Notice::QueueCleared
-            | Notice::WaveStarted => Announcement::Queue,
+            | Notice::WaveStarted
+            | Notice::LastWaveReset => Announcement::Queue,
             Notice::DownloadQueued(_)
             | Notice::Downloaded(_)
             | Notice::DownloadFailed { .. }

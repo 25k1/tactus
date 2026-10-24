@@ -1,0 +1,132 @@
+{
+  "result": {
+    "blocks": [
+      {
+        "items": [
+          {
+            "id": {
+              "tag": "dance",
+              "type": "genre"
+            },
+            "idForFrom": "genre-dance",
+            "name": "Dancing",
+            "specialContext": false
+          },
+          {
+            "id": {
+              "tag": "wake-up",
+              "type": "activity"
+            },
+            "idForFrom": "activity-wakeup",
+            "name": "Waking up",
+            "specialContext": false
+          },
+          {
+            "id": {
+              "tag": "road-trip",
+              "type": "activity"
+            },
+            "idForFrom": "activity-roadtrip",
+            "name": "Traveling",
+            "specialContext": false
+          }
+        ],
+        "type": "contexts"
+      }
+    ],
+    "defaultStation": {
+      "rupDescription": "Your personal daily selection of music",
+      "rupTitle": "My Vibe",
+      "stationId": "user:1",
+      "title": "My Vibe"
+    },
+    "settingRestrictions": {
+      "diversity": {
+        "name": "By character",
+        "possibleValues": [
+          {
+            "name": "Favorite",
+            "serializedSeed": "settingDiversity:favorite",
+            "value": "favorite"
+          },
+          {
+            "name": "Unfamiliar",
+            "serializedSeed": "settingDiversity:discover",
+            "value": "discover"
+          },
+          {
+            "name": "Popular",
+            "serializedSeed": "settingDiversity:popular",
+            "value": "popular"
+          },
+          {
+            "name": "Anything",
+            "serializedSeed": "settingDiversity:default",
+            "unspecified": true,
+            "value": "default"
+          }
+        ],
+        "type": "enum"
+      },
+      "language": {
+        "name": "By language",
+        "possibleValues": [
+          {
+            "name": "Russian",
+            "serializedSeed": "settingLanguage:russian",
+            "value": "russian"
+          },
+          {
+            "name": "Foreign",
+            "serializedSeed": "settingLanguage:not-russian",
+            "value": "not-russian"
+          },
+          {
+            "name": "Any",
+            "serializedSeed": "settingLanguage:any",
+            "unspecified": true,
+            "value": "any"
+          },
+          {
+            "name": "Wordless",
+            "serializedSeed": "settingLanguage:without-words",
+            "value": "without-words"
+          }
+        ],
+        "type": "enum"
+      },
+      "moodEnergy": {
+        "name": "By mood",
+        "possibleValues": [
+          {
+            "name": "Energetic",
+            "serializedSeed": "settingMoodEnergy:active",
+            "value": "active"
+          },
+          {
+            "name": "Cheerful",
+            "serializedSeed": "settingMoodEnergy:fun",
+            "value": "fun"
+          },
+          {
+            "name": "Calm",
+            "serializedSeed": "settingMoodEnergy:calm",
+            "value": "calm"
+          },
+          {
+            "name": "Sad",
+            "serializedSeed": "settingMoodEnergy:sad",
+            "value": "sad"
+          },
+          {
+            "name": "Any",
+            "serializedSeed": "settingMoodEnergy:all",
+            "unspecified": true,
+            "value": "all"
+          }
+        ],
+        "type": "enum"
+      }
+    }
+  }
+}

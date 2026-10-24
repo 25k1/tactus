@@ -68,10 +68,45 @@ impl PlaybackService for YandexService {
             WaveEvent::Skip { track_id, seconds } => {
                 json!({ "type": "skip", "trackId": track_id, "totalPlayedSeconds": seconds })
             }
+            WaveEvent::Like { track_id } => json!({ "type": "like", "trackId": track_id }),
+            WaveEvent::Unlike { track_id } => json!({ "type": "unlike", "trackId": track_id }),
+            WaveEvent::Dislike { track_id, seconds } => {
+                json!({ "type": "dislike", "trackId": track_id, "totalPlayedSeconds": seconds })
+            }
+            WaveEvent::Undislike { track_id } => json!({ "type": "undislike", "trackId": track_id }),
         };
         body["timestamp"] = json!(timestamp);
         let body = json!({ "event": body, "batchId": (!batch.is_empty()).then_some(batch) });
         net::block_on(self.post_json(&format!("rotor/session/{session}/feedback"), &body))?;
+        Ok(())
+    }
+
+    fn wave_settings(&self) -> Result<WaveSettings> {
+        Ok(parse::wave_settings(&net::block_on(self.get("rotor/wave/settings", &[]))?))
+    }
+
+    fn last_wave(&self) -> Result<LastWave> {
+        Ok(parse::last_wave(&net::block_on(self.get("rotor/wave/last", &[]))?))
+    }
+
+    fn reset_last_wave(&self) -> Result<()> {
+        net::block_on(self.post("rotor/wave/last/reset", &[]))?;
+        Ok(())
+    }
+
+    fn generated_stream(&self, station: &str) -> Result<GeneratedStream> {
+        let value = net::block_on(self.get(&format!("rotor/station/{station}/stream"), &[]))?;
+        let stream = parse::generated_stream(station, &value);
+        if stream.url.is_empty() {
+            return Err(Error::NotFound(station.to_owned()));
+        }
+        Ok(stream)
+    }
+
+    fn generated_feedback(&self, station: &str, stream: &str, event: StreamEvent) -> Result<()> {
+        let timestamp = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Millis, true);
+        let path = format!("rotor/station/{station}/feedback?streamId={}", encode_component(stream));
+        net::block_on(self.post_json(&path, &json!({ "type": event.name(), "timestamp": timestamp })))?;
         Ok(())
     }
 

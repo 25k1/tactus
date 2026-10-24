@@ -1,3 +1,4 @@
+use super::ts::{Demuxer, segments};
 use std::io::{self, Read, Seek, SeekFrom};
 use std::sync::{Arc, Condvar, Mutex, MutexGuard, Weak};
 
@@ -20,7 +21,8 @@ impl Buffer {
         let buffer = Arc::new(Buffer::default());
         let weak = Arc::downgrade(&buffer);
         tactus_api::net::spawn(async move {
-            let result = download(&url, &weak).await;
+            let result =
+                if is_playlist(&url) { stream_playlist(&url, &weak).await } else { download(&url, &weak).await };
             if let Some(buffer) = weak.upgrade() {
                 let mut state = buffer.lock();
                 state.done = true;
@@ -76,6 +78,26 @@ async fn download(url: &str, buffer: &Weak<Buffer>) -> tactus_api::error::Result
     while let Some(chunk) = response.chunk().await? {
         match buffer.upgrade() {
             Some(buffer) => buffer.append(&chunk),
+            None => return Ok(()),
+        }
+    }
+    Ok(())
+}
+
+fn is_playlist(url: &str) -> bool {
+    url.split(['?', '#']).next().is_some_and(|path| path.ends_with(".m3u8"))
+}
+
+async fn stream_playlist(url: &str, buffer: &Weak<Buffer>) -> tactus_api::error::Result<()> {
+    let client = tactus_api::net::client();
+    let playlist = client.get(url).send().await?.error_for_status()?.text().await?;
+    let mut demuxer = Demuxer::default();
+    for segment in segments(&playlist, url) {
+        let data = client.get(&segment).send().await?.error_for_status()?.bytes().await?;
+        let mut audio = Vec::new();
+        demuxer.push(&data, &mut audio);
+        match buffer.upgrade() {
+            Some(buffer) => buffer.append(&audio),
             None => return Ok(()),
         }
     }
@@ -138,6 +160,13 @@ mod tests {
         reader.read_exact(&mut tail).unwrap();
         assert_eq!(&tail, b"world");
         assert!(reader.seek(SeekFrom::Current(-20)).is_err());
+    }
+
+    #[test]
+    fn recognizes_playlists() {
+        assert!(is_playlist("https://host/a/00000.m3u8"));
+        assert!(is_playlist("https://host/a/00000.m3u8?sign=1"));
+        assert!(!is_playlist("https://host/a/track.mp3"));
     }
 
     #[test]

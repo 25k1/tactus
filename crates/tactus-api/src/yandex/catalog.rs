@@ -123,11 +123,30 @@ impl CatalogService for YandexService {
                     ..Page::default()
                 },
                 View::Radio => {
-                    let (dashboard, stations) = tokio::join!(
+                    let stream = |index: usize| {
+                        let station = GENERATED_STATIONS[index];
+                        let request = self.get(&format!("rotor/station/{station}/stream"), &[]);
+                        async move { request.await.ok().map(|value| parse::generated_stream(station, &value)) }
+                    };
+                    let (dashboard, stations, settings, focus, energy, calm, relax) = tokio::join!(
                         self.get("rotor/stations/dashboard", &[]),
                         self.get("rotor/stations/list", &[("language", net::language())]),
+                        self.get("rotor/wave/settings", &[]),
+                        stream(0),
+                        stream(1),
+                        stream(2),
+                        stream(3),
                     );
-                    parse::radio(dashboard.as_ref().ok(), &stations?)
+                    let mut page = parse::radio(dashboard.as_ref().ok(), &stations?);
+                    let streams: Vec<GeneratedStream> = [focus, energy, calm, relax].into_iter().flatten().collect();
+                    let moments = settings.as_ref().map(parse::wave_settings).unwrap_or_default().contexts;
+                    let extra = [
+                        (SectionKind::Moments, moments.into_iter().map(Item::Station).collect::<Vec<_>>()),
+                        (SectionKind::Generated, streams.iter().map(parse::generated_station).collect()),
+                    ];
+                    let extra = extra.into_iter().filter(|(_, items)| !items.is_empty());
+                    page.sections.splice(0..0, extra.map(|(kind, items)| Section::new(kind, "", items)));
+                    page
                 }
                 View::Podcasts => {
                     let (catalogue, episodes) =

@@ -63,6 +63,10 @@ menu-dislike = Н&е нравится
 menu-add-to-playlist = &Добавить в плейлист…
 menu-download = &Скачать
 menu-radio = Моя &волна по треку
+menu-my-wave = Включить &Мою волну
+menu-last-wave = Включить &последнюю волну
+menu-wave-settings = Настройки Мое&й волны…
+menu-reset-last-wave = Сбросить последнюю волну на Мою волн&у
 menu-similar = &Похожие треки
 menu-go-to-album = Перейти к &альбому
 menu-go-to-artist = Перейти к ис&полнителю
@@ -186,6 +190,7 @@ wave-russian = Русский
 wave-foreign = Иностранный
 wave-instrumental = Без слов
 wave-start = Запустить &Мою волну
+wave-settings-hint = Эти настройки применяются при каждом запуске Моей волны.
 
 player-previous = &Предыдущий
 player-play = &Играть
@@ -278,6 +283,8 @@ notice-download-queued = { $count ->
 notice-downloaded = Скачано: { $title }
 notice-download-failed = Не удалось скачать { $title }: { $error }
 notice-wave-started = Радио запущено
+notice-last-wave-reset = Последняя волна сброшена на Мою волну
+generated-unavailable = Недоступно для сгенерированной музыки
 notice-search-results = { $count ->
     [0] Ничего не найдено
     [one] { $count } результат
@@ -576,6 +583,8 @@ toast-new-episodes = { $count ->
    *[many] { $count } новых выпусков
 }
 section-pinned = Закреплённые
+section-moments = Занятия и настроения
+section-generated = Сгенерированная музыка
 action-pin = &Закрепить в коллекции
 action-unpin = &Открепить
 notice-pinned = Закреплено

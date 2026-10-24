@@ -82,6 +82,7 @@ impl Player {
             .queue
             .tracks()
             .iter()
+            .filter(|track| !tactus_api::is_generated(&track.id))
             .map(|track| Playable { id: track.id.clone(), album_id: track.album_id.clone() })
             .collect();
         (queue, (!self.queue.is_empty()).then(|| self.queue.index()))

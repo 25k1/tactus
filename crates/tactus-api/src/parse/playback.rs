@@ -84,6 +84,67 @@ pub fn remote_queue(id: String, value: &Value) -> RemoteQueue {
     }
 }
 
+pub fn wave_settings(value: &Value) -> WaveSettings {
+    let value = result(value);
+    let restrictions = value.at("settingRestrictions");
+    WaveSettings {
+        contexts: value.list("blocks").iter().flat_map(|block| collect(block.list("items"), station)).collect(),
+        settings: ["diversity", "moodEnergy", "language"]
+            .into_iter()
+            .filter_map(|key| {
+                let setting = restrictions.at(key);
+                let options: Vec<WaveOption> = setting
+                    .list("possibleValues")
+                    .iter()
+                    .filter_map(|option| {
+                        let seed = option.text("serializedSeed");
+                        (!seed.is_empty()).then(|| WaveOption {
+                            name: option.text("name").to_owned(),
+                            seed: seed.to_owned(),
+                            any: option.flag("unspecified"),
+                        })
+                    })
+                    .collect();
+                (!options.is_empty()).then(|| WaveSetting {
+                    key: key.to_owned(),
+                    name: setting.text("name").to_owned(),
+                    options,
+                })
+            })
+            .collect(),
+    }
+}
+
+pub fn last_wave(value: &Value) -> LastWave {
+    let value = result(value);
+    let mut seeds: Vec<String> = value.list("seeds").iter().filter_map(Value::as_str).map(str::to_owned).collect();
+    if seeds.is_empty() && !value.text("stationId").is_empty() {
+        seeds.push(value.text("stationId").to_owned());
+    }
+    LastWave { name: value.text("name").to_owned(), seeds }
+}
+
+pub fn generated_stream(station: &str, value: &Value) -> GeneratedStream {
+    let value = result(value);
+    let (data, stream) = (value.at("data"), value.at("stream"));
+    let subtitle = [data.text("subtitle"), data.text("explanations")].into_iter().find(|text| !text.is_empty());
+    GeneratedStream {
+        station: station.to_owned(),
+        id: stream.text("id").to_owned(),
+        url: stream.text("url").to_owned(),
+        title: data.text("title").to_owned(),
+        subtitle: subtitle.unwrap_or_default().to_owned(),
+    }
+}
+
+pub fn generated_station(stream: &GeneratedStream) -> Item {
+    Item::Station(Station {
+        seed: stream.station.clone(),
+        name: stream.title.clone(),
+        category: stream.subtitle.clone(),
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -137,5 +198,28 @@ mod tests {
             "s",
         );
         assert_eq!((batch.session.as_str(), batch.batch.as_str(), batch.tracks.len()), ("s", "b", 1));
+    }
+
+    #[test]
+    fn parses_wave_settings() {
+        let settings = wave_settings(&fixture("wave_settings"));
+        assert_eq!(settings.contexts.len(), 3);
+        assert_eq!(settings.contexts[1].seed, "activity:wake-up");
+        let keys: Vec<&str> = settings.settings.iter().map(|setting| setting.key.as_str()).collect();
+        assert_eq!(keys, ["diversity", "moodEnergy", "language"]);
+        let diversity = &settings.settings[0];
+        assert_eq!(diversity.options[1].seed, "settingDiversity:discover");
+        assert!(diversity.options.iter().any(|option| option.any && option.seed == "settingDiversity:default"));
+    }
+
+    #[test]
+    fn parses_last_wave_and_generated_stream() {
+        let last = last_wave(&fixture("wave_last"));
+        assert_eq!(last.seeds, ["user:onyourwave"]);
+        assert!(!last.name.is_empty());
+        let stream = generated_stream("generative:focus", &fixture("generated_stream"));
+        assert!(stream.url.ends_with(".m3u8") && !stream.id.is_empty());
+        assert_eq!(stream.track().id, "generative:focus");
+        assert!(is_generated(&stream.track().id) && !is_generated("123"));
     }
 }

@@ -1,0 +1,16 @@
+{
+  "result": {
+    "data": {
+      "backgroundColor": "#E5AA73",
+      "explanations": "This music will help you focus on your work and other activities.",
+      "imageUrl": "avatars.yandex.net/get-music-misc/34161/generative-focus-image-DPDQv/%%",
+      "subtitle": "Algorithms feat. Neural Network",
+      "title": "Inspiration"
+    },
+    "stream": {
+      "id": "<PUMPKIN>-pAE97RLdL5QP-fLAU",
+      "url": "https://generative-api.s3.yandex.net/xPkf52U1oM5l3l0c1PKuszxqc8Imgs87N9d/00000.m3u8"
+    },
+    "version": "0.0"
+  }
+}

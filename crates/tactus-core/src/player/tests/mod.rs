@@ -100,4 +100,5 @@ pub(crate) fn settle(player: &mut Player) -> Vec<Event> {
 mod content;
 mod library;
 mod playback;
+mod radio;
 mod ynison;

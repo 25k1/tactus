@@ -5,6 +5,7 @@ pub mod event;
 mod library;
 mod playback;
 pub mod queue;
+mod radio;
 pub mod session;
 pub mod sleep;
 mod system;
@@ -116,6 +117,8 @@ pub struct Player {
     last_connect: Option<Instant>,
     ynison: ynison::Ynison,
     voice_install: Option<std::sync::Arc<std::sync::atomic::AtomicBool>>,
+    wave_options: Option<tactus_api::WaveSettings>,
+    generated_stream: std::sync::Arc<std::sync::Mutex<String>>,
 }
 
 fn seed() -> u64 {
@@ -181,6 +184,8 @@ impl Player {
             last_connect: None,
             ynison: ynison::Ynison::default(),
             voice_install: None,
+            wave_options: None,
+            generated_stream: std::sync::Arc::default(),
         }
     }
 

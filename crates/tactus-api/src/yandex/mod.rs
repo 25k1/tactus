@@ -2,6 +2,7 @@ use crate::error::{Error, Result};
 use crate::model::*;
 use crate::net;
 use crate::parse::{self, Json};
+use crate::proxy::encode_component;
 use crate::service::*;
 use reqwest::StatusCode;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE, HeaderMap, HeaderValue};

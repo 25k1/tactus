@@ -2,7 +2,7 @@ use super::view_model::{self, download_state};
 use super::*;
 use serde_json::{Value, json};
 use tactus_api::{PlaylistKey, Relation, Target, View};
-use tactus_core::player::{MY_WAVE, wave};
+use tactus_core::player::wave;
 use tactus_core::remote::RemoteCommand;
 
 fn track_json(track: &tactus_api::Track) -> Value {
@@ -72,7 +72,10 @@ impl Ui {
             }
             RemoteCommand::StartWave { seeds } => {
                 let seeds = seeds.map(|seeds| wave::seeds(&seeds)).filter(|seeds| !seeds.is_empty());
-                self.act(|player| player.start_wave(seeds.unwrap_or_else(|| vec![MY_WAVE.to_owned()])));
+                self.act(|player| match seeds {
+                    Some(seeds) => player.start_wave(seeds),
+                    None => player.start_my_wave(),
+                });
             }
             RemoteCommand::PlayIndex { index } => self.act(|player| player.play_index(index)),
             RemoteCommand::RemoveFromQueue { index } => self.act(|player| player.remove_from_queue(&[index])),

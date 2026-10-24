@@ -6,6 +6,7 @@ mod output;
 #[allow(unsafe_code)]
 mod sonic;
 mod tempo;
+mod ts;
 
 pub use buffer::Buffer;
 use buffer::Reader;
