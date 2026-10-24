@@ -5,7 +5,7 @@ const RUN_KEY: &str = r"Software\Microsoft\Windows\CurrentVersion\Run";
 const VALUE: &str = "Tactus";
 
 pub fn is_enabled() -> bool {
-    registry::exists(RUN_KEY, VALUE)
+    registry::get(RUN_KEY, VALUE).is_some()
 }
 
 pub fn set(enabled: bool) -> Result<()> {

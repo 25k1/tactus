@@ -31,6 +31,7 @@ impl General {
         });
         let mut current = old.clone();
         current.autostart = autostart::is_enabled();
+        current.open_links = protocol::is_enabled();
         let flags = Flags::new(
             &panel,
             &sizer,
@@ -40,6 +41,7 @@ impl General {
                 (fl!("settings-minimize-to-tray"), |s| &mut s.minimize_to_tray),
                 (fl!("settings-start-minimized"), |s| &mut s.start_minimized),
                 (fl!("settings-autostart"), |s| &mut s.autostart),
+                (fl!("settings-open-links"), |s| &mut s.open_links),
                 (fl!("settings-resume"), |s| &mut s.resume_session),
                 (fl!("settings-autoplay"), |s| &mut s.autoplay),
                 (fl!("settings-media-controls"), |s| &mut s.media_controls),

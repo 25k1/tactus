@@ -175,6 +175,13 @@ impl Player {
         );
     }
 
+    pub fn open_playlist_link(&mut self, link: tactus_api::PlaylistLink) {
+        self.request(
+            move |service, _| service.find_playlist(&link),
+            |player, key| player.emit(Event::Open(View::Playlist(key))),
+        );
+    }
+
     pub fn request_track_info(&mut self, track: &Track) {
         let id = track.id.clone();
         self.request(

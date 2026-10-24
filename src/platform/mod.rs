@@ -3,6 +3,7 @@ pub mod edit;
 pub mod hotkeys;
 pub mod instance;
 pub mod notify;
+pub mod protocol;
 mod registry;
 
 use std::path::Path;

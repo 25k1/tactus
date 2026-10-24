@@ -5,6 +5,15 @@ impl Ui {
         let track = self.current_track();
         match command {
             Command::NewPlaylist => self.new_playlist(Vec::new()),
+            Command::OpenLink => {
+                let pasted = Clipboard::get().get_text().filter(|text| Destination::parse(text).is_some());
+                let prompt = fl!("open-link-prompt");
+                if let Some(link) =
+                    dialogs::ask_text(&self.frame, &prompt, &fl!("menu-open-link"), &pasted.unwrap_or_default())
+                {
+                    self.open_link(&link);
+                }
+            }
             Command::PromoCode => {
                 if let Some(code) =
                     dialogs::ask_text(&self.frame, &fl!("promo-code-prompt"), &fl!("menu-promo-code"), "")

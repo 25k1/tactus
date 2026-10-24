@@ -229,4 +229,13 @@ impl CatalogService for YandexService {
             }
         })
     }
+
+    fn find_playlist(&self, link: &PlaylistLink) -> Result<PlaylistKey> {
+        let path = match link {
+            PlaylistLink::Owner { owner, kind } => format!("users/{owner}/playlists/{kind}"),
+            PlaylistLink::Shared(id) => format!("playlist/{id}"),
+        };
+        let value = net::block_on(self.get(&path, &[]))?;
+        parse::playlist_key(parse::result(&value)).ok_or(Error::NotFound(path))
+    }
 }

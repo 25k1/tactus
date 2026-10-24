@@ -20,6 +20,7 @@ const PLAYLIST_BASE: Id = 1400;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Command {
     NewPlaylist,
+    OpenLink,
     PromoCode,
     SignOut,
     Settings,
@@ -77,8 +78,9 @@ pub enum Command {
 }
 
 impl Command {
-    const ALL: [Command; 55] = [
+    const ALL: [Command; 56] = [
         Command::NewPlaylist,
+        Command::OpenLink,
         Command::PromoCode,
         Command::SignOut,
         Command::Settings,
@@ -161,6 +163,7 @@ impl Command {
     pub fn label(self) -> String {
         match self {
             Command::NewPlaylist => fl!("menu-new-playlist"),
+            Command::OpenLink => fl!("menu-open-link"),
             Command::PromoCode => fl!("menu-promo-code"),
             Command::SignOut => fl!("menu-sign-out"),
             Command::Settings => fl!("menu-settings"),
@@ -221,6 +224,7 @@ impl Command {
     fn default_key(self) -> Option<&'static str> {
         Some(match self {
             Command::NewPlaylist => "Ctrl+N",
+            Command::OpenLink => "Ctrl+O",
             Command::Settings => "Ctrl+,",
             Command::Hide => "Ctrl+M",
             Command::Quit => "Ctrl+Q",

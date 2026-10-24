@@ -13,7 +13,7 @@ mod voice;
 
 use super::*;
 use crate::i18n::fl;
-use crate::platform::autostart;
+use crate::platform::{autostart, protocol};
 use tactus_api::{AccountOption, Quality};
 use tactus_core::audio::Gains;
 
@@ -170,6 +170,11 @@ impl Ui {
         }
         if new.autostart != autostart::is_enabled()
             && let Err(error) = autostart::set(new.autostart)
+        {
+            self.set_status(&error.to_string());
+        }
+        if new.open_links != protocol::is_enabled()
+            && let Err(error) = protocol::set(new.open_links)
         {
             self.set_status(&error.to_string());
         }

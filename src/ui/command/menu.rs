@@ -141,8 +141,17 @@ pub const PLAYER_MENU: [Option<Command>; 24] = {
 pub fn menu_bar(keys: &Keymap) -> MenuBar {
     use Command::*;
     let menu = |commands: &[Option<Command>]| command_menu(keys, commands);
-    let file =
-        menu(&[Some(NewPlaylist), None, Some(Settings), Some(PromoCode), Some(SignOut), None, Some(Hide), Some(Quit)]);
+    let file = menu(&[
+        Some(NewPlaylist),
+        Some(OpenLink),
+        None,
+        Some(Settings),
+        Some(PromoCode),
+        Some(SignOut),
+        None,
+        Some(Hide),
+        Some(Quit),
+    ]);
     let edit = menu(&[Some(Undo), None, Some(SelectAll), Some(FocusFilter), None, Some(Find), Some(Listen)]);
     let playback = menu(&[
         Some(PlayPause),

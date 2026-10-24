@@ -236,6 +236,11 @@ impl Ui {
             self.player.borrow_mut().resume_after_restart(playing);
         }
         self.act(Player::start);
+        if let Some(link) = crate::platform::instance::launch_link()
+            && self.player.borrow().is_signed_in()
+        {
+            self.open_link(&link);
+        }
         if crate::platform::instance::after_update() {
             let text = crate::i18n::fl!("update-installed", version = tactus_core::update::CURRENT);
             self.set_status(&text);
@@ -275,8 +280,11 @@ impl Ui {
             }
         }
         self.poll_voice();
-        if crate::platform::instance::take_raise_request() {
+        for request in crate::platform::instance::take_requests() {
             self.raise_window();
+            if let crate::platform::instance::Request::Open(link) = request {
+                self.open_link(&link);
+            }
         }
         let due = self.pending_suggestion.borrow().as_ref().is_some_and(|(_, at)| at.elapsed() >= SUGGEST_DELAY);
         if let Some((text, _)) = due.then(|| self.pending_suggestion.borrow_mut().take()).flatten() {

@@ -12,6 +12,14 @@ impl Ui {
         self.history.borrow_mut().remember(spot);
     }
 
+    pub(crate) fn open_link(self: &Rc<Self>, link: &str) {
+        match Destination::parse(link) {
+            Some(Destination::View(view)) => self.navigate(Location::View(view), true),
+            Some(Destination::Playlist(playlist)) => self.act(|player| player.open_playlist_link(playlist)),
+            None => dialogs::warn(&self.frame, &fl!("open-link-invalid", link = link), &fl!("menu-open-link")),
+        }
+    }
+
     pub(crate) fn navigate(self: &Rc<Self>, location: Location, focus: bool) {
         self.remember();
         let visit = self.history.borrow_mut().push(location).clone();

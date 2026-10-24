@@ -78,6 +78,7 @@ impl Ui {
                         }
                     }
                 }
+                Event::Open(view) => self.navigate(Location::View(view), true),
                 Event::Downloads => {
                     content |= *self.location.borrow() == Location::Section(Section::Downloads);
                     self.publish_downloads();

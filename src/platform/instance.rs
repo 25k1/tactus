@@ -1,17 +1,25 @@
 use std::io::{Read, Write};
 use std::net::{Ipv4Addr, TcpListener, TcpStream};
 use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Mutex;
 use std::time::{Duration, Instant};
 use wxdragon::prelude::SingleInstanceChecker;
 
-const RAISE: &[u8] = b"tactus:raise";
+const RAISE: &str = "tactus:raise";
+const OPEN: &str = "tactus:open:";
+const MESSAGE_LIMIT: u64 = 4096;
 const RESTART_WAIT: Duration = Duration::from_secs(20);
 const AFTER_UPDATE: &str = "--after-update";
 const RESTART: &str = "--restart";
 const PLAYING: &str = "--playing";
 
-static RAISE_REQUESTED: AtomicBool = AtomicBool::new(false);
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Request {
+    Raise,
+    Open(String),
+}
+
+static REQUESTS: Mutex<Vec<Request>> = Mutex::new(Vec::new());
 
 fn port_file() -> PathBuf {
     tactus_core::settings::data_dir().join("instance.port")
@@ -21,9 +29,21 @@ fn notify_running_instance() -> bool {
     let Some(port) = std::fs::read_to_string(port_file()).ok().and_then(|text| text.trim().parse::<u16>().ok()) else {
         return false;
     };
+    let message = launch_link().map_or_else(|| RAISE.to_owned(), |link| format!("{OPEN}{link}"));
     TcpStream::connect_timeout(&(Ipv4Addr::LOCALHOST, port).into(), Duration::from_secs(2))
-        .and_then(|mut stream| stream.write_all(RAISE))
+        .and_then(|mut stream| stream.write_all(message.as_bytes()))
         .is_ok()
+}
+
+fn request(message: &str) -> Option<Request> {
+    match message.strip_prefix(OPEN) {
+        Some(link) => Some(Request::Open(link.to_owned())),
+        None => (message == RAISE).then_some(Request::Raise),
+    }
+}
+
+pub fn launch_link() -> Option<String> {
+    std::env::args().skip(1).find(|argument| !argument.starts_with("--"))
 }
 
 fn flag(name: &str) -> bool {
@@ -74,16 +94,31 @@ pub fn listen() {
         let _ = std::fs::write(port_file(), address.port().to_string());
     }
     std::thread::spawn(move || {
-        for mut stream in listener.incoming().flatten() {
+        for stream in listener.incoming().flatten() {
             let _ = stream.set_read_timeout(Some(Duration::from_secs(2)));
-            let mut message = [0; RAISE.len()];
-            if stream.read_exact(&mut message).is_ok() && message == RAISE {
-                RAISE_REQUESTED.store(true, Ordering::Relaxed);
+            let mut message = String::new();
+            if stream.take(MESSAGE_LIMIT).read_to_string(&mut message).is_ok()
+                && let Some(request) = request(&message)
+                && let Ok(mut requests) = REQUESTS.lock()
+            {
+                requests.push(request);
             }
         }
     });
 }
 
-pub fn take_raise_request() -> bool {
-    RAISE_REQUESTED.swap(false, Ordering::Relaxed)
+pub fn take_requests() -> Vec<Request> {
+    REQUESTS.lock().map(|mut requests| std::mem::take(&mut *requests)).unwrap_or_default()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn reads_raise_and_open_messages() {
+        assert_eq!(request(RAISE), Some(Request::Raise));
+        assert_eq!(request("tactus:open:yandexmusic://album/1"), Some(Request::Open("yandexmusic://album/1".into())));
+        assert_eq!(request("GET / HTTP/1.1"), None);
+    }
 }

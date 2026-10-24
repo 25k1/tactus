@@ -53,6 +53,11 @@ fn anonymous_reads() {
         service.more(&View::Genre("58e3c0796ebb3476087d190b".into()), SectionKind::GenreReleases, 1),
         |paged| paged.items.len() * 100 + usize::from(paged.next.is_some()),
     );
+    report(
+        "playlist by login",
+        service.find_playlist(&PlaylistLink::Owner { owner: "yamusic-podcast".into(), kind: 1104 }),
+        |key| usize::from(key.owner == 970829816),
+    );
     report("suggestions", service.suggestions("metal"), |value| value.texts.len());
     report("track info", service.track_info("1710808"), |value| value.artists.len());
     report("device code", crate::auth::request_device_code(), |value| value.user_code.len());

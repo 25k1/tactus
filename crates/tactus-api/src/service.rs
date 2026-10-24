@@ -38,6 +38,10 @@ pub trait CatalogService {
     fn lyrics(&self, _id: &str) -> Result<Option<Lyrics>> {
         Ok(None)
     }
+
+    fn find_playlist(&self, _link: &PlaylistLink) -> Result<PlaylistKey> {
+        Err(Error::Unsupported)
+    }
 }
 
 pub trait LibraryService {

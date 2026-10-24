@@ -118,6 +118,7 @@ pub enum Event {
     Library,
     Playlists,
     Page(View),
+    Open(View),
     Downloads,
     Lyrics,
     LyricLine(usize),
