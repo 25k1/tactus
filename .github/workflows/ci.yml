@@ -35,19 +35,42 @@ jobs:
       TAG: ${{ github.ref_name }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: dtolnay/rust-toolchain@stable
       - uses: ./.github/actions/msvc
       - uses: Swatinem/rust-cache@v2
-      - name: Check the version
+      - name: Take the version from the tag
         shell: pwsh
         run: |
-          $version = (cargo metadata --no-deps --format-version 1 | ConvertFrom-Json).packages | Where-Object name -eq tactus | ForEach-Object version
-          if ("v$version" -ne $env:TAG) { throw "Tag $env:TAG does not match version $version" }
+          if ($env:TAG -notmatch '^v(\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?)$') { throw "Tag $env:TAG is not a version like v1.2.3" }
+          $version = $Matches[1]
+          (Get-Content Cargo.toml -Raw) -replace '(?m)^version = "[^"]*"', "version = `"$version`"" | Set-Content Cargo.toml -NoNewline
+          cargo update --workspace
+          "VERSION=$version" >> $env:GITHUB_ENV
       - run: cargo build --release --locked
+      - name: Write the release notes
+        shell: pwsh
+        run: |
+          git fetch --force --tags --quiet
+          $message = ''
+          if ((git cat-file -t $env:TAG) -eq 'tag') {
+            $message = ((git tag -l $env:TAG --format='%(contents:subject)%0a%0a%(contents:body)') -join "`n").Trim()
+          }
+          if ($message -and $message -ne $env:TAG) {
+            $notes = $message
+          } else {
+            $previous = git describe --tags --abbrev=0 --match 'v*' "$env:TAG^" 2>$null
+            $range = if ($LASTEXITCODE -eq 0) { "$previous..$env:TAG" } else { $env:TAG }
+            $notes = (git log --no-merges --reverse --pretty='format:- %s' $range) -join "`n"
+          }
+          Set-Content notes.md $notes
+          exit 0
       - name: Publish
         shell: pwsh
         run: |
           New-Item -ItemType Directory dist | Out-Null
           Copy-Item target/release/tactus.exe dist/
           Compress-Archive -Path target/release/tactus.exe, README.md, LICENSE -DestinationPath "dist/tactus-$env:TAG-windows-x64.zip"
-          gh release create $env:TAG (Get-ChildItem dist).FullName --title "Tactus $env:TAG" --generate-notes --verify-tag
+          $prerelease = if ($env:VERSION.Contains('-')) { @('--prerelease') } else { @() }
+          gh release create $env:TAG (Get-ChildItem dist).FullName --title "Tactus $env:TAG" --notes-file notes.md --generate-notes --verify-tag @prerelease
