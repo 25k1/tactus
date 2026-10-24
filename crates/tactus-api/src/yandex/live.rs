@@ -39,6 +39,7 @@ fn anonymous_reads() {
         View::Genre("58e3c0796ebb3476087d190b".into()),
         View::Category("AUDIOBOOKS_MENU".into()),
         View::Category("audibooks_fiction".into()),
+        View::Label("6074020".into()),
     ] {
         report(&format!("{view:?}"), service.page(&view, 0), sections);
     }
@@ -58,6 +59,16 @@ fn anonymous_reads() {
         service.find_playlist(&PlaylistLink::Owner { owner: "yamusic-podcast".into(), kind: 1104 }),
         |key| usize::from(key.owner == 970829816),
     );
+    for (view, kind, page) in [
+        (View::Genre("58e3c0796ebb3476087d190b".into()), SectionKind::Artists, 1),
+        (View::Genre("58e3c0796ebb3476087d190b".into()), SectionKind::Playlists, 0),
+        (View::Label("6074020".into()), SectionKind::Albums, 1),
+        (View::Artist("3121".into()), SectionKind::Discography, 0),
+    ] {
+        report(&format!("more {view:?} {kind:?} {page}"), service.more(&view, kind, page), |paged| {
+            paged.items.len() * 100 + usize::from(paged.next.is_some())
+        });
+    }
     report("suggestions", service.suggestions("metal"), |value| value.texts.len());
     report("track info", service.track_info("1710808"), |value| value.artists.len());
     report("device code", crate::auth::request_device_code(), |value| value.user_code.len());
@@ -76,9 +87,28 @@ fn signed_in_reads() {
     report("library", service.library(uid), |library| library.liked_tracks.len());
     report("settings", service.account_settings(), Vec::len);
     report("playlists", service.playlists(uid), Vec::len);
-    for view in [View::Waves, View::ForYou, View::Collection, View::Playlists, View::Podcasts, View::History] {
+    for view in [
+        View::Waves,
+        View::ForYou,
+        View::Collection,
+        View::Playlists,
+        View::Podcasts,
+        View::History,
+        View::Concerts(String::new()),
+        View::Concerts("2".into()),
+    ] {
         report(&format!("{view:?}"), service.page(&view, uid), sections);
     }
+    for (view, kind, page) in [
+        (View::ForYou, SectionKind::NewReleases, 1),
+        (View::ForYou, SectionKind::NewPlaylists, 0),
+        (View::Podcasts, SectionKind::Podcasts, 1),
+    ] {
+        report(&format!("more {view:?} {kind:?} {page}"), service.more(&view, kind, page), |paged| {
+            paged.items.len() * 100 + usize::from(paged.next.is_some())
+        });
+    }
+    report("concert locations", service.concert_locations(), Vec::len);
     if let Ok(page) = service.page(&View::ForYou, uid) {
         let kinds: Vec<String> =
             page.sections.iter().map(|section| format!("{:?}:{}", section.kind, section.items.len())).collect();

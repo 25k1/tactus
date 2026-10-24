@@ -129,6 +129,7 @@ pub enum Event {
     Error(Failure),
     Suggestions(String, Suggestions),
     TrackInfo(Box<TrackInfo>),
+    ConcertLocations(Vec<tactus_api::ConcertLocation>),
     AccountSettings,
     Searches,
     Devices,

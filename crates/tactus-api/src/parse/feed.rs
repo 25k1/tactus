@@ -81,6 +81,11 @@ pub fn for_you(feed: Option<&Value>, landing: Option<&Value>, chart: Option<&Val
         chart.map(|chart| track_items(result(chart).at("chart").list("tracks"))).filter(|tracks| !tracks.is_empty());
     for raw in landing.map(result).map(|landing| landing.list("blocks")).unwrap_or_default() {
         let Some(mut section) = block(raw) else { continue };
+        match raw.text("type") {
+            "new-releases" => section = Section { kind: SectionKind::NewReleases, more: Some(0), ..section },
+            "new-playlists" => section = Section { kind: SectionKind::NewPlaylists, more: Some(0), ..section },
+            _ => {}
+        }
         if let (true, Some(chart)) = (raw.text("type") == "chart", chart.as_ref()) {
             section.items = chart.clone();
         }
@@ -195,6 +200,8 @@ mod tests {
             })
             .unwrap();
         assert_eq!(chart.items.len(), 2);
+        let releases = page.sections.iter().find(|section| section.kind == SectionKind::NewReleases);
+        assert!(releases.is_some_and(|section| section.more == Some(0)));
     }
 
     #[test]

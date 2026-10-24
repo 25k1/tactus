@@ -94,6 +94,7 @@ pub struct Settings {
     pub remote_port: u16,
     pub remote_token: String,
     pub proxy: Proxy,
+    pub concert_location: Option<tactus_api::ConcertLocation>,
 }
 
 impl Default for Settings {
@@ -147,6 +148,7 @@ impl Default for Settings {
             remote_port: DEFAULT_REMOTE_PORT,
             remote_token: String::new(),
             proxy: Proxy::default(),
+            concert_location: None,
         }
     }
 }

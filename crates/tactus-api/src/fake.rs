@@ -82,6 +82,11 @@ impl CatalogService for FakeService {
     fn tracks(&self, ids: &[String]) -> Result<Vec<Track>> {
         Ok(ids.iter().map(|id| track(id)).collect())
     }
+
+    fn concert_locations(&self) -> Result<Vec<ConcertLocation>> {
+        let location = |id: &str, name: &str| ConcertLocation { id: id.into(), name: name.into() };
+        Ok(vec![location("213", "Moscow"), location("2", "Saint Petersburg")])
+    }
 }
 
 impl LibraryService for FakeService {

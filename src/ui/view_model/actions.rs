@@ -21,6 +21,7 @@ pub enum ItemAction {
     Similar,
     GoToAlbum,
     GoToArtist,
+    GoToLabel,
     TrackInfo,
     CopyLink,
     Rename,
@@ -38,7 +39,7 @@ pub enum ItemAction {
 }
 
 impl ItemAction {
-    pub const ALL: [ItemAction; 33] = [
+    pub const ALL: [ItemAction; 34] = [
         ItemAction::Open,
         ItemAction::Play,
         ItemAction::PlayNext,
@@ -58,6 +59,7 @@ impl ItemAction {
         ItemAction::Similar,
         ItemAction::GoToAlbum,
         ItemAction::GoToArtist,
+        ItemAction::GoToLabel,
         ItemAction::TrackInfo,
         ItemAction::CopyLink,
         ItemAction::Rename,
@@ -99,6 +101,7 @@ impl ItemAction {
             ItemAction::Similar => fl!("action-similar"),
             ItemAction::GoToAlbum => fl!("action-go-to-album"),
             ItemAction::GoToArtist => fl!("action-go-to-artist"),
+            ItemAction::GoToLabel => fl!("action-go-to-label"),
             ItemAction::TrackInfo => fl!("action-track-info"),
             ItemAction::CopyLink => fl!("action-copy-link"),
             ItemAction::Rename => fl!("action-rename"),
@@ -209,6 +212,9 @@ pub fn item_actions(player: &Player, entry: &Entry, context: &ListContext) -> Ve
             actions.extend([Some(Download), Some(Radio)]);
             if !album.artist_id.is_empty() {
                 actions.push(Some(GoToArtist));
+            }
+            if !album.label_id.is_empty() {
+                actions.push(Some(GoToLabel));
             }
             actions.push(Some(CopyLink));
         }

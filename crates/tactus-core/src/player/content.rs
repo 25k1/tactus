@@ -182,6 +182,23 @@ impl Player {
         );
     }
 
+    pub fn request_concert_locations(&mut self) {
+        self.request(
+            |service, _| service.concert_locations(),
+            |player, locations| {
+                player.emit(Event::ConcertLocations(locations));
+            },
+        );
+    }
+
+    pub fn concert_location(&self) -> &str {
+        self.settings.concert_location.as_ref().map_or("", |location| location.id.as_str())
+    }
+
+    pub fn set_concert_location(&mut self, location: Option<tactus_api::ConcertLocation>) {
+        self.update_settings(|settings| settings.concert_location = location);
+    }
+
     pub fn request_track_info(&mut self, track: &Track) {
         let id = track.id.clone();
         self.request(

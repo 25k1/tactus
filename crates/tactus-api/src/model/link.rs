@@ -48,6 +48,7 @@ impl Destination {
             ["users", login, ..] => View::User((*login).to_owned()),
             ["tag", id, ..] => View::Tag((*id).to_owned()),
             ["chart", region, ..] => View::Chart((*region).to_owned()),
+            ["label", id, ..] => View::Label((*id).to_owned()),
             ["non-music", "category", id, ..] => View::Category((*id).to_owned()),
             _ => return None,
         };
@@ -80,6 +81,7 @@ mod tests {
         assert_eq!(view("https://music.yandex.ru/users/music-blog"), Some(View::User("music-blog".into())));
         assert_eq!(view("https://music.yandex.ru/tag/rock/"), Some(View::Tag("rock".into())));
         assert_eq!(view("https://music.yandex.ru/chart/world#top"), Some(View::Chart("world".into())));
+        assert_eq!(view("https://music.yandex.ru/label/6074020"), Some(View::Label("6074020".into())));
         assert_eq!(
             view("https://music.yandex.ru/users/970829816/playlists/1104"),
             Some(View::Playlist(PlaylistKey { owner: 970829816, kind: 1104 }))

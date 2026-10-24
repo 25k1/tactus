@@ -164,10 +164,19 @@ impl CatalogService for YandexService {
                     page
                 }
                 View::Podcasts => {
-                    let (catalogue, episodes) =
-                        tokio::join!(self.get("non-music/catalogue", &[]), self.get("non-music/new-episodes", &[]));
+                    let (catalogue, episodes, podcasts) = tokio::join!(
+                        self.get("non-music/catalogue", &[]),
+                        self.get("non-music/new-episodes", &[]),
+                        self.get("landing3/podcasts", &[]),
+                    );
                     let mut page = parse::non_music(&catalogue?);
                     page.sections.splice(0..0, episodes.as_ref().map(parse::new_episodes).unwrap_or_default());
+                    let ids = podcasts.map(|value| parse::landing_ids(&value, "podcasts")).unwrap_or_default();
+                    let (first, next) = parse::page_of(&ids, 0);
+                    let items = self.fetch_albums(&first).await.unwrap_or_default();
+                    if !items.is_empty() {
+                        page.sections.push(Section::new(SectionKind::Podcasts, "", items).with_more(next));
+                    }
                     page
                 }
                 View::Category(id) => parse::non_music(&self.get(&format!("non-music/category/{id}"), &[]).await?),
@@ -189,19 +198,39 @@ impl CatalogService for YandexService {
                 View::Tag(id) => self.tag(id).await?,
                 View::Genre(id) => {
                     let albums = format!("metatags/{id}/albums");
-                    let (main, popular, fresh, tree) = tokio::join!(
+                    let (main, popular, fresh, tree, artists, playlists) = tokio::join!(
                         self.get(&format!("metatags/{id}"), &[]),
                         self.get(&albums, &[("sortBy", "popular"), ("offset", "0")]),
                         self.get(&albums, &[("sortBy", "new"), ("offset", "0")]),
                         self.get("metatags", &[]),
+                        self.genre_list(id, SectionKind::Artists, 0),
+                        self.genre_list(id, SectionKind::Playlists, 0),
                     );
                     parse::genre_page(
                         id,
-                        &main?,
-                        &popular.unwrap_or_default(),
-                        &fresh.unwrap_or_default(),
-                        tree.as_ref().ok(),
+                        &parse::GenreData {
+                            main: main?,
+                            popular: popular.unwrap_or_default(),
+                            fresh: fresh.unwrap_or_default(),
+                            tree: tree.ok(),
+                            artists: artists.ok(),
+                            playlists: playlists.ok(),
+                        },
                     )
+                }
+                View::Label(id) => {
+                    let paging = [("page", "0"), ("pageSize", "100")];
+                    let (main, albums, artists) = tokio::join!(
+                        self.get(&format!("labels/{id}"), &[]),
+                        self.get(&format!("labels/{id}/albums"), &paging),
+                        self.get(&format!("labels/{id}/artists"), &paging),
+                    );
+                    parse::label_page(&main?, albums.as_ref().ok(), artists.as_ref().ok())
+                }
+                View::Concerts(location) => {
+                    let query: Vec<(&str, &str)> =
+                        Some(("locations", location.as_str())).filter(|(_, id)| !id.is_empty()).into_iter().collect();
+                    parse::concert_page(&self.get("concerts/feed", &query).await?)
                 }
             })
         })
@@ -238,6 +267,35 @@ impl CatalogService for YandexService {
                     };
                     Ok(parse::artist_more(&value, kind))
                 }
+                (View::Genre(id), SectionKind::Artists | SectionKind::Playlists) => {
+                    let value = self.genre_list(id, kind, page).await?;
+                    Ok(if kind == SectionKind::Artists {
+                        parse::genre_artists(&value, page)
+                    } else {
+                        parse::genre_playlists(&value, page)
+                    })
+                }
+                (View::Label(id), SectionKind::Albums | SectionKind::Artists) => {
+                    let tail = if kind == SectionKind::Albums { "albums" } else { "artists" };
+                    let paging = [("page", number.as_str()), ("pageSize", "100")];
+                    Ok(parse::label_more(&self.get(&format!("labels/{id}/{tail}"), &paging).await?, kind))
+                }
+                (View::ForYou, SectionKind::NewReleases) => {
+                    let ids = parse::landing_ids(&self.get("landing3/new-releases", &[]).await?, "newReleases");
+                    let (ids, next) = parse::page_of(&ids, page);
+                    Ok(Paged { items: self.fetch_albums(&ids).await?, next })
+                }
+                (View::ForYou, SectionKind::NewPlaylists) => {
+                    let keys = parse::landing_playlists(&self.get("landing3/new-playlists", &[]).await?);
+                    let (keys, next) = parse::page_of(&keys, page);
+                    let items = self.fetch_playlists(&keys).await?.into_iter().map(Item::Playlist).collect();
+                    Ok(Paged { items, next })
+                }
+                (View::Podcasts, SectionKind::Podcasts) => {
+                    let ids = parse::landing_ids(&self.get("landing3/podcasts", &[]).await?, "podcasts");
+                    let (ids, next) = parse::page_of(&ids, page);
+                    Ok(Paged { items: self.fetch_albums(&ids).await?, next })
+                }
                 (View::Genre(id), SectionKind::Albums | SectionKind::GenreReleases) => {
                     let sort = if kind == SectionKind::Albums { "popular" } else { "new" };
                     let offset = (page * parse::GENRE_PAGE).to_string();
@@ -249,6 +307,10 @@ impl CatalogService for YandexService {
                 _ => Err(Error::Unsupported),
             }
         })
+    }
+
+    fn concert_locations(&self) -> Result<Vec<ConcertLocation>> {
+        Ok(parse::concert_locations(&net::block_on(self.get("concerts/locations", &[]))?))
     }
 
     fn tracks(&self, ids: &[String]) -> Result<Vec<Track>> {

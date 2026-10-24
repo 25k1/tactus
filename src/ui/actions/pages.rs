@@ -42,7 +42,8 @@ impl Ui {
             return;
         }
         self.book.set_selection(BROWSER_PAGE);
-        if let Some(view) = visit.location.view(&self.browser.search.get_value()) {
+        let city = self.player.borrow().concert_location().to_owned();
+        if let Some(view) = visit.location.view(&self.browser.search.get_value(), &city) {
             self.act(|player| player.load(&view, false));
         }
         self.browser.set_arrangement(&visit.spot.filter, visit.spot.sort);
@@ -74,7 +75,7 @@ impl Ui {
     }
 
     pub(crate) fn current_view(&self) -> Option<View> {
-        self.location.borrow().view(&self.browser.search.get_value())
+        self.location.borrow().view(&self.browser.search.get_value(), self.player.borrow().concert_location())
     }
 
     pub(crate) fn focus_content(&self) {

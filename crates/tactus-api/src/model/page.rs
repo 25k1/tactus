@@ -31,6 +31,8 @@ pub enum SectionKind {
     Generated,
     Discography,
     Concerts,
+    NewReleases,
+    NewPlaylists,
     Other,
 }
 
@@ -111,6 +113,8 @@ pub enum View {
     Category(String),
     User(String),
     Chart(String),
+    Label(String),
+    Concerts(String),
 }
 
 impl View {

@@ -126,6 +126,7 @@ impl Ui {
                         &view_model::track_info(&info),
                     );
                 }
+                Event::ConcertLocations(locations) => self.choose_concert_location(&locations),
                 Event::AccountSettings => {}
                 Event::NewEpisodes(episodes) => self.notify_episodes(&episodes),
                 Event::Devices => {}

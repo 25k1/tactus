@@ -42,6 +42,10 @@ pub trait CatalogService {
     fn find_playlist(&self, _link: &PlaylistLink) -> Result<PlaylistKey> {
         Err(Error::Unsupported)
     }
+
+    fn concert_locations(&self) -> Result<Vec<ConcertLocation>> {
+        Err(Error::Unsupported)
+    }
 }
 
 pub trait LibraryService {

@@ -28,6 +28,18 @@ impl Ui {
         player.playlists.iter().filter(|playlist| player.is_own(playlist)).take(PLAYLIST_LIMIT).cloned().collect()
     }
 
+    pub(crate) fn choose_concert_location(self: &Rc<Self>, locations: &[tactus_api::ConcertLocation]) {
+        let mut names = vec![fl!("concerts-default-city")];
+        names.extend(locations.iter().map(|location| location.name.clone()));
+        let Some(index) = dialogs::pick(&self.frame, &PageButton::City.label(), &fl!("concerts-city-prompt"), names)
+        else {
+            return;
+        };
+        let location = index.checked_sub(1).and_then(|index| locations.get(index)).cloned();
+        self.act(|player| player.set_concert_location(location));
+        self.navigate(Location::Section(Section::Concerts), true);
+    }
+
     pub(super) fn on_page_button(self: &Rc<Self>, button: PageButton) {
         let content = self.content.borrow().clone();
         let section = self.browser.section_index();
@@ -61,6 +73,7 @@ impl Ui {
                 }
             }
             PageButton::Refresh => self.refresh(),
+            PageButton::City => self.act(Player::request_concert_locations),
             PageButton::ClearQueue => self.act(Player::clear_queue),
             PageButton::SaveQueue => {
                 if let Some(title) =

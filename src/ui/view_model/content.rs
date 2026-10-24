@@ -89,7 +89,7 @@ pub fn content(player: &Player, location: &Location, query: &str) -> Content {
         Location::Section(Section::Downloads) => local(Section::Downloads, downloads(player)),
         location => {
             let fallback = location.section().map(Section::label).unwrap_or_default();
-            let Some(view) = location.view(query) else {
+            let Some(view) = location.view(query, player.concert_location()) else {
                 return Content::new(fallback, Status::Empty);
             };
             let mut content = match player.page(&view) {
@@ -101,6 +101,7 @@ pub fn content(player: &Player, location: &Location, query: &str) -> Content {
                     let title = match &view {
                         _ if location.section().is_some() => fallback,
                         View::Chart(region) => chart_label(region),
+                        View::Label(_) => fl!("heading-label", name = page.title.as_str()),
                         View::User(_) => fl!("heading-user", name = page.title.as_str()),
                         _ => heading(page.subject.as_ref(), &page.title),
                     };
@@ -143,10 +144,11 @@ pub enum PageButton {
     HidePlayed,
     ShowPlayed,
     Upload,
+    City,
 }
 
 impl PageButton {
-    pub const ALL: [PageButton; 15] = [
+    pub const ALL: [PageButton; 16] = [
         PageButton::Play,
         PageButton::Shuffle,
         PageButton::Radio,
@@ -162,6 +164,7 @@ impl PageButton {
         PageButton::HidePlayed,
         PageButton::ShowPlayed,
         PageButton::Upload,
+        PageButton::City,
     ];
 
     pub fn label(self) -> String {
@@ -181,6 +184,7 @@ impl PageButton {
             PageButton::HidePlayed => fl!("button-hide-played"),
             PageButton::ShowPlayed => fl!("button-show-played"),
             PageButton::Upload => fl!("button-upload"),
+            PageButton::City => fl!("button-city"),
         }
     }
 }
@@ -252,6 +256,9 @@ pub fn buttons(player: &Player, location: &Location, content: &Content, section:
     }
     if spoken(content) {
         buttons.push(if player.settings.hide_played { PageButton::ShowPlayed } else { PageButton::HidePlayed });
+    }
+    if matches!(content.view, Some(View::Concerts(_))) {
+        buttons.push(PageButton::City);
     }
     if content.view.is_some() {
         buttons.push(PageButton::Refresh);

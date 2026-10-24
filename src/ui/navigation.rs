@@ -12,6 +12,7 @@ pub enum Section {
     Playlists,
     Radio,
     Podcasts,
+    Concerts,
     History,
     Queue,
     Lyrics,
@@ -19,7 +20,7 @@ pub enum Section {
 }
 
 impl Section {
-    pub const ALL: [Section; 11] = [
+    pub const ALL: [Section; 12] = [
         Section::Search,
         Section::Wave,
         Section::ForYou,
@@ -27,6 +28,7 @@ impl Section {
         Section::Playlists,
         Section::Radio,
         Section::Podcasts,
+        Section::Concerts,
         Section::History,
         Section::Queue,
         Section::Lyrics,
@@ -46,6 +48,7 @@ impl Section {
             Section::Playlists => fl!("nav-playlists"),
             Section::Radio => fl!("nav-radio"),
             Section::Podcasts => fl!("nav-podcasts"),
+            Section::Concerts => fl!("nav-concerts"),
             Section::History => fl!("nav-history"),
             Section::Queue => fl!("nav-queue"),
             Section::Lyrics => fl!("nav-lyrics"),
@@ -62,6 +65,7 @@ impl Section {
             Section::Playlists => "Ctrl+5",
             Section::Radio => "Ctrl+6",
             Section::Podcasts => "Ctrl+7",
+            Section::Concerts => "Ctrl+Shift+O",
             Section::History => "Ctrl+8",
             Section::Queue => "Ctrl+9",
             Section::Lyrics => "Ctrl+0",
@@ -69,7 +73,7 @@ impl Section {
         }
     }
 
-    pub fn view(self, query: &str) -> Option<View> {
+    pub fn view(self, query: &str, city: &str) -> Option<View> {
         Some(match self {
             Section::Search if query.trim().is_empty() => return None,
             Section::Search => View::Search(query.trim().to_owned()),
@@ -79,6 +83,7 @@ impl Section {
             Section::Playlists => View::Playlists,
             Section::Radio => View::Radio,
             Section::Podcasts => View::Podcasts,
+            Section::Concerts => View::Concerts(city.to_owned()),
             Section::History => View::History,
             Section::Queue | Section::Lyrics | Section::Downloads => return None,
         })
@@ -99,9 +104,9 @@ impl Location {
         }
     }
 
-    pub fn view(&self, query: &str) -> Option<View> {
+    pub fn view(&self, query: &str, city: &str) -> Option<View> {
         match self {
-            Location::Section(section) => section.view(query),
+            Location::Section(section) => section.view(query, city),
             Location::View(view) => Some(view.clone()),
         }
     }
@@ -187,10 +192,11 @@ mod tests {
 
     #[test]
     fn sections_map_to_views() {
-        assert_eq!(Section::Search.view("  "), None);
-        assert_eq!(Section::Search.view(" abba "), Some(View::Search("abba".into())));
-        assert_eq!(Section::Queue.view(""), None);
-        assert_eq!(Section::ALL.len(), 11);
-        assert_eq!(Section::Downloads.index(), 10);
+        assert_eq!(Section::Search.view("  ", ""), None);
+        assert_eq!(Section::Search.view(" abba ", ""), Some(View::Search("abba".into())));
+        assert_eq!(Section::Queue.view("", ""), None);
+        assert_eq!(Section::Concerts.view("", "213"), Some(View::Concerts("213".into())));
+        assert_eq!(Section::ALL.len(), 12);
+        assert_eq!(Section::Downloads.index(), 11);
     }
 }

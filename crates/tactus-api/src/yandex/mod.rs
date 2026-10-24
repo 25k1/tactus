@@ -111,6 +111,22 @@ impl YandexService {
         Ok(tracks)
     }
 
+    async fn fetch_albums(&self, ids: &[String]) -> Result<Vec<Item>> {
+        if ids.is_empty() {
+            return Ok(Vec::new());
+        }
+        let ids = ids.join(",");
+        Ok(parse::albums(&self.post("albums", &[("album-ids", ids.as_str())]).await?))
+    }
+
+    fn genre_list(&self, id: &str, kind: SectionKind, page: u32) -> impl Future<Output = Result<Value>> + use<> {
+        let (tail, period) = if kind == SectionKind::Artists { ("artists", Some("week")) } else { ("playlists", None) };
+        let mut query =
+            vec![("offset", (page as usize * parse::LIST_PAGE).to_string()), ("limit", parse::LIST_PAGE.to_string())];
+        query.extend(period.map(|period| ("period", period.to_owned())));
+        send(self.http.get(url(&format!("metatags/{id}/{tail}"))).query(&query))
+    }
+
     async fn fetch_playlists(&self, keys: &[PlaylistKey]) -> Result<Vec<Playlist>> {
         if keys.is_empty() {
             return Ok(Vec::new());

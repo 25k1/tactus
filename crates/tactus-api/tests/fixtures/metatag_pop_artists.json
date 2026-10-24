@@ -1,0 +1,37 @@
+{
+  "result": {
+    "artists": [
+      {
+        "artist": {
+          "id": "666984",
+          "name": "ARTIK & ASTI",
+          "genres": [
+            "ruspop"
+          ]
+        }
+      },
+      {
+        "artist": {
+          "id": "5007577",
+          "name": "Zivert",
+          "genres": [
+            "ruspop"
+          ]
+        }
+      }
+    ],
+    "color": "#FF6665",
+    "coverUri": "avatars.yandex.net/get-music-misc/29541/meta-tag.58e3c0796ebb3476087d190b.cover/%%",
+    "id": "58e3c0796ebb3476087d190b",
+    "pager": {
+      "page": 0,
+      "perPage": 25,
+      "total": 11000
+    },
+    "stationId": "genre:pop",
+    "title": {
+      "fullTitle": "Pop",
+      "title": "Pop"
+    }
+  }
+}

@@ -39,7 +39,17 @@ pub fn genre_more(value: &Value, page: u32) -> Paged {
     Paged { items, next }
 }
 
-pub fn genre_page(id: &str, main: &Value, popular: &Value, fresh: &Value, tree: Option<&Value>) -> Page {
+pub struct GenreData {
+    pub main: Value,
+    pub popular: Value,
+    pub fresh: Value,
+    pub tree: Option<Value>,
+    pub artists: Option<Value>,
+    pub playlists: Option<Value>,
+}
+
+pub fn genre_page(id: &str, data: &GenreData) -> Page {
+    let (main, popular, fresh, tree) = (&data.main, &data.popular, &data.fresh, data.tree.as_ref());
     let main = result(main);
     let title = genre_title(main);
     let seed = main.text("stationId").to_owned();
@@ -55,8 +65,15 @@ pub fn genre_page(id: &str, main: &Value, popular: &Value, fresh: &Value, tree: 
     push(&mut sections, SectionKind::Genres, "", leaves.into_iter().map(Item::Genre).collect());
     push_paged(&mut sections, SectionKind::Albums, "", popular.items, popular.next);
     push_paged(&mut sections, SectionKind::GenreReleases, "", fresh.items, fresh.next);
-    push(&mut sections, SectionKind::Playlists, "", items(main.list("playlists"), playlist, Item::Playlist));
-    push(&mut sections, SectionKind::Artists, "", items(main.list("artists"), artist, Item::Artist));
+    let playlists =
+        data.playlists.as_ref().map(|value| genre_playlists(value, 0)).filter(|paged| !paged.items.is_empty());
+    let playlists = playlists
+        .unwrap_or_else(|| Paged { items: items(main.list("playlists"), playlist, Item::Playlist), next: None });
+    push_paged(&mut sections, SectionKind::Playlists, "", playlists.items, playlists.next);
+    let artists = data.artists.as_ref().map(|value| genre_artists(value, 0)).filter(|paged| !paged.items.is_empty());
+    let artists =
+        artists.unwrap_or_else(|| Paged { items: items(main.list("artists"), artist, Item::Artist), next: None });
+    push_paged(&mut sections, SectionKind::Artists, "", artists.items, artists.next);
     Page {
         title: title.clone(),
         subject: Some(Item::Genre(Genre { id: id.to_owned(), title, seed })),
@@ -81,16 +98,22 @@ mod tests {
         let albums = fixture("metatag_pop_albums");
         let page = genre_page(
             "58e3c0796ebb3476087d190b",
-            &fixture("metatag_pop"),
-            &albums,
-            &albums,
-            Some(&fixture("metatags")),
+            &GenreData {
+                main: fixture("metatag_pop"),
+                popular: albums.clone(),
+                fresh: albums.clone(),
+                tree: Some(fixture("metatags")),
+                artists: Some(fixture("metatag_pop_artists")),
+                playlists: None,
+            },
         );
         assert_eq!(page.title, "Поп");
         assert!(matches!(&page.subject, Some(Item::Genre(genre)) if genre.seed == "genre:pop"));
         assert_eq!(section(&page, SectionKind::Genres).unwrap().items.len(), 3);
         assert_eq!(section(&page, SectionKind::Albums).unwrap().more, Some(1));
         assert_eq!(section(&page, SectionKind::Playlists).unwrap().items.len(), 3);
+        let artists = section(&page, SectionKind::Artists).unwrap();
+        assert_eq!((artists.items.len(), artists.more), (2, Some(1)));
         assert_eq!(genre_more(&albums, 438).next, Some(439));
         assert_eq!(genre_more(&albums, 439).next, None);
     }

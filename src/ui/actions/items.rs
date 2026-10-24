@@ -270,6 +270,9 @@ impl Ui {
             {
                 navigate(View::Album(track.album_id.clone()));
             }
+            (ItemAction::GoToLabel, Some(Item::Album(album))) if !album.label_id.is_empty() => {
+                navigate(View::Label(album.label_id.clone()));
+            }
             (ItemAction::GoToArtist, Some(Item::Album(album))) if !album.artist_id.is_empty() => {
                 navigate(View::Artist(album.artist_id.clone()));
             }

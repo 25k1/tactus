@@ -74,6 +74,8 @@ pub struct Album {
     pub track_count: u32,
     pub genre: String,
     pub kind: AlbumKind,
+    pub label_id: String,
+    pub label: String,
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -139,6 +141,12 @@ pub struct Concert {
     pub date: String,
     pub price: String,
     pub url: String,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ConcertLocation {
+    pub id: String,
+    pub name: String,
 }
 
 pub const CHART_REGIONS: [&str; 6] = ["russia", "world", "kazakhstan", "belarus", "uzbekistan", "georgia"];

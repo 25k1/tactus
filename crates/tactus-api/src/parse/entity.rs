@@ -57,6 +57,8 @@ pub fn album(value: &Value) -> Option<Album> {
             "single" => AlbumKind::Single,
             _ => AlbumKind::Music,
         },
+        label_id: value.at("/labels/0").id("id"),
+        label: value.at("/labels/0").text("name").to_owned(),
     })
 }
 

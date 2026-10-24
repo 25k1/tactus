@@ -4,6 +4,7 @@ use std::collections::HashSet;
 
 mod account;
 mod catalog;
+mod discovery;
 mod entity;
 mod feed;
 mod genre;
@@ -12,6 +13,7 @@ mod search;
 
 pub use account::*;
 pub use catalog::*;
+pub use discovery::*;
 pub use entity::*;
 pub use feed::*;
 pub use genre::*;
