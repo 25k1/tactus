@@ -73,6 +73,12 @@ pub fn artist_page(data: &ArtistData) -> Page {
     let about = data.about.as_ref().map(|value| result(value).text("description")).filter(|text| !text.is_empty());
     let concerts = data.concerts.as_ref().map(|value| concerts(result(value).list("concerts"))).unwrap_or_default();
     let mut sections = Vec::new();
+    push(
+        &mut sections,
+        SectionKind::Upcoming,
+        "",
+        album(brief.at("upcomingAlbum")).map(Item::Album).into_iter().collect(),
+    );
     push_paged(&mut sections, SectionKind::Tracks, "", tracks.items, tracks.next);
     push_paged(&mut sections, SectionKind::Discography, "", discography.items, discography.next);
     push_paged(&mut sections, SectionKind::Albums, "", albums.items, albums.next);

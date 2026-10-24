@@ -33,6 +33,8 @@ pub enum SectionKind {
     Concerts,
     NewReleases,
     NewPlaylists,
+    Upcoming,
+    Presaves,
     Other,
 }
 
@@ -84,6 +86,22 @@ pub struct Page {
 }
 
 impl Page {
+    pub fn add_similar(&mut self, items: Vec<Item>) {
+        if items.is_empty() {
+            return;
+        }
+        match self.sections.iter_mut().find(|section| section.kind == SectionKind::Similar) {
+            Some(section) => {
+                for item in items {
+                    if !section.items.contains(&item) {
+                        section.items.push(item);
+                    }
+                }
+            }
+            None => self.sections.push(Section::new(SectionKind::Similar, "", items)),
+        }
+    }
+
     pub fn tracks(&self) -> Vec<Track> {
         self.sections
             .iter()

@@ -182,6 +182,28 @@ impl Player {
         );
     }
 
+    pub fn join_playlist(&mut self, link: tactus_api::PlaylistLink, token: String) {
+        self.request(
+            move |service, _| {
+                let key = service.find_playlist(&link)?;
+                service.join_collective(key.owner, &token)?;
+                Ok(key)
+            },
+            |player, key| {
+                player.notice(Notice::JoinedPlaylist);
+                player.refresh_playlists();
+                player.emit(Event::Open(View::Playlist(key)));
+            },
+        );
+    }
+
+    pub fn play_trailer(&mut self, target: Target) {
+        self.request(
+            move |service, _| service.trailer(&target),
+            |player, tracks| player.play_tracks(tracks, 0, "trailer"),
+        );
+    }
+
     pub fn request_concert_locations(&mut self) {
         self.request(
             |service, _| service.concert_locations(),

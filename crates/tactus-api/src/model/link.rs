@@ -12,6 +12,16 @@ pub enum PlaylistLink {
 pub enum Destination {
     View(View),
     Playlist(PlaylistLink),
+    Join { playlist: PlaylistLink, token: String },
+}
+
+fn query_value(query: &str, key: &str) -> Option<String> {
+    query
+        .split('&')
+        .filter_map(|pair| pair.split_once('='))
+        .find(|(name, _)| *name == key)
+        .map(|(_, value)| value.to_owned())
+        .filter(|value| !value.is_empty())
 }
 
 fn link_path(link: &str) -> Option<&str> {
@@ -27,8 +37,22 @@ fn link_path(link: &str) -> Option<&str> {
 
 impl Destination {
     pub fn parse(link: &str) -> Option<Destination> {
-        let path = link_path(link.trim())?;
-        let path = path.split(['?', '#']).next().unwrap_or_default();
+        let full = link_path(link.trim())?;
+        let path = full.split(['?', '#']).next().unwrap_or_default();
+        let query =
+            full.split_once('?').map(|(_, query)| query.split('#').next().unwrap_or_default()).unwrap_or_default();
+        let destination = Self::parse_path(path)?;
+        match (destination, query_value(query, "token")) {
+            (Destination::View(View::Playlist(key)), Some(token)) => Some(Destination::Join {
+                playlist: PlaylistLink::Owner { owner: key.owner.to_string(), kind: key.kind },
+                token,
+            }),
+            (Destination::Playlist(playlist), Some(token)) => Some(Destination::Join { playlist, token }),
+            (destination, _) => Some(destination),
+        }
+    }
+
+    fn parse_path(path: &str) -> Option<Destination> {
         let parts: Vec<&str> = path.split('/').filter(|part| !part.is_empty()).collect();
         let view = match parts.as_slice() {
             ["album", _, "track", id, ..] | ["track", id, ..] => View::Track((*id).to_owned()),
@@ -63,7 +87,7 @@ mod tests {
     fn view(link: &str) -> Option<View> {
         match Destination::parse(link)? {
             Destination::View(view) => Some(view),
-            Destination::Playlist(_) => None,
+            Destination::Playlist(_) | Destination::Join { .. } => None,
         }
     }
 
@@ -97,6 +121,28 @@ mod tests {
         assert_eq!(
             Destination::parse("https://music.yandex.ru/playlists/lk.9f6f8c60-2440-7ad0-9a9f-7245afc086d2"),
             Some(Destination::Playlist(PlaylistLink::Shared("9f6f8c60-2440-7ad0-9a9f-7245afc086d2".into())))
+        );
+    }
+
+    #[test]
+    fn reads_collective_invites() {
+        assert_eq!(
+            Destination::parse("https://music.yandex.ru/users/970829816/playlists/1104?token=abc123&utm=x"),
+            Some(Destination::Join {
+                playlist: PlaylistLink::Owner { owner: "970829816".into(), kind: 1104 },
+                token: "abc123".into()
+            })
+        );
+        assert_eq!(
+            Destination::parse("https://music.yandex.ru/users/someone/playlists/7?token=t"),
+            Some(Destination::Join {
+                playlist: PlaylistLink::Owner { owner: "someone".into(), kind: 7 },
+                token: "t".into()
+            })
+        );
+        assert_eq!(
+            Destination::parse("https://music.yandex.ru/album/1?token=t"),
+            Some(Destination::View(View::Album("1".into())))
         );
     }
 

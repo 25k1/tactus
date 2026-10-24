@@ -60,10 +60,15 @@ pub fn pins(value: &Value) -> Vec<Item> {
                 "album_item" => album(data).map(Item::Album),
                 "artist_item" => artist(data).map(Item::Artist),
                 "playlist_item" => playlist(data).map(Item::Playlist),
+                "wave_item" => wave_station(data),
                 _ => None,
             }
         })
         .collect()
+}
+
+pub fn presaves(value: &Value) -> Vec<Album> {
+    collect(result(value).list("upcomingAlbums"), album)
 }
 
 pub fn liked_keys<T>(value: &Value, parse: fn(&Value) -> Option<T>) -> Vec<T> {

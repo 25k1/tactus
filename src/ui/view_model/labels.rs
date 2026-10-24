@@ -51,6 +51,8 @@ pub fn section_label(kind: SectionKind, title: &str) -> String {
         SectionKind::Pinned => fl!("section-pinned"),
         SectionKind::Moments => fl!("section-moments"),
         SectionKind::Discography => fl!("section-discography"),
+        SectionKind::Upcoming => fl!("section-upcoming"),
+        SectionKind::Presaves => fl!("section-presaves"),
         SectionKind::NewReleases if title.is_empty() => fl!("section-new-releases"),
         SectionKind::NewPlaylists if title.is_empty() => fl!("section-new-playlists"),
         SectionKind::NewReleases | SectionKind::NewPlaylists => title.to_owned(),

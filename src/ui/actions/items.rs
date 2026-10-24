@@ -270,6 +270,13 @@ impl Ui {
             {
                 navigate(View::Album(track.album_id.clone()));
             }
+            (ItemAction::PlayTrailer, Some(item)) if let Some(target) = item.target() => {
+                self.act(|player| player.play_trailer(target));
+            }
+            (ItemAction::Presave | ItemAction::RemovePresave, Some(Item::Album(album))) => {
+                let (id, on) = (album.id.clone(), action == ItemAction::Presave);
+                self.act(|player| player.set_presave(id, on));
+            }
             (ItemAction::GoToLabel, Some(Item::Album(album))) if !album.label_id.is_empty() => {
                 navigate(View::Label(album.label_id.clone()));
             }

@@ -1,0 +1,64 @@
+{
+  "result": {
+    "items": [
+      {
+        "data": {
+          "agent": {
+            "cover": {
+              "color": "#A9A6A5",
+              "uri": "avatars.yandex.net/get-music-content/2427101/c55dee28.p.82939/%%"
+            },
+            "entity": {
+              "type": "artist"
+            }
+          },
+          "wave": {
+            "description": "My Vibe by artist",
+            "name": "Pink Floyd",
+            "seeds": [
+              "artist:82939"
+            ]
+          }
+        },
+        "type": "wave_agent_item"
+      },
+      {
+        "data": {
+          "album": {
+            "cover": {
+              "color": "#64b0cd",
+              "uri": "avatars.yandex.net/get-music-content/42108/e05b484a.a.32280-1/%%"
+            },
+            "id": 32280,
+            "title": "Trespass"
+          },
+          "artists": [
+            {
+              "cover": {
+                "color": "#999999",
+                "uri": "avatars.yandex.net/get-music-content/32236/35d83717.a.48069-1/%%"
+              },
+              "id": 84746,
+              "name": "Genesis",
+              "various": false
+            }
+          ]
+        },
+        "type": "album_item"
+      },
+      {
+        "data": {
+          "artist": {
+            "cover": {
+              "color": "#666665",
+              "uri": "avatars.yandex.net/get-music-content/49876/a9c29870.p.4481/%%"
+            },
+            "id": 4481,
+            "name": "The Who"
+          }
+        },
+        "type": "artist_item"
+      }
+    ]
+  }
+}

@@ -98,3 +98,34 @@ fn uploads_files_into_a_playlist() {
     let name = file.file_name().unwrap().to_string_lossy().into_owned();
     assert!(fake().calls().contains(&format!("upload 6 {name} 3")));
 }
+
+#[test]
+fn pins_waves_and_toggles_presaves() {
+    let mut player = player();
+    let wave = Item::Station(tactus_api::Station { seed: "genre:rock".into(), ..tactus_api::Station::default() });
+    player.set_pin(wave.clone(), true);
+    settle(&mut player);
+    assert!(player.is_pinned(&wave.target().unwrap()));
+    assert!(fake().calls().contains(&"pin true Wave(\"genre:rock\")".to_owned()));
+    player.set_presave("soon".into(), true);
+    assert!(player.is_presaved("soon"));
+    let events = settle(&mut player);
+    assert!(events.contains(&Event::Notice(Notice::Presaved(true))));
+    player.set_presave("soon".into(), false);
+    settle(&mut player);
+    assert!(!player.is_presaved("soon"));
+    assert!(fake().calls().contains(&"presave soon false".to_owned()));
+}
+
+#[test]
+fn joins_collective_playlists_and_plays_trailers() {
+    let mut player = player();
+    player.join_playlist(tactus_api::PlaylistLink::Owner { owner: "42".into(), kind: 7 }, "secret".into());
+    let events = settle(&mut player);
+    assert!(events.contains(&Event::Notice(Notice::JoinedPlaylist)));
+    assert!(events.contains(&Event::Open(View::Playlist(PlaylistKey { owner: 42, kind: 7 }))));
+    assert!(fake().calls().contains(&"join 42 secret".to_owned()));
+    player.play_trailer(Target::Artist("3121".into()));
+    settle(&mut player);
+    assert_eq!(player.queue.ids(), ["t1", "t2"]);
+}

@@ -31,6 +31,9 @@ pub fn notice(notice: &Notice) -> String {
         }
         Notice::WaveStarted => fl!("notice-wave-started"),
         Notice::LastWaveReset => fl!("notice-last-wave-reset"),
+        Notice::Presaved(true) => fl!("notice-presaved"),
+        Notice::Presaved(false) => fl!("notice-presave-removed"),
+        Notice::JoinedPlaylist => fl!("notice-joined-playlist"),
         Notice::SearchResults(count) => fl!("notice-search-results", count = (*count)),
         Notice::AccountUpdated => fl!("notice-account-updated"),
         Notice::MoreLoaded(count) => fl!("notice-more-loaded", count = (*count)),

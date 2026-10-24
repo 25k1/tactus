@@ -16,6 +16,11 @@ impl Ui {
         match Destination::parse(link) {
             Some(Destination::View(view)) => self.navigate(Location::View(view), true),
             Some(Destination::Playlist(playlist)) => self.act(|player| player.open_playlist_link(playlist)),
+            Some(Destination::Join { playlist, token }) => {
+                if dialogs::confirm(&self.frame, &fl!("join-playlist-confirm"), &fl!("menu-open-link")) {
+                    self.act(|player| player.join_playlist(playlist, token));
+                }
+            }
             None => dialogs::warn(&self.frame, &fl!("open-link-invalid", link = link), &fl!("menu-open-link")),
         }
     }

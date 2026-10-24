@@ -83,6 +83,18 @@ impl CatalogService for FakeService {
         Ok(ids.iter().map(|id| track(id)).collect())
     }
 
+    fn find_playlist(&self, link: &PlaylistLink) -> Result<PlaylistKey> {
+        match link {
+            PlaylistLink::Owner { owner, kind } => Ok(PlaylistKey { owner: owner.parse().unwrap_or(5), kind: *kind }),
+            PlaylistLink::Shared(_) => Ok(PlaylistKey { owner: 5, kind: 1 }),
+        }
+    }
+
+    fn trailer(&self, target: &Target) -> Result<Vec<Track>> {
+        self.record(format!("trailer {target:?}"));
+        Ok(tracks(&["t1", "t2"]))
+    }
+
     fn concert_locations(&self) -> Result<Vec<ConcertLocation>> {
         let location = |id: &str, name: &str| ConcertLocation { id: id.into(), name: name.into() };
         Ok(vec![location("213", "Moscow"), location("2", "Saint Petersburg")])
@@ -110,6 +122,16 @@ impl LibraryService for FakeService {
 
     fn set_relation(&self, _uid: u64, target: &Target, relation: Relation, on: bool) -> Result<()> {
         self.record(format!("{relation:?} {on} {target:?}"));
+        Ok(())
+    }
+
+    fn set_presave(&self, _uid: u64, album_id: &str, on: bool) -> Result<()> {
+        self.record(format!("presave {album_id} {on}"));
+        Ok(())
+    }
+
+    fn join_collective(&self, owner: u64, token: &str) -> Result<()> {
+        self.record(format!("join {owner} {token}"));
         Ok(())
     }
 

@@ -38,11 +38,18 @@ impl YandexService {
     }
 }
 
+impl YandexService {
+    pub(super) async fn presaves(&self, uid: u64) -> Result<Vec<Album>> {
+        let query = [("includeReleased", "false"), ("includeUpcoming", "true")];
+        Ok(parse::presaves(&self.get(&format!("users/{uid}/presaves"), &query).await?))
+    }
+}
+
 impl LibraryService for YandexService {
     fn library(&self, uid: u64) -> Result<Library> {
         let base = format!("users/{uid}");
         net::block_on(async {
-            let (liked, disliked, albums, artists, playlists, disliked_artists, pins) = tokio::join!(
+            let (liked, disliked, albums, artists, playlists, disliked_artists, pins, presaves) = tokio::join!(
                 self.get(&format!("{base}/likes/tracks"), &[]),
                 self.get(&format!("{base}/dislikes/tracks"), &[]),
                 self.get(&format!("{base}/likes/albums"), &[]),
@@ -50,6 +57,7 @@ impl LibraryService for YandexService {
                 self.get(&format!("{base}/likes/playlists"), &[]),
                 self.get(&format!("{base}/dislikes/artists"), &[]),
                 self.get("pins", &[]),
+                self.presaves(uid),
             );
             let ids = |value: Result<Value>, parse: fn(&Value) -> Option<String>| {
                 parse::liked_keys(&value.unwrap_or_default(), parse).into_iter().collect()
@@ -64,6 +72,7 @@ impl LibraryService for YandexService {
                     .into_iter()
                     .collect(),
                 pinned: parse::pins(&pins.unwrap_or_default()),
+                presaved: presaves.unwrap_or_default().into_iter().map(|album| album.id).collect(),
             })
         })
     }
@@ -73,6 +82,7 @@ impl LibraryService for YandexService {
             Target::Album(id) => ("album", json!({ "id": id })),
             Target::Artist(id) => ("artist", json!({ "id": id })),
             Target::Playlist(key) => ("playlist", json!({ "uid": key.owner, "kind": key.kind })),
+            Target::Wave(seeds) => ("wave", json!({ "seeds": seeds })),
             Target::Track(_) => return Err(Error::Unsupported),
         };
         let method = if on { Method::PUT } else { Method::DELETE };
@@ -155,10 +165,29 @@ impl LibraryService for YandexService {
                 (Target::Playlist(key), Relation::Like, false) => {
                     client.remove_liked_playlist(&RemoveLikedPlaylistOptions::new(uid, key.owner, key.kind)).await?;
                 }
-                (Target::Album(_) | Target::Playlist(_), Relation::Dislike, _) => return Err(Error::Unsupported),
+                (Target::Album(_) | Target::Playlist(_), Relation::Dislike, _) | (Target::Wave(_), _, _) => {
+                    return Err(Error::Unsupported);
+                }
             }
             Ok::<_, Error>(())
         })
+    }
+
+    fn set_presave(&self, uid: u64, album_id: &str, on: bool) -> Result<()> {
+        let path = format!("users/{uid}/presaves/{}", if on { "add" } else { "remove" });
+        let mut form = vec![("albumId", album_id)];
+        if on {
+            form.push(("likeAfterRelease", "true"));
+        }
+        net::block_on(self.post(&path, &form))?;
+        Ok(())
+    }
+
+    fn join_collective(&self, owner: u64, token: &str) -> Result<()> {
+        let owner = owner.to_string();
+        let path = format!("playlists/collective/join?uid={owner}&token={}", encode_component(token));
+        net::block_on(self.post(&path, &[]))?;
+        Ok(())
     }
 
     fn create_playlist(&self, uid: u64, title: &str, public: bool) -> Result<Playlist> {

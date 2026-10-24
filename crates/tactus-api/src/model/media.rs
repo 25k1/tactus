@@ -76,6 +76,8 @@ pub struct Album {
     pub kind: AlbumKind,
     pub label_id: String,
     pub label: String,
+    pub release_date: String,
+    pub upcoming: bool,
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -201,13 +203,10 @@ impl Item {
             Item::Album(album) => Target::Album(album.id.clone()),
             Item::Artist(artist) => Target::Artist(artist.id.clone()),
             Item::Playlist(playlist) => Target::Playlist(playlist.key),
-            Item::Station(_)
-            | Item::Tag(_)
-            | Item::Genre(_)
-            | Item::Category(_)
-            | Item::Link(_)
-            | Item::Chart(_)
-            | Item::Concert(_) => return None,
+            Item::Station(station) => Target::Wave(station.seed.clone()),
+            Item::Tag(_) | Item::Genre(_) | Item::Category(_) | Item::Link(_) | Item::Chart(_) | Item::Concert(_) => {
+                return None;
+            }
         })
     }
 

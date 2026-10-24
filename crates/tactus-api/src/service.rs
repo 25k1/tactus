@@ -46,6 +46,10 @@ pub trait CatalogService {
     fn concert_locations(&self) -> Result<Vec<ConcertLocation>> {
         Err(Error::Unsupported)
     }
+
+    fn trailer(&self, _target: &Target) -> Result<Vec<Track>> {
+        Err(Error::Unsupported)
+    }
 }
 
 pub trait LibraryService {
@@ -62,6 +66,14 @@ pub trait LibraryService {
     fn playlists(&self, uid: u64) -> Result<Vec<Playlist>>;
 
     fn set_relation(&self, _uid: u64, _target: &Target, _relation: Relation, _on: bool) -> Result<()> {
+        Err(Error::Unsupported)
+    }
+
+    fn set_presave(&self, _uid: u64, _album_id: &str, _on: bool) -> Result<()> {
+        Err(Error::Unsupported)
+    }
+
+    fn join_collective(&self, _owner: u64, _token: &str) -> Result<()> {
         Err(Error::Unsupported)
     }
 

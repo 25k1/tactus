@@ -69,6 +69,7 @@ fn anonymous_reads() {
             paged.items.len() * 100 + usize::from(paged.next.is_some())
         });
     }
+    report("trailer", service.trailer(&Target::Artist("3121".into())), Vec::len);
     report("suggestions", service.suggestions("metal"), |value| value.texts.len());
     report("track info", service.track_info("1710808"), |value| value.artists.len());
     report("device code", crate::auth::request_device_code(), |value| value.user_code.len());
@@ -96,8 +97,12 @@ fn signed_in_reads() {
         View::History,
         View::Concerts(String::new()),
         View::Concerts("2".into()),
+        View::Album("18031896".into()),
+        View::Playlist(PlaylistKey { owner: 103372440, kind: 1565 }),
     ] {
-        report(&format!("{view:?}"), service.page(&view, uid), sections);
+        report(&format!("{view:?}"), service.page(&view, uid), |page| {
+            page.sections.len() * 100 + page.sections.iter().position(|section| section.kind == SectionKind::Similar).map_or(0, |index| index + 1)
+        });
     }
     for (view, kind, page) in [
         (View::ForYou, SectionKind::NewReleases, 1),

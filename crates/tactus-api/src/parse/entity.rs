@@ -59,6 +59,9 @@ pub fn album(value: &Value) -> Option<Album> {
         },
         label_id: value.at("/labels/0").id("id"),
         label: value.at("/labels/0").text("name").to_owned(),
+        release_date: value.text("releaseDate").get(..10).unwrap_or_default().to_owned(),
+        upcoming: chrono::DateTime::parse_from_rfc3339(value.text("releaseDate"))
+            .is_ok_and(|date| date > chrono::Utc::now()),
     })
 }
 
@@ -106,6 +109,39 @@ pub fn playlist(value: &Value) -> Option<Playlist> {
     })
 }
 
+pub fn wave_station(value: &Value) -> Option<Item> {
+    let value = value.unwrap("wave");
+    let seeds: Vec<&str> = match value.at("seeds") {
+        Value::String(seeds) => vec![seeds.as_str()],
+        seeds => seeds.as_array().map(|seeds| seeds.iter().filter_map(Value::as_str).collect()).unwrap_or_default(),
+    };
+    let seed = if seeds.is_empty() { value.text("stationId").to_owned() } else { seeds.join(",") };
+    let name = [value.text("name"), value.text("title")].into_iter().find(|name| !name.is_empty());
+    (!seed.is_empty())
+        .then(|| Item::Station(Station { seed, name: name.unwrap_or_default().to_owned(), category: String::new() }))
+}
+
+pub fn similar_entities(value: &Value) -> Vec<Item> {
+    result(value)
+        .list("items")
+        .iter()
+        .filter_map(|entry| {
+            let data = entry.at("data");
+            match entry.text("type") {
+                "album_item" => album(data).map(Item::Album),
+                "artist_item" => artist(data).map(Item::Artist),
+                "playlist_item" => playlist(data).map(Item::Playlist),
+                "wave_agent_item" | "wave_item" => wave_station(data),
+                _ => None,
+            }
+        })
+        .collect()
+}
+
+pub fn trailer(value: &Value) -> Vec<Track> {
+    tracks(result(value).at("trailer").list("tracks"))
+}
+
 pub fn station(value: &Value) -> Option<Station> {
     let value = value.unwrap("station");
     let id = value.at("id");
@@ -135,5 +171,32 @@ mod tests {
         assert!(track.cover.starts_with("https://"));
         assert_eq!(track.loudness, Some(Loudness { integrated: -9.5, peak: 0.25 }));
         assert_eq!(tracks[1].loudness, None);
+    }
+
+    #[test]
+    fn reads_similar_entities_and_trailers() {
+        let similar = similar_entities(&fixture("album_similar"));
+        assert!(
+            matches!(&similar[0], Item::Station(station) if station.seed == "artist:82939" && station.name == "Pink Floyd")
+        );
+        assert!(matches!(&similar[1], Item::Album(album) if album.title == "Trespass"));
+        assert!(matches!(&similar[2], Item::Artist(_)));
+        let trailer = trailer(&fixture("artist_trailer"));
+        assert_eq!(trailer.len(), 2);
+        assert_eq!(trailer[0].title, "Nothing Else Matters");
+    }
+
+    #[test]
+    fn reads_wave_pins_and_upcoming_albums() {
+        let pinned =
+            wave_station(&serde_json::json!({ "seeds": ["genre:rock", "settingMoodEnergy:fun"], "title": "Rock" }));
+        assert!(matches!(pinned, Some(Item::Station(station)) if station.seed == "genre:rock,settingMoodEnergy:fun"));
+        assert!(wave_station(&serde_json::json!({ "title": "Nothing" })).is_none());
+        let upcoming =
+            album(&serde_json::json!({ "id": 1, "title": "Soon", "releaseDate": "2999-01-01T00:00:00+03:00" }))
+                .unwrap();
+        assert!(upcoming.upcoming && upcoming.release_date == "2999-01-01");
+        let released = album(&serde_json::json!({ "id": 2, "releaseDate": "2001-01-01T00:00:00+03:00", "labels": [{ "id": 5, "name": "DMGE" }] })).unwrap();
+        assert!(!released.upcoming && released.label_id == "5" && released.label == "DMGE");
     }
 }

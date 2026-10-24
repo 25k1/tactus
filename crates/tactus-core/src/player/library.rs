@@ -88,6 +88,40 @@ impl Player {
         );
     }
 
+    pub fn is_presaved(&self, album_id: &str) -> bool {
+        self.library.presaved.contains(album_id)
+    }
+
+    pub fn set_presave(&mut self, album_id: String, on: bool) {
+        if self.is_presaved(&album_id) == on {
+            return;
+        }
+        let update = |library: &mut Library, id: &str, on: bool| {
+            if on {
+                library.presaved.insert(id.to_owned());
+            } else {
+                library.presaved.remove(id);
+            }
+        };
+        update(&mut self.library, &album_id, on);
+        self.emit(Event::Library);
+        let id = album_id.clone();
+        self.spawn(
+            move |service, uid| service.set_presave(uid, &id, on),
+            move |player, result| match result {
+                Ok(()) => {
+                    player.notice(Notice::Presaved(on));
+                    player.reload(&View::Collection);
+                }
+                Err(error) => {
+                    update(&mut player.library, &album_id, !on);
+                    player.emit(Event::Library);
+                    player.fail(error);
+                }
+            },
+        );
+    }
+
     pub fn is_pinned(&self, target: &Target) -> bool {
         self.library.is_pinned(target)
     }

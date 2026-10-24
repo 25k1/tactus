@@ -47,6 +47,8 @@ pub enum Notice {
     NothingToUndo,
     Played { count: usize, played: bool },
     Pinned(bool),
+    Presaved(bool),
+    JoinedPlaylist,
     Uploaded(usize),
     Offline,
     Online,
@@ -60,7 +62,7 @@ pub enum Notice {
 impl Notice {
     pub fn announcement(&self) -> Announcement {
         match self {
-            Notice::Relation { .. } => Announcement::Likes,
+            Notice::Relation { .. } | Notice::Presaved(_) => Announcement::Likes,
             Notice::PlaylistCreated(_)
             | Notice::PlaylistRenamed
             | Notice::PlaylistDescribed
@@ -71,6 +73,7 @@ impl Notice {
             | Notice::RemovedFromPlaylist(_)
             | Notice::AccountUpdated
             | Notice::Pinned(_)
+            | Notice::JoinedPlaylist
             | Notice::Uploaded(_)
             | Notice::Promo(_) => Announcement::Playlists,
             Notice::PlayNext(_)

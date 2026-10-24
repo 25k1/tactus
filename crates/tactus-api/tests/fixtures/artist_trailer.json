@@ -1,0 +1,187 @@
+{
+  "result": {
+    "artist": {
+      "cover": {
+        "color": "#1e1e1e",
+        "uri": "avatars.yandex.net/get-music-content/16469857/cba01543.p.3121/%%"
+      },
+      "id": 3121,
+      "name": "Metallica"
+    },
+    "trailer": {
+      "title": "Artist trailer",
+      "tracks": [
+        {
+          "albums": [
+            {
+              "artists": [
+                {
+                  "available": true,
+                  "composer": false,
+                  "cover": {
+                    "prefix": "cba01543.p.3121/",
+                    "type": "from-artist-photos",
+                    "uri": "avatars.yandex.net/get-music-content/16469857/cba01543.p.3121/%%"
+                  },
+                  "genres": [],
+                  "id": 3121,
+                  "name": "Metallica",
+                  "various": false
+                }
+              ],
+              "available": true,
+              "availableForMobile": true,
+              "availableForPremiumUsers": true,
+              "availablePartially": false,
+              "contentWarning": "explicit",
+              "coverUri": "avatars.yandex.net/get-music-content/5236179/9195a36d.a.18031896-1/%%",
+              "genre": "classicmetal",
+              "id": 18031896,
+              "labels": [
+                {
+                  "id": 51173,
+                  "name": "Blackened"
+                }
+              ],
+              "likesCount": 23915,
+              "listeningFinished": false,
+              "metaType": "music",
+              "recent": false,
+              "releaseDate": "1991-08-12T00:00:00+03:00",
+              "title": "Metallica",
+              "trackCount": 193,
+              "trackPosition": {
+                "index": 15,
+                "volume": 6
+              },
+              "version": "Remastered Deluxe Box Set",
+              "veryImportant": false,
+              "year": 1991
+            }
+          ],
+          "artists": [
+            {
+              "available": true,
+              "composer": false,
+              "cover": {
+                "prefix": "cba01543.p.3121/",
+                "type": "from-artist-photos",
+                "uri": "avatars.yandex.net/get-music-content/16469857/cba01543.p.3121/%%"
+              },
+              "genres": [],
+              "id": 3121,
+              "name": "Metallica",
+              "various": false
+            }
+          ],
+          "available": true,
+          "availableForPremiumUsers": true,
+          "availableFullWithoutPermission": false,
+          "coverUri": "avatars.yandex.net/get-music-content/5236179/9195a36d.a.18031896-1/%%",
+          "durationMs": 300590,
+          "fileSize": 0,
+          "id": "90947898",
+          "lyricsAvailable": true,
+          "major": {
+            "id": 0,
+            "name": "-"
+          },
+          "previewDurationMs": 30000,
+          "realId": "90947898",
+          "rememberPosition": false,
+          "storageDir": "51327_109b74ca.36526310.1.609676",
+          "title": "Nothing Else Matters",
+          "trackSharingFlag": "COVER_ONLY",
+          "trackSource": "OWN",
+          "type": "music",
+          "version": "Radio Edit"
+        },
+        {
+          "albums": [
+            {
+              "artists": [
+                {
+                  "available": true,
+                  "composer": false,
+                  "cover": {
+                    "prefix": "cba01543.p.3121/",
+                    "type": "from-artist-photos",
+                    "uri": "avatars.yandex.net/get-music-content/16469857/cba01543.p.3121/%%"
+                  },
+                  "genres": [],
+                  "id": 3121,
+                  "name": "Metallica",
+                  "various": false
+                }
+              ],
+              "available": true,
+              "availableForMobile": true,
+              "availableForPremiumUsers": true,
+              "availablePartially": false,
+              "contentWarning": "explicit",
+              "coverUri": "avatars.yandex.net/get-music-content/5236179/9195a36d.a.18031896-1/%%",
+              "genre": "classicmetal",
+              "id": 18031896,
+              "labels": [
+                {
+                  "id": 51173,
+                  "name": "Blackened"
+                }
+              ],
+              "likesCount": 23915,
+              "listeningFinished": false,
+              "metaType": "music",
+              "recent": false,
+              "releaseDate": "1991-08-12T00:00:00+03:00",
+              "title": "Metallica",
+              "trackCount": 193,
+              "trackPosition": {
+                "index": 14,
+                "volume": 6
+              },
+              "version": "Remastered Deluxe Box Set",
+              "veryImportant": false,
+              "year": 1991
+            }
+          ],
+          "artists": [
+            {
+              "available": true,
+              "composer": false,
+              "cover": {
+                "prefix": "cba01543.p.3121/",
+                "type": "from-artist-photos",
+                "uri": "avatars.yandex.net/get-music-content/16469857/cba01543.p.3121/%%"
+              },
+              "genres": [],
+              "id": 3121,
+              "name": "Metallica",
+              "various": false
+            }
+          ],
+          "available": true,
+          "availableForPremiumUsers": true,
+          "availableFullWithoutPermission": false,
+          "coverUri": "avatars.yandex.net/get-music-content/5236179/9195a36d.a.18031896-1/%%",
+          "durationMs": 300970,
+          "fileSize": 0,
+          "id": "90947897",
+          "lyricsAvailable": true,
+          "major": {
+            "id": 0,
+            "name": "-"
+          },
+          "previewDurationMs": 30000,
+          "realId": "90947897",
+          "rememberPosition": false,
+          "storageDir": "51327_109b74ca.36526310.1.609676",
+          "title": "The Unforgiven",
+          "trackSharingFlag": "COVER_ONLY",
+          "trackSource": "OWN",
+          "type": "music",
+          "version": "Radio Edit"
+        }
+      ]
+    }
+  }
+}

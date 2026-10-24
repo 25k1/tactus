@@ -54,6 +54,10 @@ impl YandexService {
         if !pinned.is_empty() {
             page.sections.insert(0, Section::new(SectionKind::Pinned, "", pinned));
         }
+        let presaved: Vec<Item> = self.presaves(uid).await.unwrap_or_default().into_iter().map(Item::Album).collect();
+        if !presaved.is_empty() {
+            page.sections.push(Section::new(SectionKind::Presaves, "", presaved));
+        }
         Ok(page)
     }
 
@@ -90,7 +94,15 @@ impl YandexService {
             if key.owner == uid { self.get(&format!("{path}/recommendations"), &[]).await.ok() } else { None }
         };
         let (playlist, suggestions) = tokio::join!(self.get(&path, &[("rich-tracks", "true")]), suggestions);
-        Ok(parse::playlist_page(&playlist?, suggestions.as_ref()))
+        let playlist = playlist?;
+        let mut page = parse::playlist_page(&playlist, suggestions.as_ref());
+        let uuid = parse::result(&playlist).text("playlistUuid");
+        if !uuid.is_empty() {
+            let uuid = uuid.strip_prefix("lk.").unwrap_or(uuid);
+            let similar = self.get(&format!("playlist/{uuid}/similar-entities"), &[]).await;
+            page.add_similar(similar.map(|value| parse::similar_entities(&value)).unwrap_or_default());
+        }
+        Ok(page)
     }
 
     async fn tag(&self, id: &str) -> Result<Page> {
@@ -181,7 +193,15 @@ impl CatalogService for YandexService {
                 }
                 View::Category(id) => parse::non_music(&self.get(&format!("non-music/category/{id}"), &[]).await?),
                 View::History => parse::history(&self.get("music-history", &[("fullModelsCount", "200")]).await?),
-                View::Album(id) => parse::album_page(&self.get(&format!("albums/{id}/with-tracks"), &[]).await?),
+                View::Album(id) => {
+                    let (album, similar) = tokio::join!(
+                        self.get(&format!("albums/{id}/with-tracks"), &[]),
+                        self.get(&format!("albums/{id}/similar-entities"), &[]),
+                    );
+                    let mut page = parse::album_page(&album?);
+                    page.add_similar(similar.map(|value| parse::similar_entities(&value)).unwrap_or_default());
+                    page
+                }
                 View::Artist(id) => self.artist(id).await?,
                 View::Playlist(key) => self.playlist(*key, uid).await?,
                 View::Track(id) => {
@@ -307,6 +327,21 @@ impl CatalogService for YandexService {
                 _ => Err(Error::Unsupported),
             }
         })
+    }
+
+    fn trailer(&self, target: &Target) -> Result<Vec<Track>> {
+        let path = match target {
+            Target::Album(id) => format!("albums/{id}/trailer"),
+            Target::Artist(id) => format!("artists/{id}/trailer"),
+            Target::Playlist(key) => format!("users/{}/playlists/{}/trailer", key.owner, key.kind),
+            Target::Track(track) => format!("tracks/{}/trailer", track.id),
+            Target::Wave(_) => return Err(Error::Unsupported),
+        };
+        let tracks = parse::trailer(&net::block_on(self.get(&path, &[]))?);
+        if tracks.is_empty() {
+            return Err(Error::NotFound(path));
+        }
+        Ok(tracks)
     }
 
     fn concert_locations(&self) -> Result<Vec<ConcertLocation>> {

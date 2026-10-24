@@ -22,6 +22,9 @@ pub enum ItemAction {
     GoToAlbum,
     GoToArtist,
     GoToLabel,
+    PlayTrailer,
+    Presave,
+    RemovePresave,
     TrackInfo,
     CopyLink,
     Rename,
@@ -39,7 +42,7 @@ pub enum ItemAction {
 }
 
 impl ItemAction {
-    pub const ALL: [ItemAction; 34] = [
+    pub const ALL: [ItemAction; 37] = [
         ItemAction::Open,
         ItemAction::Play,
         ItemAction::PlayNext,
@@ -60,6 +63,9 @@ impl ItemAction {
         ItemAction::GoToAlbum,
         ItemAction::GoToArtist,
         ItemAction::GoToLabel,
+        ItemAction::PlayTrailer,
+        ItemAction::Presave,
+        ItemAction::RemovePresave,
         ItemAction::TrackInfo,
         ItemAction::CopyLink,
         ItemAction::Rename,
@@ -102,6 +108,9 @@ impl ItemAction {
             ItemAction::GoToAlbum => fl!("action-go-to-album"),
             ItemAction::GoToArtist => fl!("action-go-to-artist"),
             ItemAction::GoToLabel => fl!("action-go-to-label"),
+            ItemAction::PlayTrailer => fl!("action-play-trailer"),
+            ItemAction::Presave => fl!("action-presave"),
+            ItemAction::RemovePresave => fl!("action-remove-presave"),
             ItemAction::TrackInfo => fl!("action-track-info"),
             ItemAction::CopyLink => fl!("action-copy-link"),
             ItemAction::Rename => fl!("action-rename"),
@@ -205,8 +214,16 @@ pub fn item_actions(player: &Player, entry: &Entry, context: &ListContext) -> Ve
             }
             actions.extend([Some(TrackInfo), Some(CopyLink)]);
         }
+        Item::Album(album) if album.upcoming || player.is_presaved(&album.id) => {
+            actions.extend([Some(Open), None]);
+            actions.push(Some(if player.is_presaved(&album.id) { RemovePresave } else { Presave }));
+            if !album.artist_id.is_empty() {
+                actions.push(Some(GoToArtist));
+            }
+            actions.push(Some(CopyLink));
+        }
         Item::Album(album) => {
-            actions.extend([Some(Open), Some(Play), Some(AddToQueue), None]);
+            actions.extend([Some(Open), Some(Play), Some(AddToQueue), Some(PlayTrailer), None]);
             actions.extend(relation_actions(player, &Target::Album(album.id.clone()), false));
             actions.push(pin_action(player, item));
             actions.extend([Some(Download), Some(Radio)]);
@@ -219,13 +236,21 @@ pub fn item_actions(player: &Player, entry: &Entry, context: &ListContext) -> Ve
             actions.push(Some(CopyLink));
         }
         Item::Artist(artist) => {
-            actions.extend([Some(Open), Some(Play), Some(Radio), None]);
+            actions.extend([Some(Open), Some(Play), Some(Radio), Some(PlayTrailer), None]);
             actions.extend(relation_actions(player, &Target::Artist(artist.id.clone()), true));
             actions.push(pin_action(player, item));
             actions.push(Some(CopyLink));
         }
         Item::Playlist(playlist) => {
-            actions.extend([Some(Open), Some(Play), Some(AddToQueue), Some(Download), Some(Radio), None]);
+            actions.extend([
+                Some(Open),
+                Some(Play),
+                Some(AddToQueue),
+                Some(Download),
+                Some(Radio),
+                Some(PlayTrailer),
+                None,
+            ]);
             if player.is_own(playlist) {
                 actions.extend([
                     Some(Rename),
@@ -238,7 +263,7 @@ pub fn item_actions(player: &Player, entry: &Entry, context: &ListContext) -> Ve
             }
             actions.extend([pin_action(player, item), Some(Duplicate), Some(CopyLink)]);
         }
-        Item::Station(_) => actions.push(Some(Play)),
+        Item::Station(_) => actions.extend([Some(Play), pin_action(player, item)]),
         Item::Tag(_) | Item::Link(_) | Item::Concert(_) => actions.extend([Some(Open), Some(CopyLink)]),
         Item::Genre(genre) if !genre.seed.is_empty() => actions.extend([Some(Open), Some(Radio)]),
         Item::Genre(_) | Item::Category(_) => actions.push(Some(Open)),

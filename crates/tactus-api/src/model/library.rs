@@ -21,6 +21,7 @@ pub enum Target {
     Album(String),
     Artist(String),
     Playlist(PlaylistKey),
+    Wave(String),
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -32,6 +33,7 @@ pub struct Library {
     pub disliked_artists: HashSet<String>,
     pub liked_playlists: HashSet<PlaylistKey>,
     pub pinned: Vec<Item>,
+    pub presaved: HashSet<String>,
 }
 
 impl Library {
@@ -61,7 +63,7 @@ impl Library {
     fn id(target: &Target) -> &str {
         match target {
             Target::Track(track) => &track.id,
-            Target::Album(id) | Target::Artist(id) => id,
+            Target::Album(id) | Target::Artist(id) | Target::Wave(id) => id,
             Target::Playlist(_) => "",
         }
     }
@@ -76,6 +78,7 @@ impl Library {
             (Target::Album(_), Relation::Dislike) => false,
             (Target::Artist(id), Relation::Like) => self.liked_artists.contains(id),
             (Target::Artist(id), Relation::Dislike) => self.disliked_artists.contains(id),
+            (Target::Wave(_), _) => false,
         }
     }
 
