@@ -7,6 +7,7 @@ pub mod fake;
 pub mod model;
 pub mod net;
 pub mod parse;
+pub mod proxy;
 mod service;
 mod yandex;
 pub mod ynison;

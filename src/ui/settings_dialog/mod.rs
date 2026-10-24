@@ -5,6 +5,7 @@ mod general;
 mod hotkeys;
 mod key_editor;
 mod lists;
+mod network;
 mod playback;
 mod remote;
 mod shortcuts;
@@ -119,6 +120,7 @@ impl Ui {
             Box::new(hotkeys::Hotkeys::new(&notebook, &old, self, dialog)),
             Box::new(downloads::Downloads::new(&notebook, &old)),
             Box::new(remote::Remote::new(&notebook, &old)),
+            Box::new(network::Network::new(&notebook, &old)),
         ];
         let account = account::Account::new(&notebook, &self.player.borrow().account_settings);
         notebook.set_selection(0);
@@ -148,7 +150,7 @@ impl Ui {
         for (option, enabled) in account_changes {
             self.act(|player| player.set_account_option(option, enabled));
         }
-        if (&old.language, old.theme) != (&new.language, new.theme) {
+        if (&old.language, old.theme, &old.proxy) != (&new.language, new.theme, &new.proxy) {
             if dialogs::confirm(&self.frame, &fl!("settings-restart"), &fl!("settings-title")) {
                 return self.restart(None);
             }

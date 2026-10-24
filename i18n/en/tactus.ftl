@@ -330,8 +330,8 @@ settings-theme = &Theme
 theme-system = Match system
 theme-light = Light
 theme-dark = Dark
-settings-restart = Restart Tactus now to apply the new language or theme?
-settings-restart-later = The new language or theme applies after restarting Tactus.
+settings-restart = Restart Tactus now to apply the changes?
+settings-restart-later = The changes apply after restarting Tactus.
 restart-failed = Tactus could not restart. Start it again manually.
 settings-tray = Keep Tactus in the &tray when the window is closed
 settings-minimize-to-tray = &Minimize to the tray
@@ -367,6 +367,14 @@ settings-remote-token = Access token
 settings-remote-generate = &Generate new token
 settings-remote-copy = &Copy token
 settings-remote-hint = Send the token as "Authorization: Bearer <token>", or add ?token=<token> to the address.
+settings-network = Network
+settings-proxy-enabled = &Connect through a proxy server
+settings-proxy-kind = Proxy &type
+settings-proxy-host = Proxy &address
+settings-proxy-port = P&ort
+settings-proxy-login = &Login (optional)
+settings-proxy-password = Pass&word (optional)
+settings-proxy-hint = The proxy is used for Yandex Music, audio, downloads, updates and Ynison. The login and password are saved in the data folder as plain text.
 settings-account-unavailable = Yandex account settings are not available yet. Try again after signing in.
 
 account-explicit-forbidden = Hide explicit content

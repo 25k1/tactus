@@ -10,6 +10,7 @@ use std::path::{Path, PathBuf};
 use std::sync::LazyLock;
 use tactus_api::Quality;
 use tactus_api::error::Result;
+use tactus_api::proxy::Proxy;
 
 pub const DEFAULT_REMOTE_PORT: u16 = 9420;
 pub const MAX_CROSSFADE: u8 = 12;
@@ -91,6 +92,7 @@ pub struct Settings {
     pub remote_enabled: bool,
     pub remote_port: u16,
     pub remote_token: String,
+    pub proxy: Proxy,
 }
 
 impl Default for Settings {
@@ -142,6 +144,7 @@ impl Default for Settings {
             remote_enabled: false,
             remote_port: DEFAULT_REMOTE_PORT,
             remote_token: String::new(),
+            proxy: Proxy::default(),
         }
     }
 }

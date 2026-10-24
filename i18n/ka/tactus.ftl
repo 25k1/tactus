@@ -330,8 +330,8 @@ settings-theme = &თემა
 theme-system = სისტემის მიხედვით
 theme-light = ღია
 theme-dark = მუქი
-settings-restart = გადავტვირთო Tactus ახლავე ახალი ენის ან თემის გამოსაყენებლად?
-settings-restart-later = ახალი ენა ან თემა Tactus-ის გადატვირთვის შემდეგ ამოქმედდება.
+settings-restart = გადავტვირთო Tactus ახლავე ცვლილებების გამოსაყენებლად?
+settings-restart-later = ცვლილებები Tactus-ის გადატვირთვის შემდეგ ამოქმედდება.
 restart-failed = Tactus ვერ გადაიტვირთა. ხელახლა გაუშვით ხელით.
 settings-tray = ფანჯრის დახურვისას Tactus დარჩეს &სისტემურ ზოლში
 settings-minimize-to-tray = ჩაკეცვისას სისტემურ &ზოლში გადასვლა
@@ -367,6 +367,14 @@ settings-remote-token = წვდომის ტოკენი
 settings-remote-generate = ახალი ტოკენის &შექმნა
 settings-remote-copy = ტოკენის &კოპირება
 settings-remote-hint = გაგზავნეთ ტოკენი ასე: "Authorization: Bearer <token>", ან დაამატეთ მისამართს ?token=<token>.
+settings-network = ქსელი
+settings-proxy-enabled = &პროქსი სერვერით დაკავშირება
+settings-proxy-kind = პროქსის &ტიპი
+settings-proxy-host = პროქსის &მისამართი
+settings-proxy-port = პ&ორტი
+settings-proxy-login = &ლოგინი (არასავალდებულო)
+settings-proxy-password = პა&როლი (არასავალდებულო)
+settings-proxy-hint = პროქსი გამოიყენება Yandex Music-ისთვის, ხმისთვის, ჩამოტვირთვებისთვის, განახლებებისთვის და Ynison-ისთვის. ლოგინი და პაროლი data საქაღალდეში ღია ტექსტად ინახება.
 settings-account-unavailable = Yandex-ის ანგარიშის პარამეტრები ჯერ მიუწვდომელია. სცადეთ შესვლის შემდეგ.
 
 account-explicit-forbidden = უხამსი შინაარსის დამალვა

@@ -339,8 +339,8 @@ settings-theme = &Тема
 theme-system = Как в системе
 theme-light = Светлая
 theme-dark = Тёмная
-settings-restart = Перезапустить Tactus сейчас, чтобы применить новый язык или тему?
-settings-restart-later = Новый язык или тема применятся после перезапуска Tactus.
+settings-restart = Перезапустить Tactus сейчас, чтобы применить изменения?
+settings-restart-later = Изменения применятся после перезапуска Tactus.
 restart-failed = Не удалось перезапустить Tactus. Запустите его вручную.
 settings-tray = Оставлять Tactus в &трее при закрытии окна
 settings-minimize-to-tray = &Сворачивать в трей
@@ -376,6 +376,14 @@ settings-remote-token = Ключ доступа
 settings-remote-generate = &Создать новый ключ
 settings-remote-copy = &Копировать ключ
 settings-remote-hint = Передавайте ключ в заголовке "Authorization: Bearer <ключ>" или добавьте ?token=<ключ> к адресу.
+settings-network = Сеть
+settings-proxy-enabled = &Подключаться через прокси-сервер
+settings-proxy-kind = &Тип прокси
+settings-proxy-host = &Адрес прокси
+settings-proxy-port = П&орт
+settings-proxy-login = &Логин (необязательно)
+settings-proxy-password = Паро&ль (необязательно)
+settings-proxy-hint = Прокси используется для Яндекс Музыки, звука, загрузок, обновлений и Ynison. Логин и пароль хранятся в папке data открытым текстом.
 settings-account-unavailable = Настройки аккаунта Яндекса пока недоступны. Попробуйте после входа.
 
 account-explicit-forbidden = Скрывать контент с ненормативной лексикой

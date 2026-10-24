@@ -96,6 +96,7 @@ pub fn run() {
         });
         crate::i18n::init(settings.language.as_deref());
         tactus_api::net::set_language(&crate::i18n::current_language());
+        tactus_api::net::set_proxy(&settings.proxy);
         tactus_core::log::info(format_args!("Tactus {} started", tactus_core::update::CURRENT));
         tactus_core::update::cleanup();
         #[cfg(feature = "fake")]

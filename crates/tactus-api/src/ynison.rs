@@ -208,7 +208,9 @@ fn open(url: &str, token: &str, protocol: &str) -> Result<Socket> {
     headers.insert("Sec-WebSocket-Protocol", HeaderValue::from_str(protocol).map_err(failure)?);
     headers.insert("Origin", HeaderValue::from_static("http://music.yandex.ru"));
     headers.insert("Authorization", HeaderValue::from_str(&format!("OAuth {token}")).map_err(failure)?);
-    Ok(tungstenite::connect(request).map_err(failure)?.0)
+    let host = request.uri().host().ok_or_else(|| failure("no host"))?.to_owned();
+    let stream = crate::net::open_stream(&host, 443)?;
+    Ok(tungstenite::client_tls(request, stream).map_err(failure)?.0)
 }
 
 fn read_json(socket: &mut Socket) -> Result<Option<Value>> {
