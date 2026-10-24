@@ -69,7 +69,7 @@ impl Player {
             return;
         };
         if self.settings.device_id.is_empty() {
-            let id = format!("tactus-{:016x}", seed());
+            let id = format!("{:012x}", seed() & 0xffff_ffff_ffff);
             self.update_settings(|settings| settings.device_id = id);
         }
         let name = Some(self.settings.device_name.trim()).filter(|name| !name.is_empty());

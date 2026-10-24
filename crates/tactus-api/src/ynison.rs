@@ -1,11 +1,12 @@
 use crate::error::{Error, Result};
 use crate::parse::Json;
+use crate::proxy::encode_component;
 use serde_json::{Map, Value, json};
 use std::net::TcpStream;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::mpsc::{self, Receiver, Sender};
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use tungstenite::client::IntoClientRequest;
 use tungstenite::http::HeaderValue;
 use tungstenite::stream::MaybeTlsStream;
@@ -13,9 +14,17 @@ use tungstenite::{Message, WebSocket};
 
 const REDIRECTOR: &str = "wss://ynison.music.yandex.ru/redirector.YnisonRedirectService/GetRedirectToYnison";
 const STATE_PATH: &str = "/ynison_state.YnisonStateService/PutYnisonState";
+const APP_NAME: &str = "yandex-music";
 const FROM: &str = "desktop_win-own_tracks-track-default";
 const READ_TIMEOUT: Duration = Duration::from_millis(250);
-const RETRY: Duration = Duration::from_secs(30);
+const HANDSHAKE_TIMEOUT: Duration = Duration::from_secs(10);
+const PING_INTERVAL: Duration = Duration::from_secs(20);
+const PING_TIMEOUT: Duration = Duration::from_secs(20);
+const DEFAULT_BACKOFF_MS: [u64; 4] = [0, 1000, 5000, 30000];
+const JITTER_MS: u64 = 250;
+const GRPC_UNAUTHENTICATED: i64 = 16;
+const GRPC_PERMISSION_DENIED: i64 = 7;
+const DEVICE_DISPLACED: &str = "400090001";
 
 type Socket = WebSocket<MaybeTlsStream<TcpStream>>;
 
@@ -131,7 +140,7 @@ pub fn message(identity: &Identity, versions: &Versions, outgoing: &Outgoing) ->
                 "player_state": { "player_queue": queue(tracks, *index, versions), "status": status(playing, versions) },
                 "device": {
                     "capabilities": { "can_be_player": true, "can_be_remote_controller": true, "volume_granularity": 16 },
-                    "info": { "device_id": identity.id, "type": "WEB", "title": identity.title, "app_name": "Chrome" },
+                    "info": { "device_id": identity.id, "type": "WEB", "title": identity.title, "app_name": APP_NAME },
                     "volume_info": { "volume": 1.0 },
                     "is_shadow": false
                 },
@@ -157,10 +166,52 @@ pub fn message(identity: &Identity, versions: &Versions, outgoing: &Outgoing) ->
     message
 }
 
-pub fn parse_state(value: &Value) -> std::result::Result<Shared, (String, u64)> {
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct ServerError {
+    pub message: String,
+    pub grpc_code: Option<i64>,
+    pub http_code: Option<i64>,
+    pub error_code: String,
+    pub backoff_ms: Vec<u64>,
+    pub go_away_seconds: Option<u64>,
+}
+
+impl ServerError {
+    fn parse(error: &Value) -> Self {
+        let details =
+            Some(error.at("details")).filter(|details| details.as_object().is_some_and(|map| !map.is_empty()));
+        let details = details.unwrap_or_else(|| error.at("extra_headers"));
+        let number = |value: &Value| value.as_i64().or_else(|| value.as_str()?.trim().parse().ok());
+        Self {
+            message: Some(error.text("message"))
+                .filter(|message| !message.is_empty())
+                .unwrap_or("Ynison error")
+                .to_owned(),
+            grpc_code: number(error.at("grpc_code")),
+            http_code: number(error.at("http_code")),
+            error_code: details.id("ynison-error-code"),
+            backoff_ms: details
+                .text("ynison-backoff-millis")
+                .split(':')
+                .filter_map(|part| part.trim().parse().ok())
+                .collect(),
+            go_away_seconds: details.id("ynison-go-away-for-seconds").parse().ok().filter(|seconds| *seconds > 0),
+        }
+    }
+
+    pub fn unauthorized(&self) -> bool {
+        matches!(self.grpc_code, Some(GRPC_UNAUTHENTICATED | GRPC_PERMISSION_DENIED))
+            || matches!(self.http_code, Some(401 | 403))
+    }
+
+    pub fn displaced(&self) -> bool {
+        self.error_code == DEVICE_DISPLACED
+    }
+}
+
+pub fn parse_state(value: &Value) -> std::result::Result<Shared, ServerError> {
     if let Some(error) = value.get("error") {
-        let wait = error.at("details").id("ynison-go-away-for-seconds").parse().unwrap_or(RETRY.as_secs());
-        return Err((error.text("message").to_owned(), wait));
+        return Err(ServerError::parse(error));
     }
     let state = value.at("player_state");
     let queue = state.at("player_queue");
@@ -192,59 +243,115 @@ pub fn parse_state(value: &Value) -> std::result::Result<Shared, (String, u64)> 
     })
 }
 
-fn protocol(identity: &Identity, extra: &[(&str, &str)]) -> String {
+pub fn protocol(identity: &Identity, extra: &[(&str, &str)]) -> String {
     let mut fields = Map::new();
     fields.insert("Ynison-Device-Id".into(), identity.id.clone().into());
-    fields.insert("Ynison-Device-Info".into(), json!({ "app_name": "Chrome", "type": 1 }).to_string().into());
+    fields.insert("Ynison-Device-Info".into(), json!({ "app_name": identity.title, "type": "1" }).to_string().into());
     for (key, value) in extra {
         fields.insert((*key).into(), (*value).into());
     }
-    format!("Bearer, v2, {}", Value::Object(fields))
+    format!("Bearer, v2, {}", encode_component(&Value::Object(fields).to_string()))
 }
 
-fn open(url: &str, token: &str, protocol: &str) -> Result<Socket> {
+enum Failure {
+    Retry(String),
+    Server(ServerError),
+    Unauthorized(String),
+}
+
+impl From<Error> for Failure {
+    fn from(error: Error) -> Self {
+        Failure::Retry(error.to_string())
+    }
+}
+
+fn open(url: &str, token: &str, protocol: &str) -> std::result::Result<Socket, Failure> {
     let mut request = url.into_client_request().map_err(failure)?;
     let headers = request.headers_mut();
     headers.insert("Sec-WebSocket-Protocol", HeaderValue::from_str(protocol).map_err(failure)?);
-    headers.insert("Origin", HeaderValue::from_static("http://music.yandex.ru"));
+    headers.insert("Origin", HeaderValue::from_static("https://music.yandex.ru"));
     headers.insert("Authorization", HeaderValue::from_str(&format!("OAuth {token}")).map_err(failure)?);
     let host = request.uri().host().ok_or_else(|| failure("no host"))?.to_owned();
-    let stream = crate::net::open_stream(&host, 443)?;
-    Ok(tungstenite::client_tls(request, stream).map_err(failure)?.0)
+    let stream = crate::net::open_stream(&host, 443).map_err(failure)?;
+    stream.set_read_timeout(Some(HANDSHAKE_TIMEOUT)).map_err(failure)?;
+    match tungstenite::client_tls(request, stream) {
+        Ok((socket, _)) => Ok(socket),
+        Err(tungstenite::HandshakeError::Failure(tungstenite::Error::Http(response)))
+            if matches!(response.status().as_u16(), 401 | 403) =>
+        {
+            Err(Failure::Unauthorized(format!("ynison: HTTP {}", response.status())))
+        }
+        Err(error) => Err(Failure::Retry(failure(error).to_string())),
+    }
 }
 
-fn read_json(socket: &mut Socket) -> Result<Option<Value>> {
+enum Frame {
+    Json(Value),
+    Control,
+    Idle,
+}
+
+fn read_frame(socket: &mut Socket) -> Result<Frame> {
     match socket.read() {
-        Ok(Message::Text(text)) => serde_json::from_str(&text).map(Some).map_err(failure),
+        Ok(Message::Text(text)) => serde_json::from_str(&text).map(Frame::Json).map_err(failure),
         Ok(Message::Close(frame)) => Err(failure(format!("closed {frame:?}"))),
-        Ok(_) => Ok(None),
+        Ok(_) => Ok(Frame::Control),
         Err(tungstenite::Error::Io(error))
             if matches!(error.kind(), std::io::ErrorKind::WouldBlock | std::io::ErrorKind::TimedOut) =>
         {
-            Ok(None)
+            Ok(Frame::Idle)
         }
         Err(error) => Err(failure(error)),
     }
 }
 
-fn connect(token: &str, identity: &Identity) -> Result<Socket> {
+fn set_read_timeout(socket: &Socket, timeout: Duration) -> Result<()> {
+    if let MaybeTlsStream::NativeTls(stream) = socket.get_ref() {
+        stream.get_ref().set_read_timeout(Some(timeout))?;
+    }
+    Ok(())
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct KeepAlive {
+    pub interval: Duration,
+    pub timeout: Duration,
+}
+
+impl KeepAlive {
+    fn parse(params: &Value) -> Self {
+        let seconds = |key: &str, default: Duration| {
+            params.id(key).parse::<u64>().ok().filter(|seconds| *seconds > 0).map_or(default, Duration::from_secs)
+        };
+        Self {
+            interval: seconds("keep_alive_time_seconds", PING_INTERVAL),
+            timeout: seconds("keep_alive_timeout_seconds", PING_TIMEOUT),
+        }
+    }
+}
+
+fn connect(token: &str, identity: &Identity) -> std::result::Result<(Socket, KeepAlive), Failure> {
     let mut redirect = open(REDIRECTOR, token, &protocol(identity, &[]))?;
+    let deadline = Instant::now() + HANDSHAKE_TIMEOUT;
     let target = loop {
-        if let Some(target) = read_json(&mut redirect)? {
-            break target;
+        match read_frame(&mut redirect)? {
+            Frame::Json(target) => break target,
+            _ if Instant::now() >= deadline => return Err(Failure::Retry("ynison: no redirect".into())),
+            _ => {}
         }
     };
     let _ = redirect.close(None);
+    if let Some(error) = target.get("error") {
+        return Err(Failure::Server(ServerError::parse(error)));
+    }
     let (host, ticket, session) = (target.text("host"), target.text("redirect_ticket"), target.id("session_id"));
-    if host.is_empty() {
-        return Err(failure(target));
+    if host.is_empty() || ticket.is_empty() || session.is_empty() {
+        return Err(Failure::Retry(failure(target).to_string()));
     }
     let extra = [("Ynison-Redirect-Ticket", ticket), ("Ynison-Session-Id", session.as_str())];
     let socket = open(&format!("wss://{host}{STATE_PATH}"), token, &protocol(identity, &extra))?;
-    if let MaybeTlsStream::NativeTls(stream) = socket.get_ref() {
-        stream.get_ref().set_read_timeout(Some(READ_TIMEOUT))?;
-    }
-    Ok(socket)
+    set_read_timeout(&socket, READ_TIMEOUT)?;
+    Ok((socket, KeepAlive::parse(target.at("keep_alive_params"))))
 }
 
 pub struct Link {
@@ -278,65 +385,142 @@ impl Drop for Link {
     }
 }
 
-fn pause(stop: &AtomicBool, seconds: u64) {
-    for _ in 0..seconds * 4 {
-        if stop.load(Ordering::Relaxed) {
-            return;
-        }
-        std::thread::sleep(Duration::from_millis(250));
+fn pause(stop: &AtomicBool, wait: Duration) {
+    let deadline = Instant::now() + wait;
+    while !stop.load(Ordering::Relaxed) && Instant::now() < deadline {
+        std::thread::sleep(Duration::from_millis(100).min(deadline - Instant::now()));
     }
 }
 
-fn run(token: &str, identity: &Identity, inbox: &Receiver<Outgoing>, outbox: &Sender<Incoming>, stop: &AtomicBool) {
-    let versions = Versions::new(&identity.id);
-    let mut full: Option<Outgoing> = None;
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Backoff {
+    schedule: Vec<u64>,
+    attempt: usize,
+}
+
+impl Default for Backoff {
+    fn default() -> Self {
+        Self { schedule: DEFAULT_BACKOFF_MS.to_vec(), attempt: 0 }
+    }
+}
+
+impl Backoff {
+    pub fn reset(&mut self) {
+        self.attempt = 0;
+    }
+
+    pub fn adopt(&mut self, schedule: &[u64]) {
+        if !schedule.is_empty() {
+            self.schedule = schedule.to_vec();
+        }
+    }
+
+    pub fn delay(&mut self) -> Duration {
+        self.attempt += 1;
+        let base = self.schedule[(self.attempt - 1).min(self.schedule.len() - 1)];
+        Duration::from_millis(base + now_ms() % JITTER_MS)
+    }
+}
+
+enum Verdict {
+    Wait(Duration),
+    Stop,
+}
+
+fn judge(error: &ServerError, backoff: &mut Backoff) -> Verdict {
+    backoff.adopt(&error.backoff_ms);
+    if error.unauthorized() || error.displaced() {
+        return Verdict::Stop;
+    }
+    match error.go_away_seconds {
+        Some(seconds) => Verdict::Wait(Duration::from_secs(seconds)),
+        None => Verdict::Wait(backoff.delay()),
+    }
+}
+
+struct Context<'a> {
+    identity: &'a Identity,
+    versions: Versions,
+    inbox: &'a Receiver<Outgoing>,
+    outbox: &'a Sender<Incoming>,
+    stop: &'a AtomicBool,
+}
+
+fn session(
+    socket: &mut Socket,
+    keep_alive: KeepAlive,
+    context: &Context<'_>,
+    full: &mut Option<Outgoing>,
+    backoff: &mut Backoff,
+) -> std::result::Result<(), Failure> {
+    let Context { identity, versions, inbox, outbox, stop } = context;
+    let announce = full.clone().unwrap_or(Outgoing::Full {
+        queue: Vec::new(),
+        index: None,
+        playing: Playing { paused: true, speed: 1.0, ..Playing::default() },
+        active: false,
+    });
+    let mut pending = vec![announce];
+    let (mut heard, mut pinged) = (Instant::now(), Instant::now());
     while !stop.load(Ordering::Relaxed) {
-        let mut socket = match connect(token, identity) {
-            Ok(socket) => socket,
-            Err(error) => {
-                let _ = outbox.send(Incoming::Unavailable(error.to_string()));
-                pause(stop, RETRY.as_secs());
-                continue;
+        pending.extend(inbox.try_iter());
+        for outgoing in pending.drain(..) {
+            if matches!(outgoing, Outgoing::Full { .. }) {
+                *full = Some(outgoing.clone());
+            }
+            let text = message(identity, versions, &outgoing).to_string();
+            socket.send(Message::Text(text.into())).map_err(failure)?;
+        }
+        if pinged.elapsed() >= keep_alive.interval {
+            socket.send(Message::Ping(Vec::new().into())).map_err(failure)?;
+            pinged = Instant::now();
+        }
+        match read_frame(socket)? {
+            Frame::Json(value) => {
+                heard = Instant::now();
+                let shared = parse_state(&value).map_err(Failure::Server)?;
+                backoff.reset();
+                let _ = outbox.send(Incoming::State(shared));
+            }
+            Frame::Control => heard = Instant::now(),
+            Frame::Idle if heard.elapsed() >= keep_alive.interval + keep_alive.timeout => {
+                return Err(Failure::Retry("ynison: the server stopped answering".into()));
+            }
+            Frame::Idle => {}
+        }
+    }
+    Ok(())
+}
+
+fn run(token: &str, identity: &Identity, inbox: &Receiver<Outgoing>, outbox: &Sender<Incoming>, stop: &AtomicBool) {
+    let context = Context { identity, versions: Versions::new(&identity.id), inbox, outbox, stop };
+    let mut full: Option<Outgoing> = None;
+    let mut backoff = Backoff::default();
+    while !stop.load(Ordering::Relaxed) {
+        let result = connect(token, identity).and_then(|(mut socket, keep_alive)| {
+            let result = session(&mut socket, keep_alive, &context, &mut full, &mut backoff);
+            let _ = socket.close(None);
+            result
+        });
+        let verdict = match result {
+            Ok(()) => return,
+            Err(Failure::Retry(reason)) => {
+                let _ = outbox.send(Incoming::Unavailable(reason));
+                Verdict::Wait(backoff.delay())
+            }
+            Err(Failure::Unauthorized(reason)) => {
+                let _ = outbox.send(Incoming::Unavailable(reason));
+                Verdict::Stop
+            }
+            Err(Failure::Server(error)) => {
+                let _ = outbox.send(Incoming::Unavailable(error.message.clone()));
+                judge(&error, &mut backoff)
             }
         };
-        let announce = full.clone().unwrap_or(Outgoing::Full {
-            queue: Vec::new(),
-            index: None,
-            playing: Playing { paused: true, speed: 1.0, ..Playing::default() },
-            active: false,
-        });
-        let mut wait = None;
-        let mut pending = vec![announce];
-        while !stop.load(Ordering::Relaxed) && wait.is_none() {
-            pending.extend(inbox.try_iter());
-            for outgoing in pending.drain(..) {
-                if matches!(outgoing, Outgoing::Full { .. }) {
-                    full = Some(outgoing.clone());
-                }
-                let text = message(identity, &versions, &outgoing).to_string();
-                if socket.send(Message::Text(text.into())).is_err() {
-                    wait = Some(RETRY.as_secs());
-                }
-            }
-            match read_json(&mut socket) {
-                Ok(Some(value)) => match parse_state(&value) {
-                    Ok(shared) => {
-                        let _ = outbox.send(Incoming::State(shared));
-                    }
-                    Err((reason, seconds)) => {
-                        let _ = outbox.send(Incoming::Unavailable(reason));
-                        wait = Some(seconds.max(RETRY.as_secs()));
-                    }
-                },
-                Ok(None) => {}
-                Err(error) => {
-                    let _ = outbox.send(Incoming::Unavailable(error.to_string()));
-                    wait = Some(RETRY.as_secs());
-                }
-            }
+        match verdict {
+            Verdict::Wait(wait) => pause(stop, wait),
+            Verdict::Stop => return,
         }
-        let _ = socket.close(None);
-        pause(stop, wait.unwrap_or_default());
     }
 }
 
@@ -389,7 +573,53 @@ mod tests {
         assert_eq!((shared.index, shared.queue.len(), shared.active.as_deref()), (Some(1), 2, Some("phone")));
         assert_eq!((shared.playing.progress_ms, shared.playing.speed), (1200, 1.5));
         assert_eq!(shared.devices[0].title, "Phone");
-        let error = json!({ "error": { "message": "Ynison service is temporary unavailable.", "details": { "ynison-go-away-for-seconds": "3600" } } });
-        assert_eq!(parse_state(&error), Err(("Ynison service is temporary unavailable.".to_owned(), 3600)));
+        let error = json!({ "error": {
+            "message": "Ynison service is temporary unavailable.",
+            "grpc_code": 14,
+            "http_code": 503,
+            "details": { "ynison-error-code": "500140000", "ynison-go-away-for-seconds": "3600", "ynison-backoff-millis": "0:2000:9000" }
+        } });
+        let error = parse_state(&error).unwrap_err();
+        assert_eq!(error.message, "Ynison service is temporary unavailable.");
+        assert_eq!((error.grpc_code, error.http_code, error.go_away_seconds), (Some(14), Some(503), Some(3600)));
+        assert_eq!(error.backoff_ms, vec![0, 2000, 9000]);
+        assert!(!error.unauthorized() && !error.displaced());
+    }
+
+    #[test]
+    fn classifies_server_errors() {
+        let parse = |error: Value| ServerError::parse(&error);
+        assert!(parse(json!({ "grpc_code": "16" })).unauthorized());
+        assert!(parse(json!({ "http_code": 403 })).unauthorized());
+        assert!(parse(json!({ "extra_headers": { "ynison-error-code": "400090001" } })).displaced());
+        assert_eq!(parse(json!({})).message, "Ynison error");
+        let mut backoff = Backoff::default();
+        assert!(matches!(judge(&parse(json!({ "grpc_code": 16 })), &mut backoff), Verdict::Stop));
+        let go_away = parse(json!({ "details": { "ynison-go-away-for-seconds": "60" } }));
+        assert!(matches!(judge(&go_away, &mut backoff), Verdict::Wait(wait) if wait == Duration::from_secs(60)));
+    }
+
+    #[test]
+    fn backs_off_on_the_server_schedule() {
+        let mut backoff = Backoff::default();
+        let steps: Vec<u64> = (0..5).map(|_| backoff.delay().as_millis() as u64 / 1000).collect();
+        assert_eq!(steps, vec![0, 1, 5, 30, 30]);
+        backoff.adopt(&[100, 200]);
+        backoff.reset();
+        assert!(backoff.delay() < Duration::from_millis(100 + JITTER_MS));
+        assert!(backoff.delay() >= Duration::from_millis(200));
+    }
+
+    #[test]
+    fn encodes_the_handshake_like_the_official_client() {
+        let encoded = protocol(&identity(), &[("Ynison-Session-Id", "42")]);
+        let rest = encoded.strip_prefix("Bearer, v2, ").unwrap();
+        assert!(rest.bytes().all(|byte| byte.is_ascii_alphanumeric() || b"%-_.~".contains(&byte)));
+        assert!(rest.contains("Ynison-Session-Id%22%3A%2242%22"));
+        assert!(rest.contains("%5C%22app_name%5C%22%3A%5C%22Tactus%20on%20PC%5C%22"));
+        assert!(rest.contains("%5C%22type%5C%22%3A%5C%221%5C%22"));
+        let keep_alive = KeepAlive::parse(&json!({ "keep_alive_time_seconds": 5, "keep_alive_timeout_seconds": "7" }));
+        assert_eq!(keep_alive, KeepAlive { interval: Duration::from_secs(5), timeout: Duration::from_secs(7) });
+        assert_eq!(KeepAlive::parse(&Value::Null).interval, PING_INTERVAL);
     }
 }

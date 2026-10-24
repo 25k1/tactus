@@ -108,7 +108,7 @@ fn ynison_link() {
         eprintln!("no saved sign-in");
         return;
     };
-    let identity = crate::ynison::Identity { id: "tactus-test-probe-4".into(), title: "Tactus test".into() };
+    let identity = crate::ynison::Identity { id: "7ac0be5e7e57".into(), title: "Tactus test".into() };
     let link = crate::ynison::Link::start(token.trim().to_owned(), identity);
     let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
     while std::time::Instant::now() < deadline {
