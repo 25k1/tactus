@@ -94,10 +94,18 @@ impl Keymap {
         }
     }
 
+    fn bound_to<'a>(&'a self, key: &'a str) -> impl Iterator<Item = Binding> + 'a {
+        Binding::all()
+            .into_iter()
+            .filter(move |binding| self.key(*binding).is_some_and(|owned| owned.eq_ignore_ascii_case(key)))
+    }
+
     pub fn owner(&self, key: &str, except: Binding) -> Option<Binding> {
-        Binding::all().into_iter().find(|binding| {
-            *binding != except && self.key(*binding).is_some_and(|owned| owned.eq_ignore_ascii_case(key))
-        })
+        self.bound_to(key).find(|binding| *binding != except)
+    }
+
+    pub fn binding(&self, key: &str) -> Option<Binding> {
+        self.bound_to(key).next()
     }
 
     pub fn overrides(&self) -> BTreeMap<String, String> {
@@ -188,5 +196,7 @@ mod tests {
         keymap.set(play, Some("Ctrl+P".into()));
         assert!(keymap.overrides().is_empty());
         assert_eq!(keymap.owner("Ctrl+1", play), Some(Binding::Section(Section::Search)));
+        assert_eq!(keymap.binding("ctrl+shift+m"), Some(Binding::Command(Command::MiniPlayer)));
+        assert_eq!(keymap.binding("Ctrl+Alt+Shift+F12"), None);
     }
 }

@@ -186,7 +186,7 @@ impl Ui {
             self.offer_voice_download(new);
         }
         if old.track_format != new.track_format {
-            self.bar.update_track(&self.player.borrow());
+            self.each_player(|view, player| view.update_track(player));
         }
         self.publish_status();
     }

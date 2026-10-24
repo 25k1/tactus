@@ -30,7 +30,7 @@ impl Ui {
                     status = true;
                 }
                 Event::Track => {
-                    self.bar.update_track(&self.player.borrow());
+                    self.each_player(|view, player| view.update_track(player));
                     self.update_title();
                     self.announce_track();
                     self.notify_track();
@@ -41,7 +41,7 @@ impl Ui {
                     status = true;
                 }
                 Event::Playback => {
-                    self.bar.update_playback(&self.player.borrow());
+                    self.each_player(|view, player| view.update_playback(player));
                     status = true;
                 }
                 Event::Position => {
@@ -49,11 +49,11 @@ impl Ui {
                     status = true;
                 }
                 Event::Volume => {
-                    self.bar.update_volume(&self.player.borrow());
+                    self.each_player(|view, player| view.update_volume(player));
                     status = true;
                 }
                 Event::Modes => {
-                    self.bar.update_modes(&self.player.borrow());
+                    self.each_player(|view, player| view.update_modes(player));
                     if let Some(menu) = self.frame.get_menu_bar() {
                         menu.check_item(Command::Shuffle.id(), self.player.borrow().settings.shuffle);
                     }

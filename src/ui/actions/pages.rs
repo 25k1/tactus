@@ -78,23 +78,12 @@ impl Ui {
     }
 
     pub(super) fn next_pane(&self) {
-        let in_bar = [
-            &self.bar.previous as &dyn WxWidget,
-            &self.bar.play,
-            &self.bar.next,
-            &self.bar.position,
-            &self.bar.volume,
-            &self.bar.repeat,
-            &self.bar.shuffle,
-        ]
-        .iter()
-        .any(|control| control.has_focus());
         if self.sidebar.has_focus() {
             self.focus_content();
-        } else if in_bar {
+        } else if self.bar.has_focus() {
             self.sidebar.set_focus();
         } else {
-            self.bar.play.set_focus();
+            self.bar.focus();
         }
     }
 

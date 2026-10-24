@@ -8,6 +8,7 @@ mod key_capture;
 mod login;
 mod lyrics;
 mod media_list;
+mod mini_player;
 mod navigation;
 mod remote;
 mod settings_dialog;
@@ -62,6 +63,7 @@ pub struct Ui {
     browser: Browser,
     lyrics: LyricsPanel,
     bar: PlayerBar,
+    mini: RefCell<Option<mini_player::MiniPlayer>>,
     location: RefCell<Location>,
     history: RefCell<History>,
     content: RefCell<Content>,
@@ -131,7 +133,7 @@ impl Ui {
         let lyrics = LyricsPanel::new(&book);
         book.add_page(&browser.panel, "", true, None);
         book.add_page(&lyrics.panel, "", false, None);
-        let bar = PlayerBar::new(&main, player.settings.volume);
+        let bar = PlayerBar::new(&main, player.settings.volume, player.settings.compact_player);
 
         let sidebar_column = column();
         sidebar_column.add(&sidebar_label, 0, SizerFlag::All, 4);
@@ -162,6 +164,7 @@ impl Ui {
             browser,
             lyrics,
             bar,
+            mini: RefCell::new(None),
             location: RefCell::new(Location::Section(Section::Search)),
             history: RefCell::new(History::default()),
             content: RefCell::new(Content::default()),
@@ -293,6 +296,10 @@ impl Ui {
         self.remote_server.borrow_mut().take();
         self.hotkeys.borrow_mut().take();
         self.set_tray_visible(false);
+        let mini = self.mini.borrow().as_ref().map(|mini| mini.frame);
+        if let Some(frame) = mini {
+            frame.close(true);
+        }
     }
 
     fn show_screen(&self) {

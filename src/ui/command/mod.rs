@@ -68,6 +68,8 @@ pub enum Command {
     SelectAll,
     Find,
     Devices,
+    PlayerControls,
+    MiniPlayer,
     Listen,
     VoiceHelp,
     ToggleWindow,
@@ -75,7 +77,7 @@ pub enum Command {
 }
 
 impl Command {
-    const ALL: [Command; 53] = [
+    const ALL: [Command; 55] = [
         Command::NewPlaylist,
         Command::PromoCode,
         Command::SignOut,
@@ -125,6 +127,8 @@ impl Command {
         Command::SelectAll,
         Command::Find,
         Command::Devices,
+        Command::PlayerControls,
+        Command::MiniPlayer,
         Command::Listen,
         Command::VoiceHelp,
         Command::ToggleWindow,
@@ -205,6 +209,8 @@ impl Command {
             Command::SelectAll => fl!("menu-select-all"),
             Command::Find => fl!("menu-find-command"),
             Command::Devices => fl!("menu-devices"),
+            Command::PlayerControls => fl!("menu-player-controls"),
+            Command::MiniPlayer => fl!("menu-mini-player"),
             Command::Listen => fl!("menu-listen"),
             Command::VoiceHelp => fl!("menu-voice-help"),
             Command::ToggleWindow => fl!("tray-show"),
@@ -257,6 +263,8 @@ impl Command {
             Command::SelectAll => "Ctrl+A",
             Command::Find => "Ctrl+Shift+K",
             Command::Devices => "Ctrl+Shift+D",
+            Command::PlayerControls => "Ctrl+Shift+H",
+            Command::MiniPlayer => "Ctrl+Shift+M",
             _ => return None,
         })
     }

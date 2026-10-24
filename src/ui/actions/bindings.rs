@@ -128,9 +128,13 @@ impl Ui {
 
     pub(super) fn bind_bar(self: &Rc<Self>) {
         let bar = &self.bar;
-        for (control, command) in
-            [(&bar.previous, Command::Previous), (&bar.play, Command::PlayPause), (&bar.next, Command::Next)]
-        {
+        self.bind_player_menu(&bar.panel);
+        for (control, command) in [
+            (&bar.toggle, Command::PlayerControls),
+            (&bar.previous, Command::Previous),
+            (&bar.play, Command::PlayPause),
+            (&bar.next, Command::Next),
+        ] {
             let ui = self.clone();
             control.on_click(move |_| ui.execute(command));
         }

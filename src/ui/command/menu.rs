@@ -91,24 +91,56 @@ fn entry(label: String, key: Option<String>) -> String {
     }
 }
 
-pub fn menu_bar(keys: &Keymap) -> MenuBar {
-    use Command::*;
-    let menu = |commands: &[Option<Command>]| {
-        let menu = Menu::builder().build();
-        for command in commands {
-            match command {
-                Some(command) => {
-                    let kind = if *command == Shuffle { ItemKind::Check } else { ItemKind::Normal };
-                    let text = entry(command.label(), keys.key(Binding::Command(*command)));
-                    menu.append(command.id(), &text, "", kind);
-                }
-                None => {
-                    menu.append_separator();
-                }
+pub fn command_menu(keys: &Keymap, commands: &[Option<Command>]) -> Menu {
+    let menu = Menu::builder().build();
+    for command in commands {
+        match command {
+            Some(command) => {
+                let kind = if *command == Command::Shuffle { ItemKind::Check } else { ItemKind::Normal };
+                let text = entry(command.label(), keys.key(Binding::Command(*command)));
+                menu.append(command.id(), &text, "", kind);
+            }
+            None => {
+                menu.append_separator();
             }
         }
-        menu
-    };
+    }
+    menu
+}
+
+pub const PLAYER_MENU: [Option<Command>; 24] = {
+    use Command::*;
+    [
+        Some(PlayPause),
+        Some(Stop),
+        Some(Previous),
+        Some(Next),
+        None,
+        Some(Like),
+        Some(Dislike),
+        Some(Wave),
+        Some(AddToPlaylist),
+        Some(Download),
+        None,
+        Some(TrackInfo),
+        Some(GoToAlbum),
+        Some(GoToArtist),
+        Some(CopyLink),
+        None,
+        Some(SpeedDown),
+        Some(SpeedUp),
+        Some(SpeedReset),
+        Some(Shuffle),
+        Some(Repeat),
+        None,
+        Some(PlayerControls),
+        Some(MiniPlayer),
+    ]
+};
+
+pub fn menu_bar(keys: &Keymap) -> MenuBar {
+    use Command::*;
+    let menu = |commands: &[Option<Command>]| command_menu(keys, commands);
     let file =
         menu(&[Some(NewPlaylist), None, Some(Settings), Some(PromoCode), Some(SignOut), None, Some(Hide), Some(Quit)]);
     let edit = menu(&[Some(Undo), None, Some(SelectAll), Some(FocusFilter), None, Some(Find), Some(Listen)]);
@@ -131,6 +163,8 @@ pub fn menu_bar(keys: &Keymap) -> MenuBar {
         Some(Repeat),
         None,
         Some(Devices),
+        Some(PlayerControls),
+        Some(MiniPlayer),
         None,
         Some(MoveUp),
         Some(MoveDown),

@@ -28,6 +28,8 @@ impl Ui {
                 self.announce_feedback(Announcement::Playback);
             }
             Command::Stop => self.act(Player::stop),
+            Command::PlayerControls => self.toggle_player_controls(),
+            Command::MiniPlayer => self.toggle_mini_player(),
             Command::Next => self.act(Player::next),
             Command::Previous => self.act(Player::previous),
             Command::SeekForward | Command::SeekBack => {

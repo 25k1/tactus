@@ -15,6 +15,7 @@ mod devices;
 mod items;
 mod library;
 mod pages;
+mod player;
 
 fn key(event: &WindowEventData) -> Option<i32> {
     match event {
