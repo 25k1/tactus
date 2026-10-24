@@ -139,7 +139,7 @@ impl Ui {
             | Command::Dislike
             | Command::AddToPlaylist
             | Command::Download
-            | Command::Radio
+            | Command::Wave
             | Command::Similar
             | Command::GoToAlbum
             | Command::GoToArtist
@@ -155,7 +155,7 @@ impl Ui {
                     Command::Dislike => ItemAction::Dislike,
                     Command::AddToPlaylist => return self.choose_playlist(vec![track]),
                     Command::Download => ItemAction::Download,
-                    Command::Radio => ItemAction::Radio,
+                    Command::Wave => ItemAction::Radio,
                     Command::Similar => ItemAction::Similar,
                     Command::GoToAlbum => ItemAction::GoToAlbum,
                     Command::GoToArtist => ItemAction::GoToArtist,

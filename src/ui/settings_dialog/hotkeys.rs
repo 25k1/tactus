@@ -12,6 +12,7 @@ pub(super) struct Hotkeys {
 fn hotkey_label(action: GlobalAction) -> String {
     match action {
         GlobalAction::PlayPause => fl!("menu-play-pause"),
+        GlobalAction::Stop => fl!("menu-stop"),
         GlobalAction::Next => fl!("menu-next"),
         GlobalAction::Previous => fl!("menu-previous"),
         GlobalAction::SeekForward => fl!("menu-forward"),
@@ -20,6 +21,7 @@ fn hotkey_label(action: GlobalAction) -> String {
         GlobalAction::VolumeDown => fl!("menu-volume-down"),
         GlobalAction::Like => fl!("menu-like"),
         GlobalAction::Dislike => fl!("menu-dislike"),
+        GlobalAction::Wave => fl!("menu-radio"),
         GlobalAction::NowPlaying => fl!("menu-speak-now-playing"),
         GlobalAction::ShowWindow => fl!("hotkey-show-window"),
         GlobalAction::Voice => fl!("hotkey-voice"),

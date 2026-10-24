@@ -10,6 +10,7 @@ pub const MOD_WIN: u32 = 0x8;
 #[serde(rename_all = "camelCase")]
 pub enum GlobalAction {
     PlayPause,
+    Stop,
     Next,
     Previous,
     SeekForward,
@@ -18,14 +19,16 @@ pub enum GlobalAction {
     VolumeDown,
     Like,
     Dislike,
+    Wave,
     NowPlaying,
     ShowWindow,
     Voice,
 }
 
 impl GlobalAction {
-    pub const ALL: [GlobalAction; 12] = [
+    pub const ALL: [GlobalAction; 14] = [
         GlobalAction::PlayPause,
+        GlobalAction::Stop,
         GlobalAction::Next,
         GlobalAction::Previous,
         GlobalAction::SeekForward,
@@ -34,6 +37,7 @@ impl GlobalAction {
         GlobalAction::VolumeDown,
         GlobalAction::Like,
         GlobalAction::Dislike,
+        GlobalAction::Wave,
         GlobalAction::NowPlaying,
         GlobalAction::ShowWindow,
         GlobalAction::Voice,
@@ -42,6 +46,7 @@ impl GlobalAction {
     pub fn default_key(self) -> &'static str {
         match self {
             GlobalAction::PlayPause => "Ctrl+Alt+Shift+P",
+            GlobalAction::Stop => "Ctrl+Alt+Shift+S",
             GlobalAction::Next => "Ctrl+Alt+Shift+Right",
             GlobalAction::Previous => "Ctrl+Alt+Shift+Left",
             GlobalAction::SeekForward => "Ctrl+Alt+Shift+PageDown",
@@ -50,6 +55,7 @@ impl GlobalAction {
             GlobalAction::VolumeDown => "Ctrl+Alt+Shift+Down",
             GlobalAction::Like => "Ctrl+Alt+Shift+L",
             GlobalAction::Dislike => "Ctrl+Alt+Shift+D",
+            GlobalAction::Wave => "Ctrl+Alt+Shift+M",
             GlobalAction::NowPlaying => "Ctrl+Alt+Shift+I",
             GlobalAction::ShowWindow => "Ctrl+Alt+Shift+W",
             GlobalAction::Voice => "Ctrl+Alt+Shift+Space",

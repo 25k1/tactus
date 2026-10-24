@@ -151,7 +151,7 @@ pub fn menu_bar(keys: &Keymap) -> MenuBar {
         Some(AddToPlaylist),
         Some(Download),
         None,
-        Some(Radio),
+        Some(Wave),
         Some(Similar),
         Some(GoToAlbum),
         Some(GoToArtist),
