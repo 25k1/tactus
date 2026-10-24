@@ -148,8 +148,11 @@ impl Ui {
         for (option, enabled) in account_changes {
             self.act(|player| player.set_account_option(option, enabled));
         }
-        if old.language != new.language {
-            self.set_status(&fl!("settings-language-restart"));
+        if (&old.language, old.theme) != (&new.language, new.theme) {
+            if dialogs::confirm(&self.frame, &fl!("settings-restart"), &fl!("settings-title")) {
+                return self.restart(None);
+            }
+            self.set_status(&fl!("settings-restart-later"));
         }
         if (new.notifications && !old.notifications) || (new.episode_notifications && !old.episode_notifications) {
             crate::platform::notify::enable();

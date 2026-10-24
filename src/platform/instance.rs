@@ -1,13 +1,15 @@
 use std::io::{Read, Write};
 use std::net::{Ipv4Addr, TcpListener, TcpStream};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 use wxdragon::prelude::SingleInstanceChecker;
 
 const RAISE: &[u8] = b"tactus:raise";
-const UPDATE_WAIT: Duration = Duration::from_secs(20);
-pub const AFTER_UPDATE: &str = "--after-update";
+const RESTART_WAIT: Duration = Duration::from_secs(20);
+const AFTER_UPDATE: &str = "--after-update";
+const RESTART: &str = "--restart";
+const PLAYING: &str = "--playing";
 
 static RAISE_REQUESTED: AtomicBool = AtomicBool::new(false);
 
@@ -24,14 +26,31 @@ fn notify_running_instance() -> bool {
         .is_ok()
 }
 
+fn flag(name: &str) -> bool {
+    std::env::args().skip(1).any(|argument| argument == name)
+}
+
 pub fn after_update() -> bool {
-    std::env::args().skip(1).any(|argument| argument == AFTER_UPDATE)
+    flag(AFTER_UPDATE)
+}
+
+pub fn restarted() -> Option<bool> {
+    (after_update() || flag(RESTART)).then(|| flag(PLAYING))
+}
+
+pub fn relaunch(path: &Path, updated: bool, playing: bool) -> std::io::Result<()> {
+    let mut command = std::process::Command::new(path);
+    command.arg(if updated { AFTER_UPDATE } else { RESTART });
+    if playing {
+        command.arg(PLAYING);
+    }
+    command.spawn().map(drop)
 }
 
 pub fn acquire() -> Option<SingleInstanceChecker> {
     let flavor = if cfg!(feature = "fake") { "tactus-demo" } else { "tactus" };
     let name = format!("{flavor}-{}", std::env::var("USERNAME").unwrap_or_default());
-    let deadline = Instant::now() + if after_update() { UPDATE_WAIT } else { Duration::ZERO };
+    let deadline = Instant::now() + if restarted().is_some() { RESTART_WAIT } else { Duration::ZERO };
     loop {
         let checker = SingleInstanceChecker::new(&name, None);
         if !checker.as_ref().is_some_and(SingleInstanceChecker::is_another_running) {

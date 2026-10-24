@@ -154,8 +154,9 @@ impl Player {
     }
 
     pub(super) fn restore(&mut self) {
-        let autoplay = self.settings.autoplay;
-        if self.settings.resume_session && !self.session.tracks.is_empty() {
+        let restart = self.restart.take();
+        let autoplay = restart.unwrap_or(self.settings.autoplay);
+        if (self.settings.resume_session || restart.is_some()) && !self.session.tracks.is_empty() {
             let session = self.session.clone();
             self.queue.replace(session.tracks, session.index);
             self.wave.seeds = session.wave;

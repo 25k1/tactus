@@ -101,6 +101,7 @@ pub struct Player {
     downloader: Downloader,
     session: Session,
     persist: bool,
+    restart: Option<bool>,
     settings_dirty: bool,
     remote_queue: Option<String>,
     generation: u64,
@@ -165,6 +166,7 @@ impl Player {
             downloader: Downloader::default(),
             session: Session::default(),
             persist: true,
+            restart: None,
             settings_dirty: false,
             remote_queue: None,
             generation: 0,
@@ -180,6 +182,10 @@ impl Player {
             ynison: ynison::Ynison::default(),
             voice_install: None,
         }
+    }
+
+    pub fn resume_after_restart(&mut self, playing: bool) {
+        self.restart = Some(playing);
     }
 
     pub fn start(&mut self) {

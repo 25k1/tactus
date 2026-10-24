@@ -140,7 +140,7 @@ impl Ui {
                     content |= *self.location.borrow() == Location::Section(Section::Search);
                 }
                 Event::UpdateAvailable(release) => self.offer_update(*release),
-                Event::Updated(path) => self.restart_into(&path),
+                Event::Updated(path) => self.restart(Some(&path)),
                 Event::Raise => self.raise_window(),
                 Event::Quit => self.execute(Command::Quit),
             }
@@ -216,18 +216,19 @@ impl Ui {
         }
     }
 
-    fn restart_into(self: &Rc<Self>, path: &std::path::Path) {
-        match std::process::Command::new(path).arg(crate::platform::instance::AFTER_UPDATE).spawn() {
-            Ok(_) => self.execute(Command::Quit),
-            Err(error) => {
-                tactus_core::log::error(format_args!("restart after update: {error}"));
-                dialogs::warn(
-                    &self.frame,
-                    &crate::i18n::fl!("update-restart"),
-                    &crate::i18n::fl!("menu-check-updates"),
-                );
-            }
+    pub(super) fn restart(self: &Rc<Self>, updated: Option<&std::path::Path>) {
+        let playing = self.player.borrow().playing;
+        let result = match updated {
+            Some(path) => crate::platform::instance::relaunch(path, true, playing),
+            None => std::env::current_exe().and_then(|path| crate::platform::instance::relaunch(&path, false, playing)),
+        };
+        if let Err(error) = result {
+            tactus_core::log::error(format_args!("restart: {error}"));
+            let message =
+                if updated.is_some() { crate::i18n::fl!("update-restart") } else { crate::i18n::fl!("restart-failed") };
+            return dialogs::warn(&self.frame, &message, "Tactus");
         }
+        self.execute(Command::Quit);
     }
 
     fn notify_track(&self) {

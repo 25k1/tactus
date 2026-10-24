@@ -29,10 +29,24 @@ impl Column {
     pub const ALL: [Column; 4] = [Column::Title, Column::Artist, Column::Details, Column::Duration];
 }
 
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum Theme {
+    #[default]
+    System,
+    Light,
+    Dark,
+}
+
+impl Theme {
+    pub const ALL: [Theme; 3] = [Theme::System, Theme::Light, Theme::Dark];
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct Settings {
     pub language: Option<String>,
+    pub theme: Theme,
     pub volume: u8,
     pub speed: f32,
     pub spoken_speed: f32,
@@ -81,6 +95,7 @@ impl Default for Settings {
     fn default() -> Self {
         Self {
             language: None,
+            theme: Theme::System,
             volume: 100,
             speed: 1.0,
             spoken_speed: 1.0,

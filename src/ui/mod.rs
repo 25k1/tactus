@@ -36,9 +36,10 @@ use tactus_core::announce::Announcement;
 use tactus_core::hotkey::{GlobalAction, Hotkey};
 use tactus_core::player::{Connect, Player};
 use tactus_core::remote::{RemoteCommand, RemoteHub, RemoteServer};
-use tactus_core::settings::Settings;
+use tactus_core::settings::{Settings, Theme};
 use view_model::Content;
 use widgets::*;
+use wxdragon::appearance::Appearance;
 use wxdragon::prelude::*;
 use wxdragon::timer::Timer;
 use wxdragon::widgets::simplebook::SimpleBook;
@@ -85,6 +86,11 @@ pub fn run() {
         std::mem::forget(crate::platform::instance::acquire());
         tactus_core::log::init(tactus_core::settings::data_dir().join("tactus.log"));
         let settings = Settings::load();
+        let _ = set_appearance(match settings.theme {
+            Theme::System => Appearance::System,
+            Theme::Light => Appearance::Light,
+            Theme::Dark => Appearance::Dark,
+        });
         crate::i18n::init(settings.language.as_deref());
         tactus_api::net::set_language(&crate::i18n::current_language());
         tactus_core::log::info(format_args!("Tactus {} started", tactus_core::update::CURRENT));
@@ -222,6 +228,9 @@ impl Ui {
         timer.start(TICK_MS, false);
         *self.timer.borrow_mut() = Some(timer);
         self.navigate(Location::Section(Section::Search), false);
+        if let Some(playing) = crate::platform::instance::restarted() {
+            self.player.borrow_mut().resume_after_restart(playing);
+        }
         self.act(Player::start);
         if crate::platform::instance::after_update() {
             let text = crate::i18n::fl!("update-installed", version = tactus_core::update::CURRENT);

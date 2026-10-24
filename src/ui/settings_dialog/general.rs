@@ -1,9 +1,19 @@
 use super::*;
+use tactus_core::settings::Theme;
 
 pub(super) struct General {
     pub(super) language: Choice,
     codes: Vec<String>,
+    theme: Choice,
     flags: Flags,
+}
+
+fn theme_label(theme: Theme) -> String {
+    match theme {
+        Theme::System => fl!("theme-system"),
+        Theme::Light => fl!("theme-light"),
+        Theme::Dark => fl!("theme-dark"),
+    }
 }
 
 impl General {
@@ -15,6 +25,10 @@ impl General {
             choice(&panel, &names, codes.iter().position(|code| *code == current).unwrap_or_default())
         });
         add(&sizer, &label(&panel, &fl!("settings-language-hint")));
+        let themes: Vec<String> = Theme::ALL.into_iter().map(theme_label).collect();
+        let theme = field(&sizer, &panel, &fl!("settings-theme"), false, || {
+            choice(&panel, &themes, Theme::ALL.iter().position(|theme| *theme == old.theme).unwrap_or_default())
+        });
         let mut current = old.clone();
         current.autostart = autostart::is_enabled();
         let flags = Flags::new(
@@ -35,13 +49,14 @@ impl General {
             ],
         );
         panel.set_sizer(sizer, true);
-        Self { language, codes, flags }
+        Self { language, codes, theme, flags }
     }
 }
 
 impl Tab for General {
     fn apply(&self, settings: &mut Settings) {
         settings.language = self.codes.get(selection(&self.language)).cloned();
+        settings.theme = Theme::ALL.get(selection(&self.theme)).copied().unwrap_or_default();
         self.flags.apply(settings);
     }
 }
