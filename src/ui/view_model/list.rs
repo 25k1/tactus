@@ -71,6 +71,16 @@ pub fn download_state(state: &DownloadState) -> String {
     }
 }
 
+fn chart_position(chart: ChartPosition) -> String {
+    let position = u64::from(chart.position);
+    match chart.trend {
+        Trend::New => fl!("track-chart-new", position = position),
+        Trend::Same => fl!("track-chart", position = position),
+        Trend::Up(shift) => fl!("track-chart-up", position = position, shift = u64::from(shift)),
+        Trend::Down(shift) => fl!("track-chart-down", position = position, shift = u64::from(shift)),
+    }
+}
+
 pub fn columns(entry: &Entry) -> [String; 4] {
     let join = |parts: Vec<String>| join_present(parts, ", ");
     match entry {
@@ -78,8 +88,10 @@ pub fn columns(entry: &Entry) -> [String; 4] {
             track.full_title(),
             track.artist.clone(),
             join(vec![
+                track.chart.map(chart_position).unwrap_or_default(),
                 track.album.clone(),
                 if track.year > 0 { track.year.to_string() } else { String::new() },
+                track.published.clone(),
                 if track.explicit { fl!("track-explicit") } else { String::new() },
                 if track.played { fl!("track-played") } else { String::new() },
                 if track.downloaded { fl!("track-downloaded") } else { String::new() },
@@ -220,6 +232,15 @@ mod tests {
         assert_eq!(columns, ["Track 1 (Live)", "Artist", "Album", "3:00"].map(String::from));
         let album = columns_for_album();
         assert!(album[2].contains("2001"));
+    }
+
+    #[test]
+    fn columns_show_chart_positions_and_dates() {
+        let mut charted = track("2");
+        charted.chart = Some(ChartPosition { position: 3, trend: Trend::Up(2) });
+        charted.published = "2026-09-25".into();
+        let details = &columns(&Entry::Item(Item::Track(charted)))[2];
+        assert!(details.starts_with("Chart position 3, up 2") && details.ends_with("2026-09-25"), "{details}");
     }
 
     fn columns_for_album() -> [String; 4] {

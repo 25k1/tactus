@@ -71,7 +71,7 @@ fn anonymous_reads() {
     }
     report("trailer", service.trailer(&Target::Artist("3121".into())), Vec::len);
     report("suggestions", service.suggestions("metal"), |value| value.texts.len());
-    report("track info", service.track_info("1710808"), |value| value.artists.len());
+    report("track info", service.track_info("1710808"), |value| value.artists.len() * 100 + value.credits.len());
     report("device code", crate::auth::request_device_code(), |value| value.user_code.len());
 }
 
@@ -101,7 +101,12 @@ fn signed_in_reads() {
         View::Playlist(PlaylistKey { owner: 103372440, kind: 1565 }),
     ] {
         report(&format!("{view:?}"), service.page(&view, uid), |page| {
-            page.sections.len() * 100 + page.sections.iter().position(|section| section.kind == SectionKind::Similar).map_or(0, |index| index + 1)
+            page.sections.len() * 100
+                + page
+                    .sections
+                    .iter()
+                    .position(|section| section.kind == SectionKind::Similar)
+                    .map_or(0, |index| index + 1)
         });
     }
     for (view, kind, page) in [
@@ -114,6 +119,10 @@ fn signed_in_reads() {
         });
     }
     report("concert locations", service.concert_locations(), Vec::len);
+    report("signed track info", service.track_info("1710808"), |value| value.artists.len() * 100 + value.credits.len());
+    report("world chart positions", service.page(&View::Chart("world".into()), uid), |page| {
+        page.tracks().iter().filter(|track| track.chart.is_some()).count()
+    });
     if let Ok(page) = service.page(&View::ForYou, uid) {
         let kinds: Vec<String> =
             page.sections.iter().map(|section| format!("{:?}:{}", section.kind, section.items.len())).collect();

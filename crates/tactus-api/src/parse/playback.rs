@@ -23,8 +23,25 @@ pub fn track_info(value: &Value) -> Option<TrackInfo> {
             .collect(),
         lyrics: lyrics.flag("hasAvailableTextLyrics") || raw.flag("lyricsAvailable"),
         synced_lyrics: lyrics.flag("hasAvailableSyncLyrics"),
+        credits: Vec::new(),
+        disclaimer: String::new(),
         track,
     })
+}
+
+pub fn credits(value: &Value) -> Vec<(String, String)> {
+    result(value)
+        .list("credits")
+        .iter()
+        .map(|credit| (credit.text("title").to_owned(), credit.text("value").to_owned()))
+        .filter(|(title, value)| !title.is_empty() && !value.is_empty())
+        .collect()
+}
+
+pub fn disclaimer(value: &Value) -> String {
+    let agent = result(value).at("foreignAgent");
+    let parts = [agent.text("title"), agent.text("reason")];
+    parts.into_iter().filter(|part| !part.is_empty()).collect::<Vec<_>>().join(". ")
 }
 
 pub fn lyrics(text: &str) -> Vec<LyricLine> {
@@ -221,5 +238,17 @@ mod tests {
         assert!(stream.url.ends_with(".m3u8") && !stream.id.is_empty());
         assert_eq!(stream.track().id, "generative:focus");
         assert!(is_generated(&stream.track().id) && !is_generated("123"));
+    }
+
+    #[test]
+    fn reads_credits_and_disclaimers() {
+        let credits = credits(
+            &serde_json::json!({ "result": { "credits": [{ "title": "Lyrics by", "value": "Freddie Mercury" }, { "title": "", "value": "x" }] } }),
+        );
+        assert_eq!(credits, [("Lyrics by".to_owned(), "Freddie Mercury".to_owned())]);
+        let agent =
+            serde_json::json!({ "result": { "foreignAgent": { "title": "Foreign agent", "reason": "By decision" } } });
+        assert_eq!(disclaimer(&agent), "Foreign agent. By decision");
+        assert_eq!(disclaimer(&serde_json::json!({ "result": {} })), "");
     }
 }

@@ -86,6 +86,12 @@ pub struct Page {
 }
 
 impl Page {
+    pub fn add_disclaimer(&mut self, disclaimer: &str) {
+        if !disclaimer.is_empty() {
+            self.description = [disclaimer, self.description.as_str()].join("\n\n").trim().to_owned();
+        }
+    }
+
     pub fn add_similar(&mut self, items: Vec<Item>) {
         if items.is_empty() {
             return;

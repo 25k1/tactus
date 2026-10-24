@@ -52,10 +52,14 @@ pub fn track_info(info: &TrackInfo) -> String {
         (fl!("info-labels"), info.labels.join(", ")),
         (fl!("info-explicit"), yes_no(track.explicit)),
         (fl!("info-lyrics"), lyrics),
+        (fl!("info-published"), track.published.clone()),
+        (fl!("info-isrc"), track.isrc.clone()),
+        (fl!("info-disclaimer"), info.disclaimer.clone()),
         (fl!("info-link"), track.link()),
     ];
     fields
         .into_iter()
+        .chain(info.credits.iter().cloned())
         .filter(|(_, value)| !value.is_empty())
         .map(|(name, value)| format!("{name}: {value}"))
         .collect::<Vec<_>>()

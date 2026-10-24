@@ -1,6 +1,9 @@
 use super::navigation::{Location, Section};
 use crate::i18n::fl;
-use tactus_api::{AlbumKind, Artist, Item, Page, PlaylistKey, Relation, SectionKind, Target, Track, TrackInfo, View};
+use tactus_api::{
+    AlbumKind, Artist, ChartPosition, Item, Page, PlaylistKey, Relation, SectionKind, Target, Track, TrackInfo, Trend,
+    View,
+};
 use tactus_core::announce::format_time;
 use tactus_core::download::{Download, DownloadState};
 use tactus_core::player::{PageState, Player, SleepTimer};

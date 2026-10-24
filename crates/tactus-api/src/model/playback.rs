@@ -75,6 +75,8 @@ pub struct TrackInfo {
     pub labels: Vec<String>,
     pub lyrics: bool,
     pub synced_lyrics: bool,
+    pub credits: Vec<(String, String)>,
+    pub disclaimer: String,
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]

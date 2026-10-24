@@ -1,6 +1,19 @@
 use super::*;
 
+fn chart_position(value: &Value) -> Option<ChartPosition> {
+    let position = u32::try_from(value.num("position")).ok().filter(|position| *position > 0)?;
+    let shift = value.at("shift").as_i64().unwrap_or_default();
+    let trend = match (value.text("progress"), shift) {
+        ("new", _) => Trend::New,
+        (_, shift) if shift > 0 => Trend::Up(shift as u32),
+        (_, shift) if shift < 0 => Trend::Down(shift.unsigned_abs() as u32),
+        _ => Trend::Same,
+    };
+    Some(ChartPosition { position, trend })
+}
+
 pub fn track(value: &Value) -> Option<Track> {
+    let chart = chart_position(value.at("chart"));
     let value = value.unwrap("track").unwrap("fullModel");
     let id = non_empty(value.id("id"))?;
     let title = value.text("title");
@@ -24,6 +37,9 @@ pub fn track(value: &Value) -> Option<Track> {
         explicit: value.text("contentWarning") == "explicit" || value.flag("explicit"),
         episode: value.text("type") == "podcast-episode" || value.flag("rememberPosition"),
         loudness: loudness(value.at("r128")),
+        isrc: value.text("isrc").to_owned(),
+        published: value.text("pubDate").get(..10).unwrap_or_default().to_owned(),
+        chart,
         played: false,
         downloaded: false,
     })
@@ -198,5 +214,19 @@ mod tests {
         assert!(upcoming.upcoming && upcoming.release_date == "2999-01-01");
         let released = album(&serde_json::json!({ "id": 2, "releaseDate": "2001-01-01T00:00:00+03:00", "labels": [{ "id": 5, "name": "DMGE" }] })).unwrap();
         assert!(!released.upcoming && released.label_id == "5" && released.label == "DMGE");
+    }
+
+    #[test]
+    fn reads_chart_positions_and_episode_details() {
+        let entry = serde_json::json!({
+            "chart": { "position": 4, "progress": "down", "shift": -3 },
+            "track": { "id": 1, "title": "One", "isrc": "USUM71703861", "pubDate": "2026-09-25" }
+        });
+        let track = track(&entry).unwrap();
+        assert_eq!(track.chart, Some(ChartPosition { position: 4, trend: Trend::Down(3) }));
+        assert_eq!((track.isrc.as_str(), track.published.as_str()), ("USUM71703861", "2026-09-25"));
+        let fresh = serde_json::json!({ "chart": { "position": 1, "progress": "new", "shift": 0 }, "track": { "id": 2, "title": "Two" } });
+        assert_eq!(super::track(&fresh).unwrap().chart.unwrap().trend, Trend::New);
+        assert!(super::track(&serde_json::json!({ "id": 3, "title": "Three" })).unwrap().chart.is_none());
     }
 }

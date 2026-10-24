@@ -64,7 +64,7 @@ impl YandexService {
     async fn artist(&self, id: &str) -> Result<Page> {
         let albums = [("page", "0"), ("page-size", "100"), ("sort-by", "year")];
         let path = |tail: &str| format!("artists/{id}/{tail}");
-        let (brief, tracks, direct, discography, also, similar, links, about, concerts) = tokio::join!(
+        let (brief, tracks, direct, discography, also, similar, links, about, concerts, disclaimer) = tokio::join!(
             self.get(&path("brief-info"), &[]),
             self.get(&path("tracks"), &[("page", "0"), ("page-size", "100")]),
             self.get(&path("direct-albums"), &albums),
@@ -74,8 +74,9 @@ impl YandexService {
             self.get(&path("artist-links"), &[]),
             self.get(&path("about-artist"), &[]),
             self.get(&path("concerts"), &[]),
+            self.get(&path("disclaimer"), &[]),
         );
-        Ok(parse::artist_page(&parse::ArtistData {
+        let mut page = parse::artist_page(&parse::ArtistData {
             brief: brief?,
             tracks: tracks.ok(),
             albums: direct.ok(),
@@ -85,7 +86,9 @@ impl YandexService {
             links: links.ok(),
             about: about.ok(),
             concerts: concerts.ok(),
-        }))
+        });
+        page.add_disclaimer(&disclaimer.map(|value| parse::disclaimer(&value)).unwrap_or_default());
+        Ok(page)
     }
 
     async fn playlist(&self, key: PlaylistKey, uid: u64) -> Result<Page> {
@@ -194,11 +197,13 @@ impl CatalogService for YandexService {
                 View::Category(id) => parse::non_music(&self.get(&format!("non-music/category/{id}"), &[]).await?),
                 View::History => parse::history(&self.get("music-history", &[("fullModelsCount", "200")]).await?),
                 View::Album(id) => {
-                    let (album, similar) = tokio::join!(
+                    let (album, similar, disclaimer) = tokio::join!(
                         self.get(&format!("albums/{id}/with-tracks"), &[]),
                         self.get(&format!("albums/{id}/similar-entities"), &[]),
+                        self.get(&format!("albums/{id}/disclaimer"), &[]),
                     );
                     let mut page = parse::album_page(&album?);
+                    page.add_disclaimer(&disclaimer.map(|value| parse::disclaimer(&value)).unwrap_or_default());
                     page.add_similar(similar.map(|value| parse::similar_entities(&value)).unwrap_or_default());
                     page
                 }
@@ -357,8 +362,17 @@ impl CatalogService for YandexService {
     }
 
     fn track_info(&self, id: &str) -> Result<TrackInfo> {
-        parse::track_info(&net::block_on(self.get(&format!("tracks/{id}/full-info"), &[]))?)
-            .ok_or_else(|| Error::NotFound(id.to_owned()))
+        net::block_on(async {
+            let (full, credits, disclaimer) = tokio::join!(
+                self.get(&format!("tracks/{id}/full-info"), &[]),
+                self.get(&format!("tracks/{id}/credits"), &[]),
+                self.get(&format!("tracks/{id}/disclaimer"), &[]),
+            );
+            let mut info = parse::track_info(&full?).ok_or_else(|| Error::NotFound(id.to_owned()))?;
+            info.credits = credits.map(|value| parse::credits(&value)).unwrap_or_default();
+            info.disclaimer = disclaimer.map(|value| parse::disclaimer(&value)).unwrap_or_default();
+            Ok(info)
+        })
     }
 
     fn lyrics(&self, id: &str) -> Result<Option<Lyrics>> {

@@ -29,10 +29,28 @@ pub struct Track {
     pub explicit: bool,
     pub episode: bool,
     pub loudness: Option<Loudness>,
+    pub isrc: String,
+    pub published: String,
+    #[serde(skip)]
+    pub chart: Option<ChartPosition>,
     #[serde(skip)]
     pub played: bool,
     #[serde(skip)]
     pub downloaded: bool,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Trend {
+    New,
+    Same,
+    Up(u32),
+    Down(u32),
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct ChartPosition {
+    pub position: u32,
+    pub trend: Trend,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Serialize, Deserialize)]
