@@ -174,8 +174,8 @@ impl Ui {
         };
         let navigate = |view: View| self.navigate(Location::View(view), true);
         match (action, item) {
-            (ItemAction::Open, Some(Item::Link(link))) => {
-                launch_default_browser(&link.url, BrowserLaunchFlags::Default);
+            (ItemAction::Open, Some(Item::Link(Link { url, .. }) | Item::Concert(Concert { url, .. }))) => {
+                launch_default_browser(url, BrowserLaunchFlags::Default);
             }
             (ItemAction::Open, _) if let Some(view) = &view => navigate(view.clone()),
             (ItemAction::Play, Some(Item::Track(_))) if let Some(row) = row => {

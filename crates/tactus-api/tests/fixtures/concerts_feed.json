@@ -1,0 +1,82 @@
+{
+  "items": [
+    {
+      "data": {
+        "concert": {
+          "city": "Москва",
+          "concertTitle": "Джин тоник",
+          "contentRating": "6+",
+          "cover": {
+            "color": "#1e1e1e",
+            "uri": "https://avatars.mds.yandex.net/get-afishanew/14837015/fece4e2247fac29f01abd3249a181de6/orig"
+          },
+          "dataSessionId": "NTA0fDg4MDg3OHw4NTkxNzIzfDE3OTM5ODQ0MDAwMDA=",
+          "datetime": "2026-11-06T20:00:00+03:00",
+          "eventInfo": {
+            "type": "concert"
+          },
+          "id": "bbfab49c-63ef-4490-ba4e-eb1caa364a21",
+          "place": "Glastonberry"
+        },
+        "minPrice": {
+          "currency": "RUB",
+          "currencySymbol": "₽",
+          "value": 2200
+        }
+      },
+      "type": "concert_item"
+    },
+    {
+      "data": {
+        "concert": {
+          "city": "Москва",
+          "concertTitle": "Тимур Шаов",
+          "contentRating": "18+",
+          "cover": {
+            "color": "#444747",
+            "uri": "https://avatars.mds.yandex.net/get-afishanew/31447/0342073696fa1b3b03dec37b7c28583f/orig"
+          },
+          "dataSessionId": "MTAxNXw0OTIxNzF8NzMyNTA1NXwxNzk0NTAyODAwMDAw",
+          "datetime": "2026-11-12T20:00:00+03:00",
+          "eventInfo": {
+            "type": "concert"
+          },
+          "id": "79e2989f-dc0b-4b21-be85-cf23c7640146",
+          "place": "Академ Джаз Клуб"
+        },
+        "minPrice": {
+          "currency": "RUB",
+          "currencySymbol": "₽",
+          "value": 1700
+        }
+      },
+      "type": "concert_item"
+    },
+    {
+      "data": {
+        "concert": {
+          "city": "Москва",
+          "concertTitle": "Премия Яндекс Музыки: Распаковка 2026",
+          "contentRating": "16+",
+          "cover": {
+            "color": "#1e1e1e",
+            "uri": "https://avatars.mds.yandex.net/get-afishanew/5109582/713e243611dafc0d1dc2f483c023732f/orig"
+          },
+          "dataSessionId": "MzExMjJ8ODIyMzI0fDEyNTE4ODU4fDE3OTUyNzY4MDAwMDA=",
+          "datetime": "2026-11-21T19:00:00+03:00",
+          "eventInfo": {
+            "type": "concert"
+          },
+          "id": "605678ad-cae2-4a08-a6a0-8f303d1656c9",
+          "place": "Live Арена"
+        },
+        "minPrice": {
+          "currency": "RUB",
+          "currencySymbol": "₽",
+          "value": 6500
+        }
+      },
+      "type": "concert_item"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "result": {
+    "albums": [
+      {
+        "artists": [
+          {
+            "available": true,
+            "composer": false,
+            "cover": {
+              "prefix": "4813bd90.a.15748586-1",
+              "type": "from-album-cover",
+              "uri": "avatars.yandex.net/get-music-content/4467280/4813bd90.a.15748586-1/%%"
+            },
+            "genres": [],
+            "id": 171,
+            "name": "Various Artists",
+            "various": true
+          }
+        ],
+        "available": true,
+        "availableForMobile": true,
+        "availableForPremiumUsers": true,
+        "availablePartially": false,
+        "coverUri": "avatars.yandex.net/get-music-content/15134515/cc789427.a.39092306-1/%%",
+        "genre": "rock",
+        "id": 39092306,
+        "labels": [
+          {
+            "id": 6074020,
+            "name": "DMGE"
+          }
+        ],
+        "likesCount": 193,
+        "listeningFinished": false,
+        "metaType": "music",
+        "recent": false,
+        "releaseDate": "2025-11-09T00:00:00+03:00",
+        "title": "Hard Rock Live Hits Vol. 1",
+        "trackCount": 15,
+        "type": "compilation",
+        "version": "HQ 2025 Remastered",
+        "veryImportant": false,
+        "year": 2025
+      },
+      {
+        "artists": [
+          {
+            "available": true,
+            "composer": false,
+            "cover": {
+              "prefix": "4813bd90.a.15748586-1",
+              "type": "from-album-cover",
+              "uri": "avatars.yandex.net/get-music-content/4467280/4813bd90.a.15748586-1/%%"
+            },
+            "genres": [],
+            "id": 171,
+            "name": "Various Artists",
+            "various": true
+          }
+        ],
+        "available": true,
+        "availableForMobile": true,
+        "availableForPremiumUsers": true,
+        "availablePartially": false,
+        "coverUri": "avatars.yandex.net/get-music-content/15401259/4cf20504.a.38159858-1/%%",
+        "genre": "rock",
+        "id": 38159858,
+        "labels": [
+          {
+            "id": 6074020,
+            "name": "DMGE"
+          }
+        ],
+        "likesCount": 1148,
+        "listeningFinished": false,
+        "metaType": "music",
+        "recent": false,
+        "releaseDate": "2025-09-08T00:00:00+03:00",
+        "title": "90's Rock Hits From The Broadcast Archives",
+        "trackCount": 30,
+        "type": "compilation",
+        "version": "HQ 2025 Remastered",
+        "veryImportant": false,
+        "year": 2025
+      }
+    ],
+    "pager": {
+      "page": 0,
+      "perPage": 2,
+      "total": 2
+    }
+  }
+}

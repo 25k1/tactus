@@ -58,15 +58,30 @@ impl YandexService {
     }
 
     async fn artist(&self, id: &str) -> Result<Page> {
-        let (brief, tracks, albums) = tokio::join!(
-            self.get(&format!("artists/{id}/brief-info"), &[]),
-            self.get(&format!("artists/{id}/tracks"), &[("page", "0"), ("page-size", "100")]),
-            self.get(
-                &format!("artists/{id}/direct-albums"),
-                &[("page", "0"), ("page-size", "100"), ("sort-by", "year")]
-            ),
+        let albums = [("page", "0"), ("page-size", "100"), ("sort-by", "year")];
+        let path = |tail: &str| format!("artists/{id}/{tail}");
+        let (brief, tracks, direct, discography, also, similar, links, about, concerts) = tokio::join!(
+            self.get(&path("brief-info"), &[]),
+            self.get(&path("tracks"), &[("page", "0"), ("page-size", "100")]),
+            self.get(&path("direct-albums"), &albums),
+            self.get(&path("discography-albums"), &albums),
+            self.get(&path("also-albums"), &albums),
+            self.get(&path("similar"), &[]),
+            self.get(&path("artist-links"), &[]),
+            self.get(&path("about-artist"), &[]),
+            self.get(&path("concerts"), &[]),
         );
-        Ok(parse::artist_page(&brief?, tracks.as_ref().ok(), albums.as_ref().ok()))
+        Ok(parse::artist_page(&parse::ArtistData {
+            brief: brief?,
+            tracks: tracks.ok(),
+            albums: direct.ok(),
+            discography: discography.ok(),
+            also: also.ok(),
+            similar: similar.ok(),
+            links: links.ok(),
+            about: about.ok(),
+            concerts: concerts.ok(),
+        }))
     }
 
     async fn playlist(&self, key: PlaylistKey, uid: u64) -> Result<Page> {
@@ -203,14 +218,23 @@ impl CatalogService for YandexService {
                         .await?;
                     Ok(parse::search_more(&value, kind, page))
                 }
-                (View::Artist(id), SectionKind::Tracks | SectionKind::Albums) => {
+                (
+                    View::Artist(id),
+                    SectionKind::Tracks | SectionKind::Albums | SectionKind::Discography | SectionKind::AppearsOn,
+                ) => {
                     let size = parse::ARTIST_PAGE.to_string();
                     let paging = [("page", number.as_str()), ("page-size", size.as_str())];
+                    let tail = match kind {
+                        SectionKind::Tracks => "tracks",
+                        SectionKind::Discography => "discography-albums",
+                        SectionKind::AppearsOn => "also-albums",
+                        _ => "direct-albums",
+                    };
+                    let path = format!("artists/{id}/{tail}");
                     let value = if kind == SectionKind::Tracks {
-                        self.get(&format!("artists/{id}/tracks"), &paging).await?
+                        self.get(&path, &paging).await?
                     } else {
-                        let query = [paging[0], paging[1], ("sort-by", "year")];
-                        self.get(&format!("artists/{id}/direct-albums"), &query).await?
+                        self.get(&path, &[paging[0], paging[1], ("sort-by", "year")]).await?
                     };
                     Ok(parse::artist_more(&value, kind))
                 }

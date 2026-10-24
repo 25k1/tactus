@@ -29,6 +29,8 @@ pub enum SectionKind {
     Pinned,
     Moments,
     Generated,
+    Discography,
+    Concerts,
     Other,
 }
 
@@ -121,7 +123,7 @@ impl View {
             Item::Genre(genre) => View::Genre(genre.id.clone()),
             Item::Category(category) => View::Category(category.id.clone()),
             Item::Chart(chart) => View::Chart(chart.region.clone()),
-            Item::Track(_) | Item::Station(_) | Item::Link(_) => return None,
+            Item::Track(_) | Item::Station(_) | Item::Link(_) | Item::Concert(_) => return None,
         })
     }
 }

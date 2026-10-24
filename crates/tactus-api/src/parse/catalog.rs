@@ -5,7 +5,9 @@ pub const ARTIST_PAGE: u32 = 100;
 pub fn artist_more(value: &Value, kind: SectionKind) -> Paged {
     let value = result(value);
     let items = match kind {
-        SectionKind::Albums => items(value.list("albums"), album, Item::Album),
+        SectionKind::Albums | SectionKind::Discography | SectionKind::AppearsOn => {
+            items(value.list("albums"), album, Item::Album)
+        }
         _ => track_items(value.list("tracks")),
     };
     let pager = value.at("pager");
@@ -37,27 +39,61 @@ pub fn album_page(value: &Value) -> Page {
     }
 }
 
-pub fn artist_page(brief: &Value, tracks: Option<&Value>, albums: Option<&Value>) -> Page {
-    let brief = result(brief);
+#[derive(Default)]
+pub struct ArtistData {
+    pub brief: Value,
+    pub tracks: Option<Value>,
+    pub albums: Option<Value>,
+    pub discography: Option<Value>,
+    pub also: Option<Value>,
+    pub similar: Option<Value>,
+    pub links: Option<Value>,
+    pub about: Option<Value>,
+    pub concerts: Option<Value>,
+}
+
+pub fn artist_page(data: &ArtistData) -> Page {
+    let brief = result(&data.brief);
     let artist_value = brief.at("artist");
-    let paged = |value: Option<&Value>, kind: SectionKind, fallback: Vec<Item>| {
+    let paged = |value: &Option<Value>, kind: SectionKind, fallback: Vec<Item>| {
         value
+            .as_ref()
             .map(|value| artist_more(value, kind))
             .filter(|paged| !paged.items.is_empty())
             .unwrap_or(Paged { items: fallback, next: None })
     };
-    let tracks = paged(tracks, SectionKind::Tracks, track_items(brief.list("popularTracks")));
-    let albums = paged(albums, SectionKind::Albums, items(brief.list("albums"), album, Item::Album));
+    let tracks = paged(&data.tracks, SectionKind::Tracks, track_items(brief.list("popularTracks")));
+    let albums = paged(&data.albums, SectionKind::Albums, items(brief.list("albums"), album, Item::Album));
+    let discography = paged(&data.discography, SectionKind::Discography, Vec::new());
+    let also = paged(&data.also, SectionKind::AppearsOn, items(brief.list("alsoAlbums"), album, Item::Album));
+    let similar = data.similar.as_ref().map(|value| items(result(value).list("similarArtists"), artist, Item::Artist));
+    let similar = similar.filter(|items| !items.is_empty());
+    let links = data.links.as_ref().map(|value| items(result(value).list("links"), social_link, Item::Link));
+    let links = links.filter(|items| !items.is_empty());
+    let about = data.about.as_ref().map(|value| result(value).text("description")).filter(|text| !text.is_empty());
+    let concerts = data.concerts.as_ref().map(|value| concerts(result(value).list("concerts"))).unwrap_or_default();
     let mut sections = Vec::new();
     push_paged(&mut sections, SectionKind::Tracks, "", tracks.items, tracks.next);
+    push_paged(&mut sections, SectionKind::Discography, "", discography.items, discography.next);
     push_paged(&mut sections, SectionKind::Albums, "", albums.items, albums.next);
-    push(&mut sections, SectionKind::AppearsOn, "", items(brief.list("alsoAlbums"), album, Item::Album));
-    push(&mut sections, SectionKind::SimilarArtists, "", items(brief.list("similarArtists"), artist, Item::Artist));
+    push_paged(&mut sections, SectionKind::AppearsOn, "", also.items, also.next);
+    push(&mut sections, SectionKind::Concerts, "", concerts);
+    push(
+        &mut sections,
+        SectionKind::SimilarArtists,
+        "",
+        similar.unwrap_or_else(|| items(brief.list("similarArtists"), artist, Item::Artist)),
+    );
     push(&mut sections, SectionKind::Playlists, "", items(brief.list("playlists"), playlist, Item::Playlist));
-    push(&mut sections, SectionKind::Links, "", items(artist_value.list("links"), link, Item::Link));
+    push(
+        &mut sections,
+        SectionKind::Links,
+        "",
+        links.unwrap_or_else(|| items(artist_value.list("links"), link, Item::Link)),
+    );
     Page {
         title: artist_value.text("name").to_owned(),
-        description: artist_value.at("description").text("text").to_owned(),
+        description: about.unwrap_or_else(|| artist_value.at("description").text("text")).to_owned(),
         subject: artist(artist_value)
             .map(|artist| Artist { listeners: brief.at("stats").num("lastMonthListeners"), ..artist })
             .map(Item::Artist),
@@ -98,6 +134,48 @@ fn link(value: &Value) -> Option<Link> {
         },
         url: url.to_owned(),
     })
+}
+
+fn social_link(value: &Value) -> Option<Link> {
+    let url = value.text("url");
+    let title = match (value.text("title"), value.text("subtitle")) {
+        ("", "") => url.to_owned(),
+        (title, "") | ("", title) => title.to_owned(),
+        (title, subtitle) => format!("{title}: {subtitle}"),
+    };
+    (!url.is_empty()).then(|| Link { title, url: url.to_owned() })
+}
+
+pub fn concert(value: &Value) -> Option<Concert> {
+    let data = value.unwrap("data");
+    let value = data.unwrap("concert");
+    let id = value.text("id");
+    if id.is_empty() {
+        return None;
+    }
+    let price = Some(value.at("minPrice")).filter(|price| price.is_object()).unwrap_or_else(|| data.at("minPrice"));
+    let price = match (price.num("value"), price.text("currencySymbol")) {
+        (0, _) => String::new(),
+        (amount, "") => format!("{amount} {}", price.text("currency")),
+        (amount, symbol) => format!("{amount} {symbol}"),
+    };
+    let url = match value.text("afishaUrl") {
+        "" => format!("https://music.yandex.ru/concert/{id}"),
+        url => url.to_owned(),
+    };
+    Some(Concert {
+        id: id.to_owned(),
+        title: value.text("concertTitle").to_owned(),
+        city: value.text("city").to_owned(),
+        place: value.text("place").to_owned(),
+        date: value.text("datetime").get(..16).unwrap_or_default().replace('T', " "),
+        price,
+        url,
+    })
+}
+
+pub fn concerts(values: &[Value]) -> Vec<Item> {
+    items(values, concert, Item::Concert)
 }
 
 fn versions(value: &Value) -> Vec<Value> {
@@ -144,6 +222,7 @@ pub fn user_page(login: &str, value: &Value) -> Page {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::json;
 
     #[test]
     fn pages_artist_tracks_and_extends_without_duplicates() {
@@ -166,8 +245,12 @@ mod tests {
 
     #[test]
     fn parses_artist() {
-        let page =
-            artist_page(&fixture("artist_brief"), Some(&fixture("artist_tracks")), Some(&fixture("artist_albums")));
+        let page = artist_page(&ArtistData {
+            brief: fixture("artist_brief"),
+            tracks: Some(fixture("artist_tracks")),
+            albums: Some(fixture("artist_albums")),
+            ..ArtistData::default()
+        });
         assert_eq!(page.title, "Metallica");
         let Some(Item::Artist(metallica)) = &page.subject else { panic!("no artist subject") };
         assert_eq!((metallica.listeners, metallica.since), (2_870_852, 1981));
@@ -175,7 +258,7 @@ mod tests {
         assert_eq!(section(&page, SectionKind::Tracks).unwrap().items.len(), 2);
         assert_eq!(section(&page, SectionKind::Albums).unwrap().items.len(), 2);
         assert!(section(&page, SectionKind::SimilarArtists).is_some());
-        let fallback = artist_page(&fixture("artist_brief"), None, None);
+        let fallback = artist_page(&ArtistData { brief: fixture("artist_brief"), ..ArtistData::default() });
         assert!(!section(&fallback, SectionKind::Tracks).unwrap().items.is_empty());
     }
 
@@ -208,7 +291,7 @@ mod tests {
     fn parses_editions_links_and_charts() {
         let album = album_page(&fixture("album_with_tracks"));
         assert_eq!(section(&album, SectionKind::Editions).unwrap().items.len(), 1);
-        let artist = artist_page(&fixture("artist_brief"), None, None);
+        let artist = artist_page(&ArtistData { brief: fixture("artist_brief"), ..ArtistData::default() });
         let links = section(&artist, SectionKind::Links).unwrap();
         assert!(matches!(&links.items[0], Item::Link(link) if link.url.starts_with("http")));
         assert_eq!(section(&artist, SectionKind::Playlists).unwrap().items.len(), 2);
@@ -218,5 +301,29 @@ mod tests {
         let user = user_page("someone", &fixture("playlists_list"));
         assert_eq!(section(&user, SectionKind::Playlists).unwrap().items.len(), 2);
         assert_ne!(user.title, "someone");
+    }
+
+    #[test]
+    fn builds_a_full_artist_page() {
+        let page = artist_page(&ArtistData {
+            brief: fixture("artist_brief"),
+            discography: Some(fixture("artist_discography")),
+            also: Some(fixture("artist_also")),
+            similar: Some(fixture("artist_similar")),
+            links: Some(fixture("artist_links")),
+            about: Some(fixture("artist_about")),
+            concerts: Some(json!({ "concerts": fixture("concerts_feed")["items"].clone() })),
+            ..ArtistData::default()
+        });
+        let discography = section(&page, SectionKind::Discography).unwrap();
+        assert_eq!((discography.items.len(), discography.more), (3, Some(1)));
+        assert_eq!(section(&page, SectionKind::AppearsOn).unwrap().items.len(), 2);
+        assert_eq!(section(&page, SectionKind::SimilarArtists).unwrap().items.len(), 3);
+        let links = &section(&page, SectionKind::Links).unwrap().items;
+        assert!(matches!(&links[0], Item::Link(link) if link.title == "Official website: metallica.com"));
+        assert!(page.description.starts_with("American heavy metal band"));
+        let concerts = &section(&page, SectionKind::Concerts).unwrap().items;
+        assert!(matches!(&concerts[0], Item::Concert(concert)
+            if concert.date == "2026-11-06 20:00" && concert.price == "2200 ₽" && concert.url.ends_with(&concert.id)));
     }
 }

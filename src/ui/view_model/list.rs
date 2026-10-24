@@ -118,6 +118,12 @@ pub fn columns(entry: &Entry) -> [String; 4] {
             [category.title.clone(), String::new(), fl!("kind-category"), String::new()]
         }
         Entry::Item(Item::Link(link)) => [link.title.clone(), link.url.clone(), fl!("kind-link"), String::new()],
+        Entry::Item(Item::Concert(concert)) => [
+            concert.title.clone(),
+            join(vec![concert.city.clone(), concert.place.clone()]),
+            join(vec![fl!("kind-concert"), concert.price.clone()]),
+            concert.date.clone(),
+        ],
         Entry::Item(Item::Chart(chart)) => {
             [chart_label(&chart.region), String::new(), fl!("kind-chart"), String::new()]
         }

@@ -1,0 +1,35 @@
+{
+  "artist": {
+    "cover": {
+      "color": "#1e1e1e",
+      "uri": "avatars.yandex.net/get-music-content/16469857/cba01543.p.3121/%%"
+    },
+    "id": 3121,
+    "name": "Metallica"
+  },
+  "artistType": "artist",
+  "description": "American heavy metal band. It was formed in Los Angeles in 1981 by vocalist/guitarist James Hetfield and drummer Lars Ulrich, and has been based in San Francisco for most of its career. The band's fast tempos, instrumentals and aggressive musicianship made them one of the founding \"big four\" bands o",
+  "links": [
+    {
+      "subtitle": "metallica.com",
+      "title": "Official website",
+      "url": "http://www.metallica.com/"
+    },
+    {
+      "imgUrl": "avatars.mds.yandex.net/get-music-misc/34161/img.6527a12cc0ceda6808b523a3/%%",
+      "subtitle": "metallica",
+      "title": "X",
+      "url": "https://twitter.com/metallica"
+    },
+    {
+      "imgUrl": "avatars.mds.yandex.net/get-music-misc/49997/img.64b12b82b798f56e5b8e2dbf/%%",
+      "subtitle": "metallicatv",
+      "title": "YouTube",
+      "url": "http://www.youtube.com/metallicatv"
+    }
+  ],
+  "stats": {
+    "lastMonthListeners": 2870852,
+    "lastMonthListenersDelta": -184789
+  }
+}

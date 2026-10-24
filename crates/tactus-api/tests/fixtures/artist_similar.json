@@ -1,0 +1,72 @@
+{
+  "result": {
+    "similarArtists": [
+      {
+        "available": true,
+        "composer": false,
+        "counts": {
+          "alsoAlbums": 45,
+          "alsoTracks": 42,
+          "directAlbums": 27,
+          "tracks": 181
+        },
+        "cover": {
+          "prefix": "1df2a56c.p.3274/",
+          "type": "from-artist-photos",
+          "uri": "avatars.yandex.net/get-music-content/2110367/1df2a56c.p.3274/%%"
+        },
+        "genres": [
+          "classicmetal"
+        ],
+        "id": 3274,
+        "name": "Ozzy Osbourne",
+        "ticketsAvailable": false,
+        "various": false
+      },
+      {
+        "available": true,
+        "composer": false,
+        "counts": {
+          "alsoAlbums": 32,
+          "alsoTracks": 18,
+          "directAlbums": 35,
+          "tracks": 235
+        },
+        "cover": {
+          "prefix": "d800f4fb.a.7132094-1",
+          "type": "from-album-cover",
+          "uri": "avatars.yandex.net/get-music-content/142001/d800f4fb.a.7132094-1/%%"
+        },
+        "genres": [
+          "thrashmetal"
+        ],
+        "id": 48506,
+        "name": "Megadeth",
+        "ticketsAvailable": false,
+        "various": false
+      },
+      {
+        "available": true,
+        "composer": false,
+        "counts": {
+          "alsoAlbums": 27,
+          "alsoTracks": 28,
+          "directAlbums": 35,
+          "tracks": 260
+        },
+        "cover": {
+          "prefix": "e04fdcff.p.3276/",
+          "type": "from-artist-photos",
+          "uri": "avatars.yandex.net/get-music-content/32236/e04fdcff.p.3276/%%"
+        },
+        "genres": [
+          "classicmetal"
+        ],
+        "id": 3276,
+        "name": "Black Sabbath",
+        "ticketsAvailable": false,
+        "various": false
+      }
+    ]
+  }
+}

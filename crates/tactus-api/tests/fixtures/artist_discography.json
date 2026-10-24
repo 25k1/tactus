@@ -1,0 +1,168 @@
+{
+  "result": {
+    "albums": [
+      {
+        "artists": [
+          {
+            "available": true,
+            "composer": false,
+            "cover": {
+              "prefix": "cba01543.p.3121/",
+              "type": "from-artist-photos",
+              "uri": "avatars.yandex.net/get-music-content/16469857/cba01543.p.3121/%%"
+            },
+            "genres": [],
+            "id": 3121,
+            "name": "Metallica",
+            "various": false
+          }
+        ],
+        "available": true,
+        "availableForMobile": true,
+        "availableForPremiumUsers": true,
+        "availablePartially": false,
+        "coverUri": "avatars.yandex.net/get-music-content/10092855/f98325d1.a.26748333-1/%%",
+        "genre": "thrashmetal",
+        "id": 26748333,
+        "labels": [],
+        "likesCount": 5038,
+        "listeningFinished": false,
+        "metaType": "music",
+        "recent": false,
+        "releaseDate": "2023-04-14T00:00:00+03:00",
+        "title": "72 Seasons",
+        "trackCount": 12,
+        "veryImportant": false,
+        "year": 2023
+      },
+      {
+        "artists": [
+          {
+            "available": true,
+            "composer": false,
+            "cover": {
+              "prefix": "cba01543.p.3121/",
+              "type": "from-artist-photos",
+              "uri": "avatars.yandex.net/get-music-content/16469857/cba01543.p.3121/%%"
+            },
+            "genres": [],
+            "id": 3121,
+            "name": "Metallica",
+            "various": false
+          }
+        ],
+        "available": true,
+        "availableForMobile": true,
+        "availableForPremiumUsers": true,
+        "availablePartially": false,
+        "contentWarning": "explicit",
+        "coverUri": "avatars.yandex.net/get-music-content/143117/113db587.a.3935282-1/%%",
+        "duplicates": [
+          {
+            "artists": [
+              {
+                "available": true,
+                "composer": false,
+                "cover": {
+                  "prefix": "cba01543.p.3121/",
+                  "type": "from-artist-photos",
+                  "uri": "avatars.yandex.net/get-music-content/16469857/cba01543.p.3121/%%"
+                },
+                "genres": [],
+                "id": 3121,
+                "name": "Metallica",
+                "various": false
+              }
+            ],
+            "available": true,
+            "availableForMobile": true,
+            "availableForPremiumUsers": true,
+            "availablePartially": false,
+            "contentWarning": "explicit",
+            "coverUri": "avatars.yandex.net/get-music-content/143117/de18f4f7.a.3935287-1/%%",
+            "genre": "thrashmetal",
+            "id": 3935287,
+            "labels": [
+              {
+                "id": 51173,
+                "name": "Blackened"
+              }
+            ],
+            "likesCount": 3087,
+            "listeningFinished": false,
+            "metaType": "music",
+            "recent": false,
+            "releaseDate": "2016-11-18T00:00:00+03:00",
+            "title": "Hardwired…To Self-Destruct",
+            "trackCount": 12,
+            "veryImportant": false,
+            "year": 2016
+          }
+        ],
+        "genre": "thrashmetal",
+        "id": 3935282,
+        "labels": [
+          {
+            "id": 51173,
+            "name": "Blackened"
+          }
+        ],
+        "likesCount": 31073,
+        "listeningFinished": false,
+        "metaType": "music",
+        "recent": false,
+        "releaseDate": "2016-11-18T00:00:00+03:00",
+        "title": "Hardwired…To Self-Destruct",
+        "trackCount": 26,
+        "version": "Deluxe",
+        "veryImportant": false,
+        "year": 2016
+      },
+      {
+        "artists": [
+          {
+            "available": true,
+            "composer": false,
+            "cover": {
+              "prefix": "cba01543.p.3121/",
+              "type": "from-artist-photos",
+              "uri": "avatars.yandex.net/get-music-content/16469857/cba01543.p.3121/%%"
+            },
+            "genres": [],
+            "id": 3121,
+            "name": "Metallica",
+            "various": false
+          }
+        ],
+        "available": true,
+        "availableForMobile": true,
+        "availableForPremiumUsers": true,
+        "availablePartially": false,
+        "contentWarning": "explicit",
+        "coverUri": "avatars.yandex.net/get-music-content/114728/285b5880.a.7671-2/%%",
+        "genre": "thrashmetal",
+        "id": 7671,
+        "labels": [
+          {
+            "id": 448792,
+            "name": "Metallica"
+          }
+        ],
+        "likesCount": 21620,
+        "listeningFinished": false,
+        "metaType": "music",
+        "recent": false,
+        "releaseDate": "2008-09-12T00:00:00+04:00",
+        "title": "Death Magnetic",
+        "trackCount": 10,
+        "veryImportant": false,
+        "year": 2008
+      }
+    ],
+    "pager": {
+      "page": 0,
+      "perPage": 3,
+      "total": 12
+    }
+  }
+}
