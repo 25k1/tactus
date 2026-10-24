@@ -114,6 +114,9 @@ pub fn columns(entry: &Entry) -> [String; 4] {
         }
         Entry::Item(Item::Tag(tag)) => [tag.title.clone(), String::new(), fl!("kind-collection"), String::new()],
         Entry::Item(Item::Genre(genre)) => [genre.title.clone(), String::new(), fl!("kind-genre"), String::new()],
+        Entry::Item(Item::Category(category)) => {
+            [category.title.clone(), String::new(), fl!("kind-category"), String::new()]
+        }
         Entry::Item(Item::Link(link)) => [link.title.clone(), link.url.clone(), fl!("kind-link"), String::new()],
         Entry::Item(Item::Chart(chart)) => {
             [chart_label(&chart.region), String::new(), fl!("kind-chart"), String::new()]

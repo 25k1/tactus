@@ -119,6 +119,12 @@ pub struct Genre {
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]
+pub struct Category {
+    pub id: String,
+    pub title: String,
+}
+
+#[derive(Clone, Debug, Default, PartialEq)]
 pub struct Link {
     pub title: String,
     pub url: String,
@@ -140,6 +146,7 @@ pub enum Item {
     Station(Station),
     Tag(Tag),
     Genre(Genre),
+    Category(Category),
     Link(Link),
     Chart(Chart),
 }
@@ -161,6 +168,7 @@ impl Item {
             Item::Station(station) => station.name.clone(),
             Item::Tag(tag) => tag.title.clone(),
             Item::Genre(genre) => genre.title.clone(),
+            Item::Category(category) => category.title.clone(),
             Item::Link(link) => link.title.clone(),
             Item::Chart(chart) => chart.region.clone(),
         }
@@ -172,7 +180,9 @@ impl Item {
             Item::Album(album) => Target::Album(album.id.clone()),
             Item::Artist(artist) => Target::Artist(artist.id.clone()),
             Item::Playlist(playlist) => Target::Playlist(playlist.key),
-            Item::Station(_) | Item::Tag(_) | Item::Genre(_) | Item::Link(_) | Item::Chart(_) => return None,
+            Item::Station(_) | Item::Tag(_) | Item::Genre(_) | Item::Category(_) | Item::Link(_) | Item::Chart(_) => {
+                return None;
+            }
         })
     }
 
@@ -185,6 +195,7 @@ impl Item {
                 format!("https://music.yandex.ru/users/{}/playlists/{}", playlist.key.owner, playlist.key.kind)
             }
             Item::Tag(tag) => format!("https://music.yandex.ru/tag/{}", tag.id),
+            Item::Category(category) => format!("https://music.yandex.ru/non-music/category/{}", category.id),
             Item::Link(link) => link.url.clone(),
             Item::Chart(_) => "https://music.yandex.ru/chart".to_owned(),
             Item::Station(_) | Item::Genre(_) => return None,
@@ -200,7 +211,7 @@ impl Item {
             Item::Station(station) => station.seed.clone(),
             Item::Genre(genre) if !genre.seed.is_empty() => genre.seed.clone(),
             Item::Genre(_) => return None,
-            Item::Tag(_) | Item::Link(_) | Item::Chart(_) => return None,
+            Item::Tag(_) | Item::Category(_) | Item::Link(_) | Item::Chart(_) => return None,
         })
     }
 }

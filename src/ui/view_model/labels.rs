@@ -47,6 +47,7 @@ pub fn section_label(kind: SectionKind, title: &str) -> String {
         SectionKind::GenreReleases => fl!("section-genre-releases"),
         SectionKind::RecommendedArtists => fl!("section-recommended-artists"),
         SectionKind::Genres => fl!("section-genres"),
+        SectionKind::Categories => fl!("section-categories"),
         SectionKind::Pinned => fl!("section-pinned"),
         SectionKind::Other => title.to_owned(),
         SectionKind::NewEpisodes if title.is_empty() => fl!("section-new-episodes"),

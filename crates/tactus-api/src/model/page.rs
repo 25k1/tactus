@@ -24,6 +24,7 @@ pub enum SectionKind {
     GenreReleases,
     RecommendedArtists,
     Genres,
+    Categories,
     NewEpisodes,
     Pinned,
     Other,
@@ -103,6 +104,7 @@ pub enum View {
     Track(String),
     Tag(String),
     Genre(String),
+    Category(String),
     User(String),
     Chart(String),
 }
@@ -115,6 +117,7 @@ impl View {
             Item::Playlist(playlist) => View::Playlist(playlist.key),
             Item::Tag(tag) => View::Tag(tag.id.clone()),
             Item::Genre(genre) => View::Genre(genre.id.clone()),
+            Item::Category(category) => View::Category(category.id.clone()),
             Item::Chart(chart) => View::Chart(chart.region.clone()),
             Item::Track(_) | Item::Station(_) | Item::Link(_) => return None,
         })

@@ -1,0 +1,50 @@
+{
+  "result": {
+    "title": "Аудиокниги",
+    "blocks": [
+      {
+        "id": "nonmusic-menu-tab",
+        "type": "menu-tab",
+        "entities": [
+          {
+            "id": "a1",
+            "type": "menu-tab-entity",
+            "data": { "id": "bookmate-books", "title": "Аудиокниги", "url": "/non-music/category/AUDIOBOOKS_MENU" }
+          },
+          {
+            "id": "a2",
+            "type": "menu-tab-entity",
+            "data": { "id": "bookmate_podcasts", "title": "Подкасты", "url": "/non-music/category/PODCASTS_MENU" }
+          }
+        ]
+      },
+      {
+        "id": "AUDIOBOOKS_GENRES",
+        "title": "Выбирайте, что послушать сегодня",
+        "type": "categories-tab",
+        "entities": [
+          {
+            "id": "c1",
+            "type": "category",
+            "data": { "categoryId": "audibooks_fiction", "title": "⁣", "url": "/non-music/category/audibooks_fiction", "voiceTitle": "Художественная литература" }
+          },
+          {
+            "id": "c2",
+            "type": "category",
+            "data": { "categoryId": "audiobooks_sciencefiction", "title": "⁣", "url": "/non-music/category/audiobooks_sciencefiction", "voiceTitle": "Фантастика " }
+          },
+          {
+            "id": "c3",
+            "type": "category",
+            "data": { "categoryId": "audiobooks_mystery", "title": "Детективы", "url": "/non-music/category/audiobooks_mystery" }
+          },
+          {
+            "id": "c4",
+            "type": "category",
+            "data": { "categoryId": "audiobooks_unnamed", "title": "⁣", "url": "/non-music/category/audiobooks_unnamed" }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -136,6 +136,7 @@ impl CatalogService for YandexService {
                     page.sections.splice(0..0, episodes.as_ref().map(parse::new_episodes).unwrap_or_default());
                     page
                 }
+                View::Category(id) => parse::non_music(&self.get(&format!("non-music/category/{id}"), &[]).await?),
                 View::History => parse::history(&self.get("music-history", &[("fullModelsCount", "200")]).await?),
                 View::Album(id) => parse::album_page(&self.get(&format!("albums/{id}/with-tracks"), &[]).await?),
                 View::Artist(id) => self.artist(id).await?,

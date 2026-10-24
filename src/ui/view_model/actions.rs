@@ -235,7 +235,7 @@ pub fn item_actions(player: &Player, entry: &Entry, context: &ListContext) -> Ve
         Item::Station(_) => actions.push(Some(Play)),
         Item::Tag(_) | Item::Link(_) => actions.extend([Some(Open), Some(CopyLink)]),
         Item::Genre(genre) if !genre.seed.is_empty() => actions.extend([Some(Open), Some(Radio)]),
-        Item::Genre(_) => actions.push(Some(Open)),
+        Item::Genre(_) | Item::Category(_) => actions.push(Some(Open)),
         Item::Chart(_) => actions.extend([Some(Open), Some(Play), Some(AddToQueue), Some(CopyLink)]),
     }
     actions

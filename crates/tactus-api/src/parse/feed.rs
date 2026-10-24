@@ -1,5 +1,17 @@
 use super::*;
 
+const CATEGORY_URL: &str = "/non-music/category/";
+
+fn category(data: &Value) -> Option<Item> {
+    let id = match data.text("categoryId") {
+        "" => data.text("url").strip_prefix(CATEGORY_URL)?,
+        id => id,
+    };
+    let readable = |text: &str| text.chars().any(char::is_alphanumeric).then(|| text.trim().to_owned());
+    let title = readable(data.text("voiceTitle")).or_else(|| readable(data.text("title")))?;
+    Some(Item::Category(Category { id: id.to_owned(), title }))
+}
+
 fn landing_item(entity: &Value) -> Option<Item> {
     let data = if entity.at("data").is_null() { entity } else { entity.at("data") };
     match entity.text("type") {
@@ -8,6 +20,7 @@ fn landing_item(entity: &Value) -> Option<Item> {
         "album" | "album-chart-item" => album(data).map(Item::Album),
         "chart-item" | "track" | "episode" | "podcast_episode" => track(data).map(Item::Track),
         "last-recently-played" => album(data.at("playedItem")).map(Item::Album),
+        "category" | "menu-tab-entity" => category(data),
         "mix-link" => {
             let id = data.text("url").strip_prefix("/tag/")?.trim_end_matches('/');
             Some(Item::Tag(Tag { id: id.to_owned(), title: data.text("title").to_owned() }))
@@ -18,7 +31,9 @@ fn landing_item(entity: &Value) -> Option<Item> {
 
 fn block(block: &Value) -> Option<Section> {
     let items: Vec<Item> = block.list("entities").iter().filter_map(landing_item).collect();
-    (!items.is_empty()).then(|| Section::new(SectionKind::Other, block.text("title"), items))
+    let categories = items.iter().all(|item| matches!(item, Item::Category(_)));
+    let kind = if categories { SectionKind::Categories } else { SectionKind::Other };
+    (!items.is_empty()).then(|| Section::new(kind, block.text("title"), items))
 }
 
 pub fn blocks(value: &Value) -> Vec<Section> {
@@ -205,6 +220,41 @@ mod tests {
         let page = non_music(&fixture("non_music"));
         assert!(!page.sections.is_empty());
         assert!(page.sections.iter().all(|section| !section.items.is_empty()));
+    }
+
+    #[test]
+    fn parses_book_and_podcast_categories() {
+        let page = non_music(&fixture("non_music_category"));
+        let categories: Vec<Vec<(String, String)>> = page
+            .sections
+            .iter()
+            .map(|section| {
+                assert_eq!(section.kind, SectionKind::Categories);
+                section
+                    .items
+                    .iter()
+                    .map(|item| match item {
+                        Item::Category(category) => (category.id.clone(), category.title.clone()),
+                        other => panic!("{other:?}"),
+                    })
+                    .collect()
+            })
+            .collect();
+        let pairs = |items: &[(&str, &str)]| -> Vec<(String, String)> {
+            items.iter().map(|(id, title)| ((*id).to_owned(), (*title).to_owned())).collect()
+        };
+        assert_eq!(
+            categories,
+            [
+                pairs(&[("AUDIOBOOKS_MENU", "Аудиокниги"), ("PODCASTS_MENU", "Подкасты")]),
+                pairs(&[
+                    ("audibooks_fiction", "Художественная литература"),
+                    ("audiobooks_sciencefiction", "Фантастика"),
+                    ("audiobooks_mystery", "Детективы"),
+                ]),
+            ]
+        );
+        assert_eq!(View::of(&page.sections[1].items[0]), Some(View::Category("audibooks_fiction".into())));
     }
 
     #[test]

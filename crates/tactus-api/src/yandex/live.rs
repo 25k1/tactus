@@ -37,6 +37,8 @@ fn anonymous_reads() {
         View::Chart("world".into()),
         View::User("music-blog".into()),
         View::Genre("58e3c0796ebb3476087d190b".into()),
+        View::Category("AUDIOBOOKS_MENU".into()),
+        View::Category("audibooks_fiction".into()),
     ] {
         report(&format!("{view:?}"), service.page(&view, 0), sections);
     }
