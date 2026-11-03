@@ -11,6 +11,7 @@ pub struct LoginPanel {
     pub code: TextCtrl,
     pub copy_code: Button,
     pub open_page: Button,
+    pub cancel: Button,
 }
 
 impl LoginPanel {
@@ -26,9 +27,11 @@ impl LoginPanel {
         code.set_accessibility_label(&fl!("login-code"));
         let copy_code = button(&panel, &fl!("login-copy-code"));
         let open_page = button(&panel, &fl!("login-open-page"));
+        let cancel = button(&panel, &fl!("dialog-cancel"));
         let buttons = row();
         buttons.add(&copy_code, 0, SizerFlag::Right, 8);
         buttons.add(&open_page, 0, SizerFlag::Right, 8);
+        buttons.add(&cancel, 0, SizerFlag::Right, 8);
         let sizer = column();
         for widget in [&title, &description] {
             sizer.add(widget, 0, SizerFlag::All, 8);
@@ -39,7 +42,7 @@ impl LoginPanel {
         sizer.add(&code, 0, SizerFlag::Expand | SizerFlag::All, 8);
         sizer.add_sizer(&buttons, 0, SizerFlag::All, 8);
         panel.set_sizer(sizer, true);
-        LoginPanel { panel, get_code, status, code_label, code, copy_code, open_page }
+        LoginPanel { panel, get_code, status, code_label, code, copy_code, open_page, cancel }
     }
 
     pub fn update(&self, state: &LoginState) {

@@ -67,11 +67,15 @@ pub(crate) fn player() -> Player {
 
 pub(crate) fn player_with(settings: Settings) -> (Player, MockOutput) {
     let output = MockOutput::default();
-    let mut player =
-        Player::with_output(settings, Arc::new(FakeProvider(fake().clone())), Box::new(output.clone()), mock::loader());
+    let mut player = Player::with_output(
+        settings,
+        vec![Arc::new(FakeProvider(fake().clone()))],
+        Box::new(output.clone()),
+        mock::loader(),
+    );
     player.persist = false;
-    player.service = Some(fake().clone());
-    player.account = Some(Account { id: "1".into(), ..Account::default() });
+    player.profile.service = Some(fake().clone());
+    player.profile.account = Some(Account { id: "1".into(), ..Account::default() });
     (player, output)
 }
 
@@ -98,6 +102,7 @@ pub(crate) fn settle(player: &mut Player) -> Vec<Event> {
     }
 }
 
+mod accounts;
 mod content;
 mod library;
 mod playback;

@@ -120,9 +120,9 @@ impl Ui {
             "shuffle": player.settings.shuffle,
             "liked": has(Relation::Like),
             "disliked": has(Relation::Dislike),
-            "queueIndex": player.queue.index(),
-            "queueLength": player.queue.len(),
-            "account": player.account.as_ref().map(|account| account.name.clone()),
+            "queueIndex": player.visible_queue().index(),
+            "queueLength": player.visible_queue().len(),
+            "account": player.profile.account.as_ref().map(|_| player.profile.label()),
             "nowPlaying": view_model::now_playing(&player),
             "sleep": player.sleep_timer(),
             "sleepRemainingMs": player.sleep_remaining().map(|remaining| remaining.as_millis() as u64),
@@ -133,7 +133,7 @@ impl Ui {
 
     pub(super) fn publish_queue(&self) {
         if self.serving() {
-            let queue: Vec<Value> = self.player.borrow().queue.tracks().iter().map(track_json).collect();
+            let queue: Vec<Value> = self.player.borrow().visible_queue().tracks().iter().map(track_json).collect();
             self.remote_hub.publish_queue(json!(queue));
         }
     }

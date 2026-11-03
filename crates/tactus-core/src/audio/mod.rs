@@ -93,7 +93,7 @@ fn decode(reader: Reader, buffer: &Buffer, codec: Codec) -> Result<Decoder<Reade
 pub fn load(source: &AudioSource) -> Result<Loaded> {
     let buffer = match source.url.strip_prefix("file:") {
         Some(path) => Buffer::complete(std::fs::read(path)?),
-        None => Buffer::fetch(source.url.clone()),
+        None => Buffer::fetch(source.url.clone(), tactus_api::net::client_for(source.proxy.as_ref())),
     };
     Loaded::reload((buffer, source.codec))
 }

@@ -4,6 +4,7 @@ mod control;
 pub mod event;
 mod library;
 mod playback;
+mod profile;
 pub mod queue;
 mod radio;
 pub mod session;
@@ -14,14 +15,16 @@ mod voice;
 pub mod wave;
 pub mod ynison;
 
+use crate::accounts::{AccountEntry, AccountList};
 use crate::audio::{self, Loaded, Loader, Output, RodioOutput, Start};
 use crate::download::{self, Download, DownloadState, Downloader, Job};
 use crate::log;
 use crate::media::{Media, MediaCommand, MediaEvent};
 use crate::offline::Offline;
-use crate::settings::{self, Settings};
+use crate::settings::Settings;
 use crate::update;
 pub use event::{Cue, Event, Notice};
+pub use profile::Profile;
 use queue::{Queue, Repeat};
 use session::Session;
 use sleep::Sleep;
@@ -33,8 +36,8 @@ use tactus_api::error::{Error, ErrorKind, Failure, Result};
 use tactus_api::net;
 use tactus_api::sync::Guard;
 use tactus_api::{
-    Account, AccountOption, AccountSettings, Item, Library, Lyrics, MusicService, Page, Play, Playlist, PlaylistEdit,
-    PlaylistKey, Provider, Relation, Section, SectionKind, Service, Target, Track, View,
+    Account, AccountOption, AccountSettings, Capabilities, Item, Library, Lyrics, MusicService, Page, Play, Playlist,
+    PlaylistEdit, PlaylistKey, Provider, ProviderKind, Relation, Section, SectionKind, Service, Target, Track, View,
 };
 use undo::{Change, Undo};
 pub use wave::MY_WAVE;
@@ -80,23 +83,19 @@ pub enum PageState {
 pub struct Player {
     pub settings: Settings,
     pub login: LoginState,
-    pub account: Option<Account>,
-    pub account_settings: AccountSettings,
-    pub library: Library,
-    pub playlists: Vec<Playlist>,
+    pub profile: Profile,
     pub queue: Queue,
     pub track: Option<Track>,
     pub playing: bool,
     pub position_ms: u64,
-    pub pages: HashMap<View, PageState>,
     pub downloads: Vec<Download>,
     pub offline: Offline,
-    pub disconnected: bool,
     pub lyrics: Option<Lyrics>,
     pub lyric_line: Option<usize>,
     pub busy: usize,
-    provider: SharedProvider,
-    service: Option<Service>,
+    providers: Vec<SharedProvider>,
+    others: Vec<Profile>,
+    owner: String,
     events: Vec<Event>,
     sender: Sender<Update>,
     updates: Receiver<Update>,
@@ -106,7 +105,6 @@ pub struct Player {
     wave: Wave,
     media: Option<Media>,
     downloader: Downloader,
-    session: Session,
     persist: bool,
     restart: Option<bool>,
     settings_dirty: bool,
@@ -121,7 +119,6 @@ pub struct Player {
     started: Instant,
     last_save: Instant,
     last_episode_check: Option<Instant>,
-    last_connect: Option<Instant>,
     ynison: ynison::Ynison,
     voice_install: Option<std::sync::Arc<std::sync::atomic::AtomicBool>>,
     wave_options: Option<tactus_api::WaveSettings>,
@@ -132,49 +129,50 @@ fn seed() -> u64 {
     std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(1, |elapsed| elapsed.as_nanos() as u64)
 }
 
-pub fn yandex() -> SharedProvider {
-    std::sync::Arc::new(tactus_yandex::YandexProvider)
+pub fn providers() -> Vec<SharedProvider> {
+    vec![std::sync::Arc::new(tactus_yandex::YandexProvider)]
 }
 
 impl Player {
-    pub fn new(settings: Settings, provider: SharedProvider) -> Self {
+    pub fn new(settings: Settings, providers: Vec<SharedProvider>) -> Self {
         let output =
             RodioOutput::new(&settings.output_device, settings.volume, settings.speed, &settings.active_equalizer());
-        Self::with_output(settings, provider, Box::new(output), audio::loader())
+        Self::with_output(settings, providers, Box::new(output), audio::loader())
     }
 
-    pub fn with_output(settings: Settings, provider: SharedProvider, audio: Box<dyn Output>, loader: Loader) -> Self {
+    pub fn with_output(
+        settings: Settings,
+        providers: Vec<SharedProvider>,
+        audio: Box<dyn Output>,
+        loader: Loader,
+    ) -> Self {
         let (sender, updates) = mpsc::channel();
+        let guest = Profile::new(AccountEntry::default(), providers[0].clone());
         Self {
             audio,
             loader,
             sleep: None,
             settings,
             login: LoginState::Idle,
-            account: None,
-            account_settings: AccountSettings::new(),
-            library: Library::default(),
-            playlists: Vec::new(),
+            profile: guest,
             queue: Queue::default(),
             track: None,
             playing: false,
             position_ms: 0,
-            pages: HashMap::new(),
             downloads: Vec::new(),
             offline: Offline::default(),
-            disconnected: false,
             lyrics: None,
             lyric_line: None,
             busy: 0,
-            provider,
-            service: None,
+            providers,
+            others: Vec::new(),
+            owner: String::new(),
             events: Vec::new(),
             sender,
             updates,
             wave: Wave::default(),
             media: None,
             downloader: Downloader::default(),
-            session: Session::default(),
             persist: true,
             restart: None,
             settings_dirty: false,
@@ -189,7 +187,6 @@ impl Player {
             started: Instant::now(),
             last_save: Instant::now(),
             last_episode_check: None,
-            last_connect: None,
             ynison: ynison::Ynison::default(),
             voice_install: None,
             wave_options: None,
@@ -202,15 +199,75 @@ impl Player {
     }
 
     pub fn start(&mut self) {
-        self.session = Session::load();
         self.offline = Offline::load();
-        if let Some(token) = settings::load_token() {
-            self.connect_with(&token);
+        let list = AccountList::load();
+        self.owner = list.queue_owner;
+        for entry in list.accounts {
+            let Some(provider) = self.provider_for(entry.provider) else {
+                continue;
+            };
+            let mut profile = Profile::new(entry, provider);
+            profile.load_session();
+            let previous = std::mem::replace(&mut self.profile, profile);
+            if previous.entry.is_saved() {
+                self.others.push(previous);
+            }
+        }
+        if let Some(index) = self.others.iter().position(|profile| profile.id() == list.active) {
+            std::mem::swap(&mut self.profile, &mut self.others[index]);
+        }
+        if !self.has_account(&self.owner) {
+            self.owner = self.profile.id().to_owned();
+        }
+        for id in self.account_ids() {
+            self.within(&id, Player::connect_saved);
         }
     }
 
     pub fn is_signed_in(&self) -> bool {
-        self.service.is_some()
+        self.profile.is_signed_in()
+    }
+
+    fn provider_for(&self, kind: ProviderKind) -> Option<SharedProvider> {
+        self.providers.iter().find(|provider| provider.kind() == kind).cloned()
+    }
+
+    fn account_ids(&self) -> Vec<String> {
+        std::iter::once(&self.profile).chain(&self.others).map(|profile| profile.id().to_owned()).collect()
+    }
+
+    fn has_account(&self, id: &str) -> bool {
+        std::iter::once(&self.profile).chain(&self.others).any(|profile| profile.id() == id)
+    }
+
+    pub fn is_owner(&self) -> bool {
+        self.profile.id() == self.owner
+    }
+
+    pub(super) fn within<R>(&mut self, id: &str, work: impl FnOnce(&mut Player) -> R) -> Option<R> {
+        if self.profile.id() == id {
+            return Some(work(self));
+        }
+        let index = self.others.iter().position(|profile| profile.id() == id)?;
+        let home = self.profile.id().to_owned();
+        std::mem::swap(&mut self.profile, &mut self.others[index]);
+        let result = work(self);
+        if let Some(index) = self.others.iter().position(|profile| profile.id() == home) {
+            std::mem::swap(&mut self.profile, &mut self.others[index]);
+        }
+        Some(result)
+    }
+
+    pub fn as_owner<R: Default>(&mut self, work: impl FnOnce(&mut Player) -> R) -> R {
+        let owner = self.owner.clone();
+        self.within(&owner, work).unwrap_or_default()
+    }
+
+    pub(super) fn owner_profile(&self) -> &Profile {
+        std::iter::once(&self.profile)
+            .chain(&self.others)
+            .find(|profile| profile.id() == self.owner)
+            .unwrap_or(&self.profile)
     }
 
     pub fn take_events(&mut self) -> Vec<Event> {
@@ -245,11 +302,17 @@ impl Player {
         W: FnOnce(&dyn MusicService) -> Result<T> + Send + 'static,
         D: FnOnce(&mut Player, Result<T>) + Send + 'static,
     {
-        let Some(service) = self.service.clone() else {
+        let Some(service) = self.profile.service.clone() else {
             self.fail(Error::SignedOut);
             return;
         };
-        self.background(move || work(service.as_ref()), done);
+        let context = self.profile.id().to_owned();
+        self.background(
+            move || work(service.as_ref()),
+            move |player, result| {
+                player.within(&context, |player| done(player, result));
+            },
+        );
     }
 
     fn background<T, W, D>(&mut self, work: W, done: D)
@@ -282,7 +345,7 @@ impl Player {
     }
 
     fn quiet(&mut self, work: impl FnOnce(&dyn MusicService) -> Result<()> + Send + 'static) {
-        if self.service.is_some() {
+        if self.profile.service.is_some() {
             self.spawn(work, |_, result| {
                 if let Err(error) = result {
                     log::warn(&error);
@@ -295,22 +358,29 @@ impl Player {
         while let Ok(update) = self.updates.try_recv() {
             update(self);
         }
+        let updates: Vec<download::Update> = self.downloader.updates().collect();
+        for update in updates {
+            self.apply_download(update);
+        }
+        self.as_owner(Player::poll_owner);
+        self.poll_episodes();
+        for id in self.account_ids() {
+            self.within(&id, Player::poll_connection);
+        }
+        self.flush_settings();
+    }
+
+    fn poll_owner(&mut self) {
         let media_events: Vec<MediaEvent> =
             self.media.as_ref().map(|media| media.events().collect()).unwrap_or_default();
         for event in media_events {
             self.handle_media(event);
-        }
-        let updates: Vec<download::Update> = self.downloader.updates().collect();
-        for update in updates {
-            self.apply_download(update);
         }
         self.audio.tick();
         self.poll_sleep();
         if self.audio.is_loaded() {
             self.poll_playback();
         }
-        self.poll_episodes();
-        self.poll_connection();
         self.poll_ynison();
         if self.last_save.elapsed() >= SAVE_INTERVAL {
             if self.playing {
@@ -318,7 +388,6 @@ impl Player {
             }
             self.last_save = Instant::now();
         }
-        self.flush_settings();
     }
 
     pub(super) fn save_session(&mut self) {
@@ -326,20 +395,20 @@ impl Player {
             return;
         }
         if let Some(track) = self.track.clone() {
-            self.session.remember_position(&track, self.position_ms);
+            self.profile.session.remember_position(&track, self.position_ms);
         }
-        self.session.tracks = self.queue.tracks().to_vec();
-        self.session.index = self.queue.index();
-        self.session.position_ms = self.position_ms;
-        self.session.wave = self.wave.seeds.clone();
-        if let Err(error) = self.session.save() {
+        self.profile.session.tracks = self.queue.tracks().to_vec();
+        self.profile.session.index = self.queue.index();
+        self.profile.session.position_ms = self.position_ms;
+        self.profile.session.wave = self.wave.seeds.clone();
+        if let Err(error) = self.profile.session.save(&self.profile.entry) {
             log::warn(format_args!("session: {error}"));
         }
         self.last_save = Instant::now();
     }
 
     pub fn shutdown(&mut self) {
-        self.save_session();
+        self.as_owner(Player::save_session);
         self.flush_settings();
         self.audio.stop();
     }

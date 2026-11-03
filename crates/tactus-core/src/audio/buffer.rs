@@ -26,12 +26,15 @@ pub struct Buffer {
 }
 
 impl Buffer {
-    pub fn fetch(url: String) -> Arc<Buffer> {
+    pub fn fetch(url: String, client: reqwest::Client) -> Arc<Buffer> {
         let buffer = Arc::new(Buffer::default());
         let weak = Arc::downgrade(&buffer);
         net::spawn(async move {
-            let result =
-                if is_playlist(&url) { stream_playlist(&url, &weak).await } else { download(&url, &weak).await };
+            let result = if is_playlist(&url) {
+                stream_playlist(&client, &url, &weak).await
+            } else {
+                download(&client, &url, &weak).await
+            };
             if let Some(buffer) = weak.upgrade() {
                 buffer.finish(result.err().map(|error| error.to_string()));
             }
@@ -96,13 +99,13 @@ impl Buffer {
     }
 }
 
-async fn download(url: &str, buffer: &Weak<Buffer>) -> Result<()> {
+async fn download(client: &reqwest::Client, url: &str, buffer: &Weak<Buffer>) -> Result<()> {
     let mut failures = 0;
     loop {
         let Some(offset) = buffer.upgrade().map(|buffer| buffer.len()) else {
             return Ok(());
         };
-        let Err(error) = transfer(url, offset, buffer).await else {
+        let Err(error) = transfer(client, url, offset, buffer).await else {
             return Ok(());
         };
         if buffer.upgrade().is_some_and(|buffer| buffer.len() > offset) {
@@ -118,8 +121,8 @@ async fn download(url: &str, buffer: &Weak<Buffer>) -> Result<()> {
     }
 }
 
-async fn transfer(url: &str, offset: u64, buffer: &Weak<Buffer>) -> Result<()> {
-    let mut request = net::client().get(url);
+async fn transfer(client: &reqwest::Client, url: &str, offset: u64, buffer: &Weak<Buffer>) -> Result<()> {
+    let mut request = client.get(url);
     if offset > 0 {
         request = request.header(RANGE, format!("bytes={offset}-"));
     }
@@ -153,8 +156,7 @@ fn is_playlist(url: &str) -> bool {
     url.split(['?', '#']).next().is_some_and(|path| path.ends_with(".m3u8"))
 }
 
-async fn stream_playlist(url: &str, buffer: &Weak<Buffer>) -> Result<()> {
-    let client = net::client();
+async fn stream_playlist(client: &reqwest::Client, url: &str, buffer: &Weak<Buffer>) -> Result<()> {
     let playlist = client.get(url).send().await?.error_for_status()?.text().await?;
     let mut demuxer = Demuxer::default();
     for segment in segments(&playlist, url) {

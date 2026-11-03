@@ -1,6 +1,7 @@
 use crate::capabilities::Capabilities;
 use crate::error::Result;
 use crate::model::{Destination, Item};
+use crate::proxy::Proxy;
 use crate::service::Service;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
@@ -39,7 +40,7 @@ pub trait Provider: Send + Sync {
     fn kind(&self) -> ProviderKind;
     fn capabilities(&self) -> Capabilities;
     fn login(&self) -> Result<Box<dyn Login>>;
-    fn connect(&self, credentials: &str) -> Result<Service>;
+    fn connect(&self, credentials: &str, proxy: Option<&Proxy>) -> Result<Service>;
     fn destination(&self, _link: &str) -> Option<Destination> {
         None
     }

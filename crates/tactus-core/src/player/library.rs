@@ -2,7 +2,7 @@ use super::*;
 
 impl Player {
     pub fn has(&self, target: &Target, relation: Relation) -> bool {
-        self.library.has(target, relation)
+        self.profile.library.has(target, relation)
     }
 
     pub fn set_relation(&mut self, target: Target, relation: Relation, on: bool) {
@@ -39,7 +39,7 @@ impl Player {
 
     pub(super) fn relate(&mut self, changes: Vec<Change>, undo: Option<Undo>, notice: Notice) {
         for (target, relation, on) in &changes {
-            self.library.apply(target, *relation, *on);
+            self.profile.library.apply(target, *relation, *on);
         }
         self.wave_relation_feedback(&changes);
         self.emit(Event::Library);
@@ -69,7 +69,7 @@ impl Player {
                     Err(error) => (changes, Some(error)),
                 };
                 for (target, relation, on) in &failed {
-                    player.library.apply(target, *relation, !on);
+                    player.profile.library.apply(target, *relation, !on);
                 }
                 match error {
                     None => {
@@ -89,7 +89,7 @@ impl Player {
     }
 
     pub fn is_presaved(&self, album_id: &str) -> bool {
-        self.library.presaved.contains(album_id)
+        self.profile.library.presaved.contains(album_id)
     }
 
     pub fn set_presave(&mut self, album_id: String, on: bool) {
@@ -103,7 +103,7 @@ impl Player {
                 library.presaved.remove(id);
             }
         };
-        update(&mut self.library, &album_id, on);
+        update(&mut self.profile.library, &album_id, on);
         self.emit(Event::Library);
         let id = album_id.clone();
         self.spawn(
@@ -114,7 +114,7 @@ impl Player {
                     player.reload(&View::Collection);
                 }
                 Err(error) => {
-                    update(&mut player.library, &album_id, !on);
+                    update(&mut player.profile.library, &album_id, !on);
                     player.emit(Event::Library);
                     player.fail(error);
                 }
@@ -123,14 +123,14 @@ impl Player {
     }
 
     pub fn is_pinned(&self, target: &Target) -> bool {
-        self.library.is_pinned(target)
+        self.profile.library.is_pinned(target)
     }
 
     pub fn set_pin(&mut self, item: Item, on: bool) {
         let Some(target) = item.target() else {
             return;
         };
-        self.library.set_pinned(&item, on);
+        self.profile.library.set_pinned(&item, on);
         self.emit(Event::Library);
         self.spawn(
             move |service| service.set_pin(&target, on),
@@ -140,7 +140,7 @@ impl Player {
                     player.reload(&View::Collection);
                 }
                 Err(error) => {
-                    player.library.set_pinned(&item, !on);
+                    player.profile.library.set_pinned(&item, !on);
                     player.emit(Event::Library);
                     player.fail(error);
                 }
@@ -168,7 +168,7 @@ impl Player {
             move |service| service.create_playlist(&title, public),
             move |player, playlist| {
                 player.notice(Notice::PlaylistCreated(playlist.title.clone()));
-                player.playlists.insert(0, playlist.clone());
+                player.profile.playlists.insert(0, playlist.clone());
                 player.emit(Event::Playlists);
                 player.reload(&View::Playlists);
                 if !tracks.is_empty() {
@@ -223,8 +223,8 @@ impl Player {
                     player.remember_undo(undo);
                 }
                 if deleting {
-                    player.playlists.retain(|playlist| playlist.key != key);
-                    player.pages.remove(&View::Playlist(key.clone()));
+                    player.profile.playlists.retain(|playlist| playlist.key != key);
+                    player.profile.pages.remove(&View::Playlist(key.clone()));
                 }
                 player.playlists_changed(key);
             },
@@ -263,7 +263,7 @@ impl Player {
 
     pub fn download(&mut self, tracks: Vec<Track>, numbered: bool) {
         let tracks: Vec<Track> = tracks.into_iter().filter(|track| !tactus_api::is_generated(&track.id)).collect();
-        let Some(service) = self.service.clone() else {
+        let Some(service) = self.profile.service.clone() else {
             return self.fail(Error::SignedOut);
         };
         let folder = self.settings.download_folder();
@@ -274,7 +274,7 @@ impl Player {
                 path: download::render_path(&folder, &self.settings.download_template, &track, number),
                 track,
                 number,
-                quality: self.settings.download_quality,
+                quality: self.download_quality(),
                 cover: self.settings.embed_cover,
                 service: service.clone(),
             };

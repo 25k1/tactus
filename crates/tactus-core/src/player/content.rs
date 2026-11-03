@@ -2,11 +2,11 @@ use super::*;
 
 impl Player {
     pub fn page(&self, view: &View) -> Option<&PageState> {
-        self.pages.get(view)
+        self.profile.pages.get(view)
     }
 
     fn notice_new_episodes(&mut self) {
-        let Some(PageState::Ready(page)) = self.pages.get(&View::Podcasts) else {
+        let Some(PageState::Ready(page)) = self.profile.pages.get(&View::Podcasts) else {
             return;
         };
         let episodes: Vec<Track> = page
@@ -16,7 +16,7 @@ impl Player {
             .flat_map(Section::tracks)
             .cloned()
             .collect();
-        let unseen = self.session.unseen_episodes(&episodes);
+        let unseen = self.profile.session.unseen_episodes(&episodes);
         if self.settings.episode_notifications && !unseen.is_empty() {
             self.emit(Event::NewEpisodes(unseen));
         }
@@ -31,7 +31,7 @@ impl Player {
     }
 
     pub fn is_played(&self, track: &Track) -> bool {
-        track.episode && self.session.played.contains(&track.id)
+        track.episode && self.profile.session.played.contains(&track.id)
     }
 
     pub fn set_played(&mut self, tracks: &[Track], played: bool) {
@@ -40,7 +40,7 @@ impl Player {
             return;
         }
         for track in &episodes {
-            self.session.set_played(&track.id, played);
+            self.profile.session.set_played(&track.id, played);
         }
         self.emit(Event::Library);
         self.notice(Notice::Played { count: episodes.len(), played });
@@ -52,23 +52,23 @@ impl Player {
     }
 
     pub fn searches(&self) -> &[String] {
-        &self.session.searches
+        &self.profile.session.searches
     }
 
     pub fn clear_searches(&mut self) {
-        self.session.searches.clear();
+        self.profile.session.searches.clear();
         self.emit(Event::Searches);
     }
 
     pub fn load(&mut self, view: &View, force: bool) {
         if let View::Search(query) = view {
-            self.session.remember_search(query);
+            self.profile.session.remember_search(query);
             self.emit(Event::Searches);
         }
-        if !force && matches!(self.pages.get(view), Some(PageState::Ready(_) | PageState::Loading)) {
+        if !force && matches!(self.profile.pages.get(view), Some(PageState::Ready(_) | PageState::Loading)) {
             return;
         }
-        self.pages.insert(view.clone(), PageState::Loading);
+        self.profile.pages.insert(view.clone(), PageState::Loading);
         self.emit(Event::Page(view.clone()));
         let key = view.clone();
         let target = view.clone();
@@ -87,7 +87,7 @@ impl Player {
                     let count = page.sections.iter().skip(1).map(|section| section.items.len()).sum();
                     player.notice(Notice::SearchResults(count));
                 }
-                player.pages.insert(target.clone(), state);
+                player.profile.pages.insert(target.clone(), state);
                 if target == View::Podcasts {
                     player.notice_new_episodes();
                 }
@@ -97,11 +97,11 @@ impl Player {
     }
 
     pub fn has_more(&self, view: &View, section: usize) -> bool {
-        matches!(self.pages.get(view), Some(PageState::Ready(page)) if page.sections.get(section).is_some_and(|section| section.more.is_some()))
+        matches!(self.profile.pages.get(view), Some(PageState::Ready(page)) if page.sections.get(section).is_some_and(|section| section.more.is_some()))
     }
 
     pub fn load_more(&mut self, view: &View, section: usize) {
-        let Some(PageState::Ready(page)) = self.pages.get(view) else {
+        let Some(PageState::Ready(page)) = self.profile.pages.get(view) else {
             return;
         };
         let Some((kind, next)) = page.sections.get(section).and_then(|found| Some((found.kind, found.more?))) else {
@@ -119,7 +119,7 @@ impl Player {
                     Ok(paged) => paged,
                     Err(error) => return player.fail(error),
                 };
-                let Some(PageState::Ready(page)) = player.pages.get_mut(&target) else {
+                let Some(PageState::Ready(page)) = player.profile.pages.get_mut(&target) else {
                     return;
                 };
                 let Some(found) = page.sections.get_mut(section) else {
@@ -138,13 +138,13 @@ impl Player {
     }
 
     pub(super) fn reload(&mut self, view: &View) {
-        if self.pages.contains_key(view) {
+        if self.profile.pages.contains_key(view) {
             self.load(view, true);
         }
     }
 
     pub(super) fn with_page(&mut self, view: View, then: impl FnOnce(&mut Player, Page) + Send + 'static) {
-        if let Some(PageState::Ready(page)) = self.pages.get(&view) {
+        if let Some(PageState::Ready(page)) = self.profile.pages.get(&view) {
             let page = page.clone();
             return then(self, page);
         }
@@ -152,7 +152,7 @@ impl Player {
         self.request(
             move |service| service.page(&key),
             move |player, page| {
-                player.pages.insert(view.clone(), PageState::Ready(page.clone()));
+                player.profile.pages.insert(view.clone(), PageState::Ready(page.clone()));
                 player.emit(Event::Page(view));
                 then(player, page);
             },

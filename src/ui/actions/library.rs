@@ -25,7 +25,14 @@ impl Ui {
 
     pub(crate) fn own_playlists(&self) -> Vec<Playlist> {
         let player = self.player.borrow();
-        player.playlists.iter().filter(|playlist| player.is_own(playlist)).take(PLAYLIST_LIMIT).cloned().collect()
+        player
+            .profile
+            .playlists
+            .iter()
+            .filter(|playlist| player.is_own(playlist))
+            .take(PLAYLIST_LIMIT)
+            .cloned()
+            .collect()
     }
 
     pub(crate) fn choose_concert_location(self: &Rc<Self>, locations: &[tactus_api::ConcertLocation]) {

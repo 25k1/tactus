@@ -126,7 +126,8 @@ fn plays_likes_once_the_collection_loads() {
 #[test]
 fn adds_the_current_track_to_a_named_playlist() {
     let (mut assistant, mut player) = (assistant(), player());
-    player.playlists = vec![Playlist { key: PlaylistKey::new(1, 3), title: "Road trip".into(), ..Playlist::default() }];
+    player.profile.playlists =
+        vec![Playlist { key: PlaylistKey::new(1, 3), title: "Road trip".into(), ..Playlist::default() }];
     player.play_tracks(tracks(&["1"]), 0, "test");
     assert_eq!(say(&mut assistant, &mut player, "add this to playlist road trip"), understood(None));
     let events = settle(&mut player);

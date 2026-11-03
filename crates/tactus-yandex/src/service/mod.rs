@@ -62,6 +62,7 @@ pub struct YandexService {
     http: reqwest::Client,
     client: YandexMusicClient,
     uid: std::sync::Mutex<Option<u64>>,
+    proxy: Option<proxy::Proxy>,
 }
 
 fn numeric_key(key: &PlaylistKey) -> Result<(u64, u32)> {
@@ -93,7 +94,7 @@ fn track_ref(track: &Track) -> Value {
 }
 
 impl YandexService {
-    pub fn new(token: &str) -> Result<Self> {
+    pub fn new(token: &str, proxy: Option<&proxy::Proxy>) -> Result<Self> {
         let mut headers = HeaderMap::new();
         headers.insert("X-Yandex-Music-Client", HeaderValue::from_static(DEFAULT_CLIENT_ID));
         if !token.is_empty() {
@@ -102,9 +103,9 @@ impl YandexService {
                 HeaderValue::from_str(&format!("OAuth {token}")).map_err(|error| Error::Api(error.to_string()))?,
             );
         }
-        let http = net::builder(headers).build()?;
+        let http = net::builder(headers, proxy).build()?;
         let client = YandexMusicClient::builder(token).custom_client(http.clone()).build().api()?;
-        Ok(Self { http, client, uid: std::sync::Mutex::default() })
+        Ok(Self { http, client, uid: std::sync::Mutex::default(), proxy: proxy.cloned() })
     }
 
     fn cached_uid(&self) -> Option<u64> {

@@ -32,14 +32,15 @@ impl Player {
 
     fn fetcher(&self, id: &str) -> impl FnOnce(&dyn MusicService) -> Result<Loaded> + Send + 'static {
         let (local, quality, loader, id) =
-            (self.offline.source(id), self.settings.stream_quality, self.loader.clone(), id.to_owned());
+            (self.offline.source(id), self.stream_quality(), self.loader.clone(), id.to_owned());
+        let proxy = self.profile.entry.proxy.clone();
         let generated = tactus_api::is_generated(&id).then(|| self.generated_stream.clone());
         move |service| {
             if let Some(slot) = generated {
                 let stream = service.generated_stream(&id)?;
                 let _ = service.generated_feedback(&id, &stream.id, tactus_api::StreamEvent::Started);
                 slot.guard().clone_from(&stream.id);
-                return loader(&tactus_api::AudioSource { url: stream.url, codec: tactus_api::Codec::Mp3 });
+                return loader(&tactus_api::AudioSource::new(stream.url, tactus_api::Codec::Mp3).via(proxy.as_ref()));
             }
             loader(&match local {
                 Some(source) => source,
@@ -57,7 +58,7 @@ impl Player {
             return;
         };
         self.audio.stop();
-        let at = if at_ms == 0 { self.session.resume_position(&track) } else { at_ms };
+        let at = if at_ms == 0 { self.profile.session.resume_position(&track) } else { at_ms };
         self.present(&track, autoplay, at);
         if let Some(loaded) = self.take_prefetched(&track.id) {
             return self.start_loaded(&track, loaded, Start::new(autoplay, Duration::from_millis(at), 1.0));
@@ -95,7 +96,7 @@ impl Player {
         }
         self.started = Instant::now();
         self.playing = start.playing;
-        if self.stream_retries.take().is_some() && !self.disconnected {
+        if self.stream_retries.take().is_some() && !self.profile.disconnected {
             self.notice(Notice::Online);
         }
         self.playback_changed();
@@ -218,7 +219,7 @@ impl Player {
 
     fn retry_stream(&mut self, at_ms: u64) {
         let attempt = self.stream_retries.unwrap_or_default();
-        if attempt == 0 && !self.disconnected {
+        if attempt == 0 && !self.profile.disconnected {
             self.notice(Notice::Offline);
         }
         self.stream_retries = Some(attempt + 1);
@@ -265,6 +266,9 @@ impl Player {
     }
 
     pub fn set_playing(&mut self, playing: bool) {
+        if !self.is_owner() {
+            return self.as_owner(|player| player.set_playing(playing));
+        }
         if self.track.is_none() {
             return;
         }
@@ -280,10 +284,16 @@ impl Player {
     }
 
     pub fn toggle_play(&mut self) {
+        if !self.is_owner() {
+            return self.as_owner(Player::toggle_play);
+        }
         self.set_playing(!self.playing);
     }
 
     pub fn seek(&mut self, position_ms: u64) {
+        if !self.is_owner() {
+            return self.as_owner(|player| player.seek(position_ms));
+        }
         let duration = self.track.as_ref().map_or(0, |track| track.duration_ms);
         let position = if duration > 0 { position_ms.min(duration) } else { position_ms };
         self.audio.seek(Duration::from_millis(position));
@@ -293,6 +303,9 @@ impl Player {
     }
 
     pub fn seek_by(&mut self, delta_ms: i64) {
+        if !self.is_owner() {
+            return self.as_owner(|player| player.seek_by(delta_ms));
+        }
         self.seek(self.position_ms.saturating_add_signed(delta_ms));
     }
 
@@ -333,14 +346,23 @@ impl Player {
     }
 
     pub fn set_shuffle(&mut self, shuffle: bool) {
+        if !self.is_owner() {
+            return self.as_owner(|player| player.set_shuffle(shuffle));
+        }
         self.update_settings(|settings| settings.shuffle = shuffle);
     }
 
     pub fn next(&mut self) {
+        if !self.is_owner() {
+            return self.as_owner(Player::next);
+        }
         self.advance(true);
     }
 
     pub fn previous(&mut self) {
+        if !self.is_owner() {
+            return self.as_owner(Player::previous);
+        }
         if self.is_generated_playing() {
             return;
         }
@@ -358,7 +380,7 @@ impl Player {
             return;
         };
         let seconds = self.audio.position().as_secs_f64();
-        self.session.remember_position(&track, self.position_ms);
+        self.profile.session.remember_position(&track, self.position_ms);
         if seconds >= 1.0 {
             let play = Play { track: track.clone(), played_seconds: seconds as u32, from: PLAY_FROM.to_owned() };
             self.quiet(move |service| service.report_play(&play));

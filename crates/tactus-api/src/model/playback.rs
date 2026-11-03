@@ -42,6 +42,17 @@ impl Codec {
 pub struct AudioSource {
     pub url: String,
     pub codec: Codec,
+    pub proxy: Option<crate::proxy::Proxy>,
+}
+
+impl AudioSource {
+    pub fn new(url: impl Into<String>, codec: Codec) -> Self {
+        Self { url: url.into(), codec, proxy: None }
+    }
+
+    pub fn via(self, proxy: Option<&crate::proxy::Proxy>) -> Self {
+        Self { proxy: proxy.cloned(), ..self }
+    }
 }
 
 #[derive(Clone, Debug, Default, PartialEq)]

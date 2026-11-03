@@ -209,14 +209,15 @@ pub fn portable_path(path: &str) -> String {
     Path::new(path).strip_prefix(app_dir()).map_or_else(|_| path.to_owned(), |relative| relative.display().to_string())
 }
 
-fn read_text(name: &str) -> Option<String> {
+pub fn read_text(name: &str) -> Option<String> {
     std::fs::read_to_string(data_dir().join(name)).ok()
 }
 
-fn write_text(name: &str, contents: &str) -> Result<()> {
-    let directory = data_dir();
-    std::fs::create_dir_all(&directory)?;
-    let path = directory.join(name);
+pub fn write_text(name: &str, contents: &str) -> Result<()> {
+    let path = data_dir().join(name);
+    if let Some(directory) = path.parent() {
+        std::fs::create_dir_all(directory)?;
+    }
     let temporary = path.with_extension("tmp");
     std::fs::write(&temporary, contents)?;
     std::fs::rename(temporary, path)?;
@@ -231,16 +232,8 @@ pub fn write_json<T: Serialize>(name: &str, value: &T) -> Result<()> {
     write_text(name, &serde_json::to_string_pretty(value)?)
 }
 
-pub fn load_token() -> Option<String> {
-    read_text("token").map(|token| token.trim().to_owned()).filter(|token| !token.is_empty())
-}
-
-pub fn save_token(token: &str) -> Result<()> {
-    write_text("token", token)
-}
-
-pub fn delete_token() -> Result<()> {
-    match std::fs::remove_file(data_dir().join("token")) {
+pub fn remove_dir(name: &str) -> Result<()> {
+    match std::fs::remove_dir_all(data_dir().join(name)) {
         Err(error) if error.kind() != std::io::ErrorKind::NotFound => Err(error.into()),
         _ => Ok(()),
     }

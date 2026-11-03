@@ -46,10 +46,7 @@ impl Offline {
     pub fn source(&self, id: &str) -> Option<AudioSource> {
         let file = self.0.get(id).map(Stored::file).filter(|file| file.is_file())?;
         let flac = file.extension().is_some_and(|extension| extension.eq_ignore_ascii_case("flac"));
-        Some(AudioSource {
-            url: format!("file:{}", file.display()),
-            codec: if flac { Codec::Flac } else { Codec::Mp3 },
-        })
+        Some(AudioSource::new(format!("file:{}", file.display()), if flac { Codec::Flac } else { Codec::Mp3 }))
     }
 
     pub fn stored(&self) -> impl Iterator<Item = &Stored> {

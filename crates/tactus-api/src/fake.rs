@@ -150,7 +150,7 @@ impl LibraryService for FakeService {
 
 impl PlaybackService for FakeService {
     fn audio_source(&self, id: &str, _quality: Quality) -> Result<AudioSource> {
-        Ok(AudioSource { url: format!("fake://{id}"), codec: Codec::Mp3 })
+        Ok(AudioSource::new(format!("fake://{id}"), Codec::Mp3))
     }
 
     fn start_wave(&self, seeds: &[String]) -> Result<WaveBatch> {
@@ -236,10 +236,15 @@ impl Provider for FakeProvider {
     }
 
     fn login(&self) -> Result<Box<dyn Login>> {
-        Ok(Box::new(InstantLogin(LoginPrompt { code: "CODE".into(), ..LoginPrompt::default() })))
+        Ok(Box::new(InstantLogin(LoginPrompt {
+            code: "CODE".into(),
+            url: String::new(),
+            interval: std::time::Duration::from_millis(10),
+            expires: std::time::Duration::from_secs(60),
+        })))
     }
 
-    fn connect(&self, _credentials: &str) -> Result<Service> {
+    fn connect(&self, _credentials: &str, _proxy: Option<&crate::proxy::Proxy>) -> Result<Service> {
         Ok(self.0.clone())
     }
 }

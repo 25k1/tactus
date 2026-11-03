@@ -72,7 +72,7 @@ impl Ui {
         let row = restore.map(|(_, row)| row).or(row);
         let (buttons, marked) = {
             let player = self.player.borrow();
-            let marked = (location == Location::Section(Section::Queue)).then(|| player.queue.index());
+            let marked = (location == Location::Section(Section::Queue)).then(|| player.visible_queue().index());
             (view_model::buttons(&player, &location, &content, section), marked)
         };
         let mode = (location == Location::Section(Section::Search), location == Location::Section(Section::Wave));

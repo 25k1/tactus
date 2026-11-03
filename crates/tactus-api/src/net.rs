@@ -1,8 +1,9 @@
 use crate::proxy::{self, Proxy};
+use crate::sync::Guard;
 use reqwest::header::{ACCEPT_LANGUAGE, HeaderMap, HeaderValue};
 use std::future::Future;
 use std::net::TcpStream;
-use std::sync::{LazyLock, OnceLock};
+use std::sync::{LazyLock, Mutex, OnceLock};
 use std::time::Duration;
 
 static RUNTIME: LazyLock<tokio::runtime::Runtime> = LazyLock::new(|| {
@@ -56,7 +57,14 @@ pub fn spawn_blocking(task: impl FnOnce() + Send + 'static) {
     RUNTIME.spawn_blocking(task);
 }
 
-pub fn builder(mut headers: HeaderMap) -> reqwest::ClientBuilder {
+fn route(account: Option<&Proxy>) -> Option<&Proxy> {
+    match account {
+        Some(proxy) => proxy.active().then_some(proxy),
+        None => active_proxy(),
+    }
+}
+
+pub fn builder(mut headers: HeaderMap, account: Option<&Proxy>) -> reqwest::ClientBuilder {
     if let Ok(language) = HeaderValue::from_str(language()) {
         headers.insert(ACCEPT_LANGUAGE, language);
     }
@@ -66,13 +74,28 @@ pub fn builder(mut headers: HeaderMap) -> reqwest::ClientBuilder {
         .read_timeout(Duration::from_secs(20))
         .tcp_keepalive(Duration::from_secs(30))
         .default_headers(headers);
-    match active_proxy().and_then(|proxy| reqwest::Proxy::all(proxy.url()).ok()) {
+    match route(account).and_then(|proxy| reqwest::Proxy::all(proxy.url()).ok()) {
         Some(proxy) => builder.proxy(proxy),
         None => builder,
     }
 }
 
 pub fn client() -> &'static reqwest::Client {
-    static CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| builder(HeaderMap::new()).build().unwrap_or_default());
+    static CLIENT: LazyLock<reqwest::Client> =
+        LazyLock::new(|| builder(HeaderMap::new(), None).build().unwrap_or_default());
     &CLIENT
+}
+
+pub fn client_for(account: Option<&Proxy>) -> reqwest::Client {
+    static CLIENTS: Mutex<Vec<(Proxy, reqwest::Client)>> = Mutex::new(Vec::new());
+    let Some(proxy) = account else {
+        return client().clone();
+    };
+    let mut clients = CLIENTS.guard();
+    if let Some((_, client)) = clients.iter().find(|(known, _)| known == proxy) {
+        return client.clone();
+    }
+    let client = builder(HeaderMap::new(), Some(proxy)).build().unwrap_or_default();
+    clients.push((proxy.clone(), client.clone()));
+    client
 }

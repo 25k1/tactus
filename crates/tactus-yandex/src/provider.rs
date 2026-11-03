@@ -64,8 +64,8 @@ impl Provider for YandexProvider {
         Ok(Box::new(DeviceLogin { prompt, device_code: device.device_code }))
     }
 
-    fn connect(&self, credentials: &str) -> Result<Service> {
-        Ok(Arc::new(YandexService::new(credentials)?))
+    fn connect(&self, credentials: &str, proxy: Option<&tactus_api::proxy::Proxy>) -> Result<Service> {
+        Ok(Arc::new(YandexService::new(credentials, proxy)?))
     }
 
     fn destination(&self, link: &str) -> Option<Destination> {

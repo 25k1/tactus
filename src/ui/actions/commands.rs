@@ -23,11 +23,16 @@ impl Ui {
                 }
             }
             Command::SignOut => {
-                if dialogs::confirm(&self.frame, &fl!("sign-out-confirm"), &fl!("menu-sign-out")) {
+                let account = self.player.borrow().profile.label();
+                if dialogs::confirm(&self.frame, &fl!("sign-out-confirm", account = account), &fl!("menu-sign-out")) {
                     self.act(Player::sign_out);
                 }
             }
-            Command::Settings => self.show_settings(),
+            Command::Settings => self.show_settings(false),
+            Command::AccountOptions => self.show_settings(true),
+            Command::AddAccount => self.add_account(),
+            Command::SwitchAccount => self.choose_account(),
+            Command::RenameAccount => self.rename_account(),
             Command::Hide => self.hide_window(),
             Command::Quit => {
                 self.quitting.set(true);
@@ -204,6 +209,7 @@ impl Ui {
                 }
             }
             Some(MenuId::Sleep(choice)) => self.set_sleep(choice),
+            Some(MenuId::Account(index)) => self.switch_to(index),
             Some(MenuId::Playlist(_)) | None => {}
         }
     }

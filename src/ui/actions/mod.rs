@@ -9,6 +9,7 @@ use tactus_core::announce::format_time;
 use tactus_core::player::SleepTimer;
 use tactus_core::player::{SEEK_STEP_MS, SPEED_STEP, VOLUME_STEP, wave};
 
+mod accounts;
 mod bindings;
 mod commands;
 mod devices;
@@ -34,7 +35,7 @@ impl Ui {
     }
 
     pub(crate) fn rebuild_menu(&self) {
-        self.frame.set_menu_bar(command::menu_bar(&self.keymap()));
+        self.frame.set_menu_bar(command::menu_bar(&self.keymap(), &self.account_menu()));
         if let Some(menu) = self.frame.get_menu_bar() {
             menu.check_item(Command::Shuffle.id(), self.player.borrow().settings.shuffle);
         }

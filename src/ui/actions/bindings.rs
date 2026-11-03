@@ -42,7 +42,9 @@ impl Ui {
 
     pub(super) fn bind_login(self: &Rc<Self>) {
         let ui = self.clone();
-        self.login.get_code.on_click(move |_| ui.act(Player::begin_login));
+        self.login.get_code.on_click(move |_| ui.act(|player| player.begin_login(tactus_api::ProviderKind::Yandex)));
+        let ui = self.clone();
+        self.login.cancel.on_click(move |_| ui.act(Player::cancel_login));
         let ui = self.clone();
         self.login.copy_code.on_click(move |_| {
             let code = ui.login.code.get_value();
@@ -52,7 +54,7 @@ impl Ui {
         });
         let ui = self.clone();
         self.login.open_page.on_click(move |_| {
-            if let tactus_core::player::LoginState::Waiting { url, .. } = &ui.player.borrow().login {
+            if let LoginState::Waiting { url, .. } = &ui.player.borrow().login {
                 launch_default_browser(url, BrowserLaunchFlags::Default);
             }
         });

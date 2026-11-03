@@ -126,7 +126,7 @@ fn add_to_playlist(player: &mut Player, name: String) -> Option<Outcome> {
     let Some(track) = player.track.clone() else {
         return Some(Outcome::Reply(Reply::NothingPlaying));
     };
-    let mut own: Vec<_> = player.playlists.iter().filter(|playlist| player.is_own(playlist)).cloned().collect();
+    let mut own: Vec<_> = player.profile.playlists.iter().filter(|playlist| player.is_own(playlist)).cloned().collect();
     match choose(&name, own.iter().map(|playlist| playlist.title.clone())) {
         Pick::One(index) => {
             player.add_to_playlist(&own.swap_remove(index), vec![track]);

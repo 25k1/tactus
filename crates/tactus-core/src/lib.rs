@@ -1,5 +1,6 @@
 #![deny(unsafe_code)]
 
+pub mod accounts;
 pub mod announce;
 pub mod assistant;
 pub mod audio;

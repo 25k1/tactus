@@ -57,6 +57,7 @@ pub enum Notice {
     VoiceCancelled,
     AccountUpdated,
     Promo(String),
+    AccountSwitched(String),
 }
 
 impl Notice {
@@ -93,6 +94,7 @@ impl Notice {
             Notice::SearchResults(_) | Notice::MoreLoaded(_) => Announcement::Search,
             Notice::Sleep(_) | Notice::SleepSoon | Notice::SleepStopped => Announcement::Playback,
             Notice::UpToDate | Notice::NothingToUndo | Notice::Offline | Notice::Online => Announcement::Errors,
+            Notice::AccountSwitched(_) => Announcement::Playback,
         }
     }
 

@@ -68,6 +68,9 @@ impl Player {
     }
 
     pub(super) fn wave_relation_feedback(&mut self, changes: &[Change]) {
+        if !self.is_owner() {
+            return;
+        }
         for (target, relation, on) in changes {
             let Target::Track(track) = target else {
                 continue;

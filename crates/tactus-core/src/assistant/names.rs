@@ -21,7 +21,7 @@ pub(super) fn choose(name: &str, titles: impl IntoIterator<Item = String>) -> Pi
 }
 
 fn library(player: &Player) -> Vec<Item> {
-    let mut items: Vec<Item> = player.playlists.iter().cloned().map(Item::Playlist).collect();
+    let mut items: Vec<Item> = player.profile.playlists.iter().cloned().map(Item::Playlist).collect();
     if let Some(PageState::Ready(page)) = player.page(&View::Collection) {
         let liked =
             |section: &&Section| !matches!(section.kind, SectionKind::DislikedTracks | SectionKind::DislikedArtists);

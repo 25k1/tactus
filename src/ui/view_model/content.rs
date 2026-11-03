@@ -79,7 +79,7 @@ pub fn content(player: &Player, location: &Location, query: &str) -> Content {
         Location::Section(Section::Queue) => local(
             Section::Queue,
             player
-                .queue
+                .visible_queue()
                 .tracks()
                 .iter()
                 .cloned()

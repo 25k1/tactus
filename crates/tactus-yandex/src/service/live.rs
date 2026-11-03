@@ -14,7 +14,7 @@ fn sections(page: &Page) -> usize {
 #[test]
 #[ignore]
 fn anonymous_reads() {
-    let service = YandexService::new("").unwrap();
+    let service = YandexService::new("", None).unwrap();
     let search = service.page(&View::Search("Metallica".into())).unwrap();
     assert!(!search.sections.is_empty());
     let album = search
@@ -83,7 +83,7 @@ fn signed_in_reads() {
         eprintln!("no saved sign-in");
         return;
     };
-    let service = YandexService::new(token.trim()).unwrap();
+    let service = YandexService::new(token.trim(), None).unwrap();
     report("library", service.library(), |library| library.liked_tracks.len());
     report("settings", service.account_settings(), Vec::len);
     report("playlists", service.playlists(), Vec::len);

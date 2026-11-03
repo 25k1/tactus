@@ -1,6 +1,8 @@
 use super::*;
 
 pub const PLAYLIST_LIMIT: usize = 300;
+pub const ACCOUNT_LIMIT: usize = 30;
+const ACCOUNT_KEYS: usize = 9;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum MenuId {
@@ -9,6 +11,7 @@ pub enum MenuId {
     Action(ItemAction),
     Playlist(usize),
     Sleep(SleepChoice),
+    Account(usize),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -54,6 +57,7 @@ impl MenuId {
             MenuId::Action(action) => ACTION_BASE + action.index() as Id,
             MenuId::Playlist(index) => PLAYLIST_BASE + index as Id,
             MenuId::Sleep(choice) => SLEEP_BASE + choice.index() as Id,
+            MenuId::Account(index) => ACCOUNT_BASE + index as Id,
         }
     }
 
@@ -65,6 +69,9 @@ impl MenuId {
             }
             id if id >= ACTION_BASE => {
                 offset(ACTION_BASE).and_then(|index| ItemAction::ALL.get(index)).copied().map(MenuId::Action)
+            }
+            id if id >= ACCOUNT_BASE => {
+                offset(ACCOUNT_BASE).filter(|index| *index < ACCOUNT_LIMIT).map(MenuId::Account)
             }
             id if id >= SLEEP_BASE => {
                 offset(SLEEP_BASE).and_then(|index| SleepChoice::ALL.get(index)).copied().map(MenuId::Sleep)
@@ -91,10 +98,11 @@ fn entry(label: String, key: Option<String>) -> String {
     }
 }
 
-pub fn command_menu(keys: &Keymap, commands: &[Option<Command>]) -> Menu {
+pub fn command_menu(keys: &Keymap, commands: &[Option<Command>], available: Capabilities) -> Menu {
     let menu = Menu::builder().build();
     for command in commands {
         match command {
+            Some(command) if !available.contains(command.requires()) => {}
             Some(command) => {
                 let kind = if *command == Command::Shuffle { ItemKind::Check } else { ItemKind::Normal };
                 let text = entry(command.label(), keys.key(Binding::Command(*command)));
@@ -138,20 +146,36 @@ pub const PLAYER_MENU: [Option<Command>; 24] = {
     ]
 };
 
-pub fn menu_bar(keys: &Keymap) -> MenuBar {
+pub struct AccountMenu {
+    pub labels: Vec<String>,
+    pub active: Option<usize>,
+    pub capabilities: Capabilities,
+}
+
+fn account_menu(keys: &Keymap, accounts: &AccountMenu) -> Menu {
     use Command::*;
-    let menu = |commands: &[Option<Command>]| command_menu(keys, commands);
-    let file = menu(&[
-        Some(NewPlaylist),
-        Some(OpenLink),
-        None,
-        Some(Settings),
-        Some(PromoCode),
-        Some(SignOut),
-        None,
-        Some(Hide),
-        Some(Quit),
-    ]);
+    let menu = Menu::builder().build();
+    for (index, label) in accounts.labels.iter().enumerate().take(ACCOUNT_LIMIT) {
+        let key = (index < ACCOUNT_KEYS).then(|| format!("Ctrl+Shift+{}", index + 1));
+        menu.append(MenuId::Account(index).id(), &entry(escape(label), key), "", ItemKind::Radio);
+        menu.check_item(MenuId::Account(index).id(), accounts.active == Some(index));
+    }
+    if !accounts.labels.is_empty() {
+        menu.append_separator();
+    }
+    let signed_in = accounts.active.is_some();
+    let commands = [Some(AddAccount), Some(SwitchAccount), Some(RenameAccount), Some(AccountOptions), Some(SignOut)];
+    for command in commands.into_iter().flatten().filter(|command| signed_in || *command == AddAccount) {
+        menu.append(command.id(), &entry(command.label(), keys.key(Binding::Command(command))), "", ItemKind::Normal);
+    }
+    menu
+}
+
+pub fn menu_bar(keys: &Keymap, accounts: &AccountMenu) -> MenuBar {
+    use Command::*;
+    let menu = |commands: &[Option<Command>]| command_menu(keys, commands, accounts.capabilities);
+    let file =
+        menu(&[Some(NewPlaylist), Some(OpenLink), None, Some(Settings), Some(PromoCode), None, Some(Hide), Some(Quit)]);
     let edit = menu(&[Some(Undo), None, Some(SelectAll), Some(FocusFilter), None, Some(Find), Some(Listen)]);
     let playback = menu(&[
         Some(PlayPause),
@@ -230,6 +254,7 @@ pub fn menu_bar(keys: &Keymap) -> MenuBar {
     ]);
     MenuBar::builder()
         .append(file, &fl!("menu-file"))
+        .append(account_menu(keys, accounts), &fl!("menu-accounts"))
         .append(edit, &fl!("menu-edit"))
         .append(playback, &fl!("menu-playback"))
         .append(track, &fl!("menu-track"))

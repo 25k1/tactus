@@ -65,7 +65,9 @@ impl Player {
 
     pub(super) fn connect_ynison(&mut self) {
         self.ynison = Ynison::default();
-        let Some(token) = settings::load_token().filter(|_| self.settings.ynison) else {
+        let owner = self.owner_profile();
+        let supported = self.settings.ynison && owner.capabilities().contains(Capabilities::YNISON);
+        let Some(token) = owner.entry.load_token().filter(|_| supported) else {
             return;
         };
         if self.settings.device_id.is_empty() {

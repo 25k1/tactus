@@ -1,3 +1,4 @@
+use crate::accounts::AccountEntry;
 use crate::settings;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeSet, HashMap};
@@ -24,12 +25,15 @@ pub struct Session {
 }
 
 impl Session {
-    pub fn load() -> Session {
-        settings::read_json(FILE).unwrap_or_default()
+    pub fn load(account: &AccountEntry) -> Session {
+        account.is_saved().then(|| settings::read_json(&account.file(FILE))).flatten().unwrap_or_default()
     }
 
-    pub fn save(&self) -> Result<()> {
-        settings::write_json(FILE, self)
+    pub fn save(&self, account: &AccountEntry) -> Result<()> {
+        if !account.is_saved() {
+            return Ok(());
+        }
+        settings::write_json(&account.file(FILE), self)
     }
 
     pub fn remember_position(&mut self, track: &Track, position_ms: u64) {

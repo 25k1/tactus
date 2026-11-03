@@ -37,7 +37,7 @@ use std::time::{Duration, Instant};
 use tactus_api::Playlist;
 use tactus_core::announce::Announcement;
 use tactus_core::hotkey::{GlobalAction, Hotkey};
-use tactus_core::player::Player;
+use tactus_core::player::{LoginState, Player};
 use tactus_core::remote::{RemoteCommand, RemoteHub, RemoteServer};
 use tactus_core::settings::{Settings, Theme};
 use view_model::Content;
@@ -101,10 +101,11 @@ pub fn run() {
         tactus_core::log::info(format_args!("Tactus {} started", tactus_core::update::CURRENT));
         tactus_core::update::cleanup();
         #[cfg(feature = "fake")]
-        let provider = Arc::new(tactus_api::fake::FakeProvider(Arc::new(tactus_api::fake::FakeService::demo())));
+        let providers: Vec<tactus_core::player::SharedProvider> =
+            vec![Arc::new(tactus_api::fake::FakeProvider(Arc::new(tactus_api::fake::FakeService::demo())))];
         #[cfg(not(feature = "fake"))]
-        let provider = tactus_core::player::yandex();
-        let ui = Ui::build(Player::new(settings, provider));
+        let providers = tactus_core::player::providers();
+        let ui = Ui::build(Player::new(settings, providers));
         crate::platform::instance::listen();
         ui.bind();
         ui.start();
@@ -118,7 +119,6 @@ impl Ui {
             frame.set_icon(&icon);
         }
         frame.create_status_bar(1, 0, ID_ANY as Id, "status");
-        frame.set_menu_bar(command::menu_bar(&command::Keymap::new(&player.settings.app_keys)));
 
         let root = Panel::builder(&frame).build();
         let root_sizer = column();
@@ -219,6 +219,7 @@ impl Ui {
     }
 
     fn start(self: &Rc<Self>) {
+        self.rebuild_menu();
         let settings = self.settings();
         self.player.borrow_mut().attach_window(self.frame.get_handle() as usize);
         self.set_tray(settings.tray);
@@ -238,6 +239,7 @@ impl Ui {
             self.player.borrow_mut().resume_after_restart(playing);
         }
         self.act(Player::start);
+        self.rebuild_menu();
         if let Some(link) = crate::platform::instance::launch_link()
             && self.player.borrow().is_signed_in()
         {
@@ -313,9 +315,13 @@ impl Ui {
     }
 
     fn show_screen(&self) {
-        let signed_in = self.player.borrow().is_signed_in();
-        self.login.panel.show(!signed_in);
-        self.main.show(signed_in);
+        let (signed_in, adding) = {
+            let player = self.player.borrow();
+            (player.is_signed_in(), player.is_signed_in() && player.login != LoginState::Idle)
+        };
+        self.login.panel.show(!signed_in || adding);
+        self.main.show(signed_in && !adding);
+        self.login.cancel.show(adding);
         self.update_login();
         if let Some(parent) = self.main.get_parent() {
             parent.layout();

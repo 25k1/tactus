@@ -19,6 +19,8 @@ impl Ui {
                 Event::Login => {
                     let was_signed_out = self.login.panel.is_shown();
                     self.show_screen();
+                    self.rebuild_menu();
+                    self.update_title();
                     match (was_signed_out, self.player.borrow().is_signed_in()) {
                         (true, true) => self.focus_content(),
                         (false, false) => self.login.get_code.set_focus(),
@@ -27,6 +29,8 @@ impl Ui {
                 }
                 Event::Account => {
                     self.update_status();
+                    self.rebuild_menu();
+                    self.update_title();
                     status = true;
                 }
                 Event::Track => {
@@ -177,10 +181,10 @@ impl Ui {
     fn update_status(&self) {
         let text = {
             let player = self.player.borrow();
-            match (&player.account, player.busy > 0) {
-                _ if player.disconnected => crate::i18n::fl!("status-offline"),
+            match (&player.profile.account, player.busy > 0) {
+                _ if player.profile.disconnected => crate::i18n::fl!("status-offline"),
                 (_, true) => crate::i18n::fl!("status-loading"),
-                (Some(account), false) => crate::i18n::fl!("status-signed-in", name = account.name.clone()),
+                (Some(_), false) => crate::i18n::fl!("status-signed-in", name = player.profile.label()),
                 (None, false) => String::new(),
             }
         };
@@ -188,9 +192,13 @@ impl Ui {
     }
 
     fn update_title(&self) {
-        let title = match view_model::now_playing(&self.player.borrow()) {
-            Some(text) => format!("{text} - Tactus"),
-            None => "Tactus".to_owned(),
+        let player = self.player.borrow();
+        let account = (player.accounts().len() > 1).then(|| player.profile.label());
+        let title = match (view_model::now_playing(&player), account) {
+            (Some(text), Some(account)) => format!("{text} - {account} - Tactus"),
+            (Some(text), None) => format!("{text} - Tactus"),
+            (None, Some(account)) => format!("{account} - Tactus"),
+            (None, None) => "Tactus".to_owned(),
         };
         self.frame.set_title(&title);
     }

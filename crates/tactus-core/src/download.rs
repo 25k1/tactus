@@ -143,7 +143,7 @@ fn run(id: u64, job: &Job, updates: &Sender<Update>) -> Result<PathBuf> {
     }
     let partial = path.with_extension(format!("{}.part", source.codec.extension()));
     net::block_on(async {
-        let mut response = net::client().get(&source.url).send().await?.error_for_status()?;
+        let mut response = net::client_for(source.proxy.as_ref()).get(&source.url).send().await?.error_for_status()?;
         let total = response.content_length().unwrap_or(0);
         let mut file = std::fs::File::create(&partial)?;
         let (mut written, mut reported) = (0u64, 0u8);

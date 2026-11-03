@@ -136,10 +136,14 @@ fn downloaded_tracks_play_from_the_local_file() {
         Ok(Loaded::from_source(Box::new(rodio::source::Empty::new())))
     });
     let output = MockOutput::default();
-    let mut player =
-        Player::with_output(Settings::default(), Arc::new(FakeProvider(fake().clone())), Box::new(output), loader);
+    let mut player = Player::with_output(
+        Settings::default(),
+        vec![Arc::new(FakeProvider(fake().clone()))],
+        Box::new(output),
+        loader,
+    );
     player.persist = false;
-    player.service = Some(fake().clone());
+    player.profile.service = Some(fake().clone());
     let file = std::env::temp_dir().join(format!("tactus-local-{}.mp3", std::process::id()));
     std::fs::write(&file, b"ID3").unwrap();
     player.offline.add(&track("local"), &file);

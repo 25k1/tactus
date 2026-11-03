@@ -1,6 +1,7 @@
 use super::navigation::Section;
 use super::view_model::ItemAction;
 use crate::i18n::fl;
+use tactus_api::Capabilities;
 use tactus_core::hotkey::GlobalAction;
 use tactus_core::player::SleepTimer;
 use wxdragon::prelude::*;
@@ -14,6 +15,7 @@ pub use menu::*;
 const COMMAND_BASE: Id = 1000;
 const SECTION_BASE: Id = 1100;
 const SLEEP_BASE: Id = 1150;
+const ACCOUNT_BASE: Id = 1160;
 const ACTION_BASE: Id = 1200;
 const PLAYLIST_BASE: Id = 1400;
 
@@ -22,6 +24,10 @@ pub enum Command {
     NewPlaylist,
     OpenLink,
     PromoCode,
+    AddAccount,
+    SwitchAccount,
+    RenameAccount,
+    AccountOptions,
     SignOut,
     Settings,
     Hide,
@@ -82,10 +88,14 @@ pub enum Command {
 }
 
 impl Command {
-    const ALL: [Command; 60] = [
+    const ALL: [Command; 64] = [
         Command::NewPlaylist,
         Command::OpenLink,
         Command::PromoCode,
+        Command::AddAccount,
+        Command::SwitchAccount,
+        Command::RenameAccount,
+        Command::AccountOptions,
         Command::SignOut,
         Command::Settings,
         Command::Hide,
@@ -173,6 +183,10 @@ impl Command {
             Command::NewPlaylist => fl!("menu-new-playlist"),
             Command::OpenLink => fl!("menu-open-link"),
             Command::PromoCode => fl!("menu-promo-code"),
+            Command::AddAccount => fl!("menu-add-account"),
+            Command::SwitchAccount => fl!("menu-switch-account"),
+            Command::RenameAccount => fl!("menu-rename-account"),
+            Command::AccountOptions => fl!("menu-account-options"),
             Command::SignOut => fl!("menu-sign-out"),
             Command::Settings => fl!("menu-settings"),
             Command::Hide => fl!("menu-hide"),
@@ -233,11 +247,24 @@ impl Command {
         }
     }
 
+    pub fn requires(self) -> Capabilities {
+        match self {
+            Command::Wave | Command::MyWave | Command::LastWave | Command::ResetLastWave | Command::WaveSettings => {
+                Capabilities::WAVE
+            }
+            Command::PromoCode => Capabilities::PROMO_CODES,
+            Command::Dislike => Capabilities::DISLIKE,
+            Command::Download => Capabilities::DOWNLOAD,
+            _ => Capabilities::NONE,
+        }
+    }
+
     fn default_key(self) -> Option<&'static str> {
         Some(match self {
             Command::NewPlaylist => "Ctrl+N",
             Command::OpenLink => "Ctrl+O",
             Command::Settings => "Ctrl+,",
+            Command::SwitchAccount => "Ctrl+Shift+T",
             Command::Hide => "Ctrl+M",
             Command::Quit => "Ctrl+Q",
             Command::PlayPause => "Ctrl+P",

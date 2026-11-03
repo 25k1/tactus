@@ -96,7 +96,7 @@ fn buttons(dialog: &Dialog) -> StdDialogButtonSizer {
 }
 
 impl Ui {
-    pub(super) fn show_settings(self: &Rc<Self>) {
+    pub(super) fn show_settings(self: &Rc<Self>, account_page: bool) {
         let old = self.settings();
         let dialog = Dialog::builder(&self.frame, &fl!("settings-title"))
             .with_style(DialogStyle::DefaultDialogStyle | DialogStyle::ResizeBorder)
@@ -122,14 +122,16 @@ impl Ui {
             Box::new(remote::Remote::new(&notebook, &old)),
             Box::new(network::Network::new(&notebook, &old)),
         ];
-        let account = account::Account::new(&notebook, &self.player.borrow().account_settings);
-        notebook.set_selection(0);
+        let account = account::Account::new(&notebook, &self.player.borrow().profile);
+        notebook.set_selection(if account_page { tabs.len() } else { 0 });
         let sizer = column();
         sizer.add(&notebook, 1, SizerFlag::Expand | SizerFlag::All, 8);
         sizer.add_sizer(&buttons(&dialog), 0, SizerFlag::Expand | SizerFlag::All, 8);
         dialog.set_sizer(sizer, true);
         dialog.set_escape_id(ID_CANCEL);
-        focus.set_focus();
+        if !account_page {
+            focus.set_focus();
+        }
         if dialog.show_modal() != ID_OK {
             self.act(|player| player.preview_equalizer(&old.active_equalizer()));
             dialog.destroy();
@@ -140,7 +142,15 @@ impl Ui {
             tab.apply(&mut new);
         }
         let changes = account.changes();
+        let overrides = account.overrides();
         dialog.destroy();
+        if let Some(overrides) = overrides {
+            self.act(move |player| {
+                player.rename_account(&overrides.alias);
+                player.set_account_overrides(overrides.stream_quality, overrides.download_quality, overrides.proxy);
+            });
+            self.rebuild_menu();
+        }
         self.apply_settings(&old, &new, changes);
     }
 

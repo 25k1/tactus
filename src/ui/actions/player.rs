@@ -32,7 +32,7 @@ impl Ui {
     }
 
     pub(super) fn show_player_menu(&self, window: &impl WxWidget) {
-        let mut menu = command_menu(&self.keymap(), &PLAYER_MENU);
+        let mut menu = command_menu(&self.keymap(), &PLAYER_MENU, self.player.borrow().capabilities());
         menu.check_item(Command::Shuffle.id(), self.player.borrow().settings.shuffle);
         window.popup_menu(&mut menu, None);
     }

@@ -12,7 +12,7 @@ impl PlaybackService for YandexService {
             if let Ok(info) = self.client.get_file_info(&options).await
                 && !info.url.is_empty()
             {
-                return Ok(AudioSource { url: info.url, codec: Codec::parse(&info.codec) });
+                return Ok(AudioSource::new(info.url, Codec::parse(&info.codec)).via(self.proxy.as_ref()));
             }
             let variants = self.client.get_download_info(&GetDownloadInfoOptions::new(id)).await.api()?;
             let best = variants
@@ -20,7 +20,8 @@ impl PlaybackService for YandexService {
                 .filter(|variant| variant.codec == "mp3" && !variant.preview)
                 .max_by_key(|variant| variant.bitrate_in_kbps)
                 .ok_or_else(|| Error::NotFound(id.to_owned()))?;
-            Ok::<_, Error>(AudioSource { url: best.get_direct_link(&self.http).await.api()?, codec: Codec::Mp3 })
+            let url = best.get_direct_link(&self.http).await.api()?;
+            Ok::<_, Error>(AudioSource::new(url, Codec::Mp3).via(self.proxy.as_ref()))
         })
     }
 

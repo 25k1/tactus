@@ -52,6 +52,7 @@ pub fn notice(notice: &Notice) -> String {
         Notice::VoiceCancelled => fl!("notice-voice-cancelled"),
         Notice::Offline => fl!("notice-offline"),
         Notice::Online => fl!("notice-online"),
+        Notice::AccountSwitched(label) => fl!("notice-account-switched", account = label.as_str()),
         Notice::Pinned(true) => fl!("notice-pinned"),
         Notice::Pinned(false) => fl!("notice-unpinned"),
         Notice::Played { count, played: true } => fl!("notice-played", count = (*count)),
