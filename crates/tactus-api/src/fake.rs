@@ -1,6 +1,7 @@
 use crate::error::{Error, Result};
 use crate::model::*;
 use crate::service::*;
+use crate::{Capabilities, Login, LoginPrompt, Provider, ProviderKind};
 use std::collections::HashMap;
 use std::sync::Mutex;
 
@@ -207,5 +208,37 @@ impl PlaybackService for FakeService {
     fn generated_feedback(&self, station: &str, stream: &str, event: StreamEvent) -> Result<()> {
         self.record(format!("stream {station} {stream} {}", event.name()));
         Ok(())
+    }
+}
+
+pub struct FakeProvider(pub Service);
+
+struct InstantLogin(LoginPrompt);
+
+impl Login for InstantLogin {
+    fn prompt(&self) -> &LoginPrompt {
+        &self.0
+    }
+
+    fn poll(&mut self) -> Result<Option<String>> {
+        Ok(Some("fake-token".into()))
+    }
+}
+
+impl Provider for FakeProvider {
+    fn kind(&self) -> ProviderKind {
+        ProviderKind::Yandex
+    }
+
+    fn capabilities(&self) -> Capabilities {
+        Capabilities::ALL
+    }
+
+    fn login(&self) -> Result<Box<dyn Login>> {
+        Ok(Box::new(InstantLogin(LoginPrompt { code: "CODE".into(), ..LoginPrompt::default() })))
+    }
+
+    fn connect(&self, _credentials: &str) -> Result<Service> {
+        Ok(self.0.clone())
     }
 }

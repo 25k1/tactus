@@ -1,11 +1,7 @@
-use yandex_music::error::ClientError;
-
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("{0}")]
     Network(#[from] reqwest::Error),
-    #[error("{0}")]
-    Client(#[from] ClientError),
     #[error("{0}")]
     Json(#[from] serde_json::Error),
     #[error("{0}")]
@@ -69,10 +65,7 @@ fn network_kind(error: &reqwest::Error) -> ErrorKind {
 impl Error {
     pub fn kind(&self) -> ErrorKind {
         match self {
-            Error::Network(error) | Error::Client(ClientError::RequestError { error }) => network_kind(error),
-            Error::Client(ClientError::YandexMusicError { error }) if error.name.contains("not-found") => {
-                ErrorKind::NotFound
-            }
+            Error::Network(error) => network_kind(error),
             Error::Status { status, .. } => status_kind(*status),
             Error::NotFound(_) => ErrorKind::NotFound,
             Error::AuthorizationPending | Error::SignedOut => ErrorKind::SignedOut,
@@ -80,7 +73,7 @@ impl Error {
             Error::Audio(_) => ErrorKind::Audio,
             Error::Io(_) => ErrorKind::Storage,
             Error::Unsupported => ErrorKind::Unsupported,
-            Error::Client(_) | Error::Json(_) | Error::Api(_) => ErrorKind::Other,
+            Error::Json(_) | Error::Api(_) => ErrorKind::Other,
         }
     }
 

@@ -33,7 +33,7 @@ use tactus_api::error::{Error, ErrorKind, Failure, Result};
 use tactus_api::net;
 use tactus_api::{
     Account, AccountOption, AccountSettings, Item, Library, Lyrics, MusicService, Page, Play, Playlist, PlaylistEdit,
-    PlaylistKey, Relation, Section, SectionKind, Service, Target, Track, View, auth,
+    PlaylistKey, Provider, Relation, Section, SectionKind, Service, Target, Track, View,
 };
 use undo::{Change, Undo};
 pub use wave::MY_WAVE;
@@ -55,7 +55,7 @@ pub const VOLUME_STEP: i16 = 5;
 pub const SPEED_STEP: f32 = 0.1;
 
 type Update = Box<dyn FnOnce(&mut Player) + Send>;
-pub type Connect = fn(&str) -> Result<Service>;
+pub type SharedProvider = std::sync::Arc<dyn Provider>;
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub enum LoginState {
@@ -94,7 +94,7 @@ pub struct Player {
     pub lyrics: Option<Lyrics>,
     pub lyric_line: Option<usize>,
     pub busy: usize,
-    connect: Connect,
+    provider: SharedProvider,
     service: Option<Service>,
     events: Vec<Event>,
     sender: Sender<Update>,
@@ -131,18 +131,18 @@ fn seed() -> u64 {
     std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(1, |elapsed| elapsed.as_nanos() as u64)
 }
 
-pub fn connect_yandex(token: &str) -> Result<Service> {
-    Ok(std::sync::Arc::new(tactus_api::YandexService::new(token)?))
+pub fn yandex() -> SharedProvider {
+    std::sync::Arc::new(tactus_yandex::YandexProvider)
 }
 
 impl Player {
-    pub fn new(settings: Settings, connect: Connect) -> Self {
+    pub fn new(settings: Settings, provider: SharedProvider) -> Self {
         let output =
             RodioOutput::new(&settings.output_device, settings.volume, settings.speed, &settings.active_equalizer());
-        Self::with_output(settings, connect, Box::new(output), audio::loader())
+        Self::with_output(settings, provider, Box::new(output), audio::loader())
     }
 
-    pub fn with_output(settings: Settings, connect: Connect, audio: Box<dyn Output>, loader: Loader) -> Self {
+    pub fn with_output(settings: Settings, provider: SharedProvider, audio: Box<dyn Output>, loader: Loader) -> Self {
         let (sender, updates) = mpsc::channel();
         Self {
             audio,
@@ -165,7 +165,7 @@ impl Player {
             lyrics: None,
             lyric_line: None,
             busy: 0,
-            connect,
+            provider,
             service: None,
             events: Vec::new(),
             sender,

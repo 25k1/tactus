@@ -76,7 +76,7 @@ mod testing {
     pub use tactus_core::settings::Settings;
 
     pub fn player() -> Player {
-        Player::new(Settings::default(), |_| Err(tactus_api::error::Error::Unsupported))
+        Player::new(Settings::default(), tactus_core::player::yandex())
     }
 
     pub fn actions(player: &Player, item: Item, context: ListContext) -> Vec<ItemAction> {

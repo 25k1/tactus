@@ -37,7 +37,7 @@ use std::time::{Duration, Instant};
 use tactus_api::Playlist;
 use tactus_core::announce::Announcement;
 use tactus_core::hotkey::{GlobalAction, Hotkey};
-use tactus_core::player::{Connect, Player};
+use tactus_core::player::Player;
 use tactus_core::remote::{RemoteCommand, RemoteHub, RemoteServer};
 use tactus_core::settings::{Settings, Theme};
 use view_model::Content;
@@ -101,10 +101,10 @@ pub fn run() {
         tactus_core::log::info(format_args!("Tactus {} started", tactus_core::update::CURRENT));
         tactus_core::update::cleanup();
         #[cfg(feature = "fake")]
-        let connect: Connect = |_| Ok(Arc::new(tactus_api::fake::FakeService::demo()));
+        let provider = Arc::new(tactus_api::fake::FakeProvider(Arc::new(tactus_api::fake::FakeService::demo())));
         #[cfg(not(feature = "fake"))]
-        let connect: Connect = tactus_core::player::connect_yandex;
-        let ui = Ui::build(Player::new(settings, connect));
+        let provider = tactus_core::player::yandex();
+        let ui = Ui::build(Player::new(settings, provider));
         crate::platform::instance::listen();
         ui.bind();
         ui.start();

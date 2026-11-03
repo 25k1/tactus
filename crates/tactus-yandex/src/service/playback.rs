@@ -14,14 +14,13 @@ impl PlaybackService for YandexService {
             {
                 return Ok(AudioSource { url: info.url, codec: Codec::parse(&info.codec) });
             }
-            let variants =
-                self.client.get_download_info(&GetDownloadInfoOptions::new(id)).await.map_err(Error::from)?;
+            let variants = self.client.get_download_info(&GetDownloadInfoOptions::new(id)).await.api()?;
             let best = variants
                 .iter()
                 .filter(|variant| variant.codec == "mp3" && !variant.preview)
                 .max_by_key(|variant| variant.bitrate_in_kbps)
                 .ok_or_else(|| Error::NotFound(id.to_owned()))?;
-            Ok::<_, Error>(AudioSource { url: best.get_direct_link(&self.http).await?, codec: Codec::Mp3 })
+            Ok::<_, Error>(AudioSource { url: best.get_direct_link(&self.http).await.api()?, codec: Codec::Mp3 })
         })
     }
 
@@ -39,7 +38,7 @@ impl PlaybackService for YandexService {
         if !play.track.album_id.is_empty() {
             options = options.album_id(play.track.album_id.clone());
         }
-        Ok(net::block_on(self.client.play_audio(&options))?)
+        net::block_on(self.client.play_audio(&options)).api()
     }
 
     fn start_wave(&self, seeds: &[String]) -> Result<WaveBatch> {

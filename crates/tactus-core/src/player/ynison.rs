@@ -1,5 +1,5 @@
 use super::*;
-use tactus_api::ynison::{Device, Identity, Incoming, Link, Outgoing, Playable, Playing, Shared};
+use tactus_yandex::ynison::{Device, Identity, Incoming, Link, Outgoing, Playable, Playing, Shared};
 
 const STATUS_INTERVAL: Duration = Duration::from_secs(10);
 const SEEK_TOLERANCE_MS: u64 = 3_000;

@@ -16,7 +16,7 @@ impl AccountService for YandexService {
 
     fn consume_promo_code(&self, code: &str) -> Result<String> {
         let options = ConsumePromoCodeOptions::new(code, net::language());
-        let result = net::block_on(self.client.consume_promo_code(&options))?;
+        let result = net::block_on(self.client.consume_promo_code(&options)).api()?;
         Ok(if result.status_desc.is_empty() { result.status } else { result.status_desc })
     }
 }

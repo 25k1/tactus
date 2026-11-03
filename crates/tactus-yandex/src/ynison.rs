@@ -1,12 +1,12 @@
-use crate::error::{Error, Result};
 use crate::parse::Json;
-use crate::proxy::encode_component;
 use serde_json::{Map, Value, json};
 use std::net::TcpStream;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
+use tactus_api::error::{Error, Result};
+use tactus_api::proxy::encode_component;
 use tungstenite::client::IntoClientRequest;
 use tungstenite::http::HeaderValue;
 use tungstenite::stream::MaybeTlsStream;
@@ -272,7 +272,7 @@ fn open(url: &str, token: &str, protocol: &str) -> std::result::Result<Socket, F
     headers.insert("Origin", HeaderValue::from_static("https://music.yandex.ru"));
     headers.insert("Authorization", HeaderValue::from_str(&format!("OAuth {token}")).map_err(failure)?);
     let host = request.uri().host().ok_or_else(|| failure("no host"))?.to_owned();
-    let stream = crate::net::open_stream(&host, 443).map_err(failure)?;
+    let stream = tactus_api::net::open_stream(&host, 443).map_err(failure)?;
     stream.set_read_timeout(Some(HANDSHAKE_TIMEOUT)).map_err(failure)?;
     match tungstenite::client_tls(request, stream) {
         Ok((socket, _)) => Ok(socket),

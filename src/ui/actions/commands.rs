@@ -6,7 +6,8 @@ impl Ui {
         match command {
             Command::NewPlaylist => self.new_playlist(Vec::new()),
             Command::OpenLink => {
-                let pasted = Clipboard::get().get_text().filter(|text| Destination::parse(text).is_some());
+                let pasted =
+                    Clipboard::get().get_text().filter(|text| self.player.borrow().destination(text).is_some());
                 let prompt = fl!("open-link-prompt");
                 if let Some(link) =
                     dialogs::ask_text(&self.frame, &prompt, &fl!("menu-open-link"), &pasted.unwrap_or_default())

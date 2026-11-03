@@ -1,14 +1,14 @@
-use crate::error::{Error, Result};
-use crate::model::*;
-use crate::net;
 use crate::parse::{self, Json};
-use crate::proxy::encode_component;
-use crate::service::*;
 use reqwest::StatusCode;
 use reqwest::header::{AUTHORIZATION, CONTENT_TYPE, HeaderMap, HeaderValue};
 use reqwest::{Method, RequestBuilder};
 use serde_json::{Value, json};
 use std::future::Future;
+use tactus_api::error::{Error, Result};
+use tactus_api::model::*;
+use tactus_api::net;
+use tactus_api::proxy::encode_component;
+use tactus_api::*;
 use yandex_music::api::account::consume_promo_code::ConsumePromoCodeOptions;
 use yandex_music::api::album::add_liked_album::AddLikedAlbumOptions;
 use yandex_music::api::album::remove_liked_album::RemoveLikedAlbumOptions;
@@ -26,6 +26,7 @@ use yandex_music::api::track::get_lyrics::GetLyricsOptions;
 use yandex_music::api::track::play_audio::PlayAudioOptions;
 use yandex_music::api::track::remove_disliked_tracks::RemoveDislikedTracksOptions;
 use yandex_music::api::track::remove_liked_tracks::RemoveLikedTracksOptions;
+use yandex_music::error::ClientError;
 use yandex_music::model::info::file_info::Quality as FileQuality;
 use yandex_music::model::info::lyrics::LyricsFormat;
 use yandex_music::{DEFAULT_CLIENT_ID, YandexMusicClient};
@@ -41,6 +42,20 @@ const API_URL: &str = "https://api.music.yandex.net";
 const DEVICE: &str =
     "os=Windows; os_version=10; manufacturer=Tactus; model=Tactus; clid=; device_id=tactus; uuid=tactus";
 const TRACK_CHUNK: usize = 200;
+
+trait ClientResult<T> {
+    fn api(self) -> Result<T>;
+}
+
+impl<T> ClientResult<T> for std::result::Result<T, ClientError> {
+    fn api(self) -> Result<T> {
+        self.map_err(|error| match error {
+            ClientError::RequestError { error } => Error::Network(error),
+            ClientError::YandexMusicError { error } if error.name.contains("not-found") => Error::NotFound(error.name),
+            error => Error::Api(error.to_string()),
+        })
+    }
+}
 
 pub struct YandexService {
     http: reqwest::Client,
@@ -81,7 +96,7 @@ impl YandexService {
             );
         }
         let http = net::builder(headers).build()?;
-        let client = YandexMusicClient::builder(token).custom_client(http.clone()).build()?;
+        let client = YandexMusicClient::builder(token).custom_client(http.clone()).build().api()?;
         Ok(Self { http, client })
     }
 

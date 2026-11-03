@@ -1,8 +1,16 @@
-use crate::error::{Error, Result};
-use crate::model::DeviceCode;
-use crate::net;
 use crate::parse::{self, Json};
 use serde_json::Value;
+use tactus_api::error::{Error, Result};
+use tactus_api::net;
+
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct DeviceCode {
+    pub device_code: String,
+    pub user_code: String,
+    pub verification_url: String,
+    pub expires_in: u64,
+    pub interval: u64,
+}
 
 const OAUTH_URL: &str = "https://oauth.yandex.ru";
 pub const CLIENT_ID: &str = "23cabbbdc6cd418abb4b39c32c41195d";

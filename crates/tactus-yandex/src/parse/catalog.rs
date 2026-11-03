@@ -236,7 +236,7 @@ mod tests {
         assert_eq!(paged.next, Some(1));
         let mut section = Section::new(SectionKind::Tracks, "", paged.items.clone()).with_more(Some(1));
         let mut more = paged.clone();
-        more.items.push(Item::Track(crate::fake::track("new")));
+        more.items.push(Item::Track(tactus_api::fake::track("new")));
         more.next = None;
         assert_eq!(section.extend(more), 1);
         assert_eq!(section.more, None);

@@ -2,7 +2,7 @@ use super::*;
 use crate::audio::mock::{self, MockOutput};
 use std::sync::{Arc, OnceLock};
 use tactus_api::Loudness;
-use tactus_api::fake::{FakeService, track, tracks};
+use tactus_api::fake::{FakeProvider, FakeService, track, tracks};
 use tactus_api::{Artist, Item, Section, SectionKind};
 
 static SERVICE: OnceLock<Arc<FakeService>> = OnceLock::new();
@@ -67,7 +67,8 @@ pub(crate) fn player() -> Player {
 
 pub(crate) fn player_with(settings: Settings) -> (Player, MockOutput) {
     let output = MockOutput::default();
-    let mut player = Player::with_output(settings, |_| Ok(fake().clone()), Box::new(output.clone()), mock::loader());
+    let mut player =
+        Player::with_output(settings, Arc::new(FakeProvider(fake().clone())), Box::new(output.clone()), mock::loader());
     player.persist = false;
     player.service = Some(fake().clone());
     player.account = Some(Account { uid: 1, ..Account::default() });

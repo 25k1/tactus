@@ -43,6 +43,7 @@ unused_self = "warn"
 tactus-api = { path = "crates/tactus-api" }
 tactus-core = { path = "crates/tactus-core" }
 tactus-voice = { path = "crates/tactus-voice" }
+tactus-yandex = { path = "crates/tactus-yandex" }
 yandex-music = "0.7"
 reqwest = { version = "0.13", default-features = false, features = ["default-tls", "system-proxy", "socks", "json", "form", "query"] }
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }

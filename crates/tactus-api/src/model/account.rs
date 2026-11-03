@@ -51,12 +51,3 @@ impl AccountOption {
 }
 
 pub type AccountSettings = Vec<(AccountOption, bool)>;
-
-#[derive(Clone, Debug, Default, PartialEq)]
-pub struct DeviceCode {
-    pub device_code: String,
-    pub user_code: String,
-    pub verification_url: String,
-    pub expires_in: u64,
-    pub interval: u64,
-}

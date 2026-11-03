@@ -14,32 +14,38 @@ impl Player {
                 }
             })
         };
+        let provider = self.provider.clone();
         net::spawn_blocking(move || {
             let send = |update: Update| {
                 let _ = sender.send(update);
             };
-            let device = match auth::request_device_code() {
-                Ok(device) => device,
+            let mut login = match provider.login() {
+                Ok(login) => login,
                 Err(error) => return send(set(LoginState::Failed(error.failure()))),
             };
-            send(set(LoginState::Waiting { code: device.user_code.clone(), url: device.verification_url.clone() }));
-            let deadline = Instant::now() + Duration::from_secs(device.expires_in.max(60));
+            let prompt = login.prompt().clone();
+            send(set(LoginState::Waiting { code: prompt.code, url: prompt.url }));
+            let deadline = Instant::now() + prompt.expires;
             while Instant::now() < deadline {
-                std::thread::sleep(Duration::from_secs(device.interval.max(2)));
-                match auth::poll_device_token(&device.device_code) {
-                    Ok(token) => {
+                std::thread::sleep(prompt.interval);
+                match login.poll() {
+                    Ok(Some(token)) => {
                         return send(Box::new(move |player: &mut Player| {
                             if player.login_generation == generation {
                                 player.finish_login(&token);
                             }
                         }));
                     }
-                    Err(Error::AuthorizationPending) => {}
+                    Ok(None) => {}
                     Err(error) => return send(set(LoginState::Failed(error.failure()))),
                 }
             }
             send(set(LoginState::Failed(Error::Expired.failure())));
         });
+    }
+
+    pub fn destination(&self, link: &str) -> Option<tactus_api::Destination> {
+        self.provider.destination(link)
     }
 
     pub(super) fn finish_login(&mut self, token: &str) {
@@ -52,7 +58,7 @@ impl Player {
     }
 
     pub(super) fn connect_with(&mut self, token: &str) {
-        match (self.connect)(token) {
+        match self.provider.connect(token) {
             Ok(service) => {
                 self.service = Some(service);
                 self.emit(Event::Login);

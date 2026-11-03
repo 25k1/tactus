@@ -13,7 +13,8 @@ impl Ui {
     }
 
     pub(crate) fn open_link(self: &Rc<Self>, link: &str) {
-        match Destination::parse(link) {
+        let destination = self.player.borrow().destination(link);
+        match destination {
             Some(Destination::View(view)) => self.navigate(Location::View(view), true),
             Some(Destination::Playlist(playlist)) => self.act(|player| player.open_playlist_link(playlist)),
             Some(Destination::Join { playlist, token }) => {

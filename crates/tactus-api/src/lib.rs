@@ -1,17 +1,17 @@
 #![forbid(unsafe_code)]
 
-pub mod auth;
+mod capabilities;
 pub mod error;
 #[cfg(any(test, feature = "fake"))]
 pub mod fake;
+pub mod json;
 pub mod model;
 pub mod net;
-pub mod parse;
+mod provider;
 pub mod proxy;
 mod service;
-mod yandex;
-pub mod ynison;
 
+pub use capabilities::Capabilities;
 pub use model::*;
+pub use provider::*;
 pub use service::*;
-pub use yandex::YandexService;

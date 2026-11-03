@@ -123,7 +123,7 @@ impl YandexService {
     }
 
     async fn lyrics_text(&self, id: &str, format: LyricsFormat) -> Result<Option<Lyrics>> {
-        let lyrics = self.client.get_lyrics(&GetLyricsOptions::new(id, format)).await?;
+        let lyrics = self.client.get_lyrics(&GetLyricsOptions::new(id, format)).await.api()?;
         if lyrics.download_url.is_empty() {
             return Ok(None);
         }

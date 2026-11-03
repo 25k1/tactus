@@ -2,8 +2,8 @@ use serde_json::Value;
 use sha2::{Digest, Sha256};
 use std::path::{Path, PathBuf};
 use tactus_api::error::{Error, Result};
+use tactus_api::json::Json;
 use tactus_api::net;
-use tactus_api::parse::Json;
 
 pub const REPOSITORY: &str = "25k1/tactus";
 pub const ASSET: &str = "tactus.exe";

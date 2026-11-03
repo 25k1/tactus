@@ -2,7 +2,7 @@ use super::*;
 use crate::player::ynison::Remote;
 use std::cell::RefCell;
 use std::rc::Rc;
-use tactus_api::ynison::{Device, Incoming, Outgoing, Playable, Playing, Shared};
+use tactus_yandex::ynison::{Device, Incoming, Outgoing, Playable, Playing, Shared};
 
 #[derive(Clone, Default)]
 struct FakeRemote {

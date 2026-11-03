@@ -130,40 +130,46 @@ impl LibraryService for YandexService {
         net::block_on(async {
             match (target, relation, on) {
                 (Target::Track(track), Relation::Like, true) => {
-                    client.add_liked_tracks(&AddLikedTracksOptions::new(uid, [track.id.as_str()])).await?;
+                    client.add_liked_tracks(&AddLikedTracksOptions::new(uid, [track.id.as_str()])).await.api()?;
                 }
                 (Target::Track(track), Relation::Like, false) => {
-                    client.remove_liked_tracks(&RemoveLikedTracksOptions::new(uid, [track.id.as_str()])).await?;
+                    client.remove_liked_tracks(&RemoveLikedTracksOptions::new(uid, [track.id.as_str()])).await.api()?;
                 }
                 (Target::Track(track), Relation::Dislike, true) => {
-                    client.add_disliked_tracks(&AddDislikedTracksOptions::new(uid, [track.id.as_str()])).await?;
+                    client.add_disliked_tracks(&AddDislikedTracksOptions::new(uid, [track.id.as_str()])).await.api()?;
                 }
                 (Target::Track(track), Relation::Dislike, false) => {
-                    client.remove_disliked_tracks(&RemoveDislikedTracksOptions::new(uid, [track.id.as_str()])).await?;
+                    client
+                        .remove_disliked_tracks(&RemoveDislikedTracksOptions::new(uid, [track.id.as_str()]))
+                        .await
+                        .api()?;
                 }
                 (Target::Album(id), Relation::Like, true) => {
-                    client.add_liked_album(&AddLikedAlbumOptions::new(uid, album_id(id)?)).await?;
+                    client.add_liked_album(&AddLikedAlbumOptions::new(uid, album_id(id)?)).await.api()?;
                 }
                 (Target::Album(id), Relation::Like, false) => {
-                    client.remove_liked_album(&RemoveLikedAlbumOptions::new(uid, album_id(id)?)).await?;
+                    client.remove_liked_album(&RemoveLikedAlbumOptions::new(uid, album_id(id)?)).await.api()?;
                 }
                 (Target::Artist(id), Relation::Like, true) => {
-                    client.add_liked_artist(&AddLikedArtistOptions::new(uid, id.as_str())).await?;
+                    client.add_liked_artist(&AddLikedArtistOptions::new(uid, id.as_str())).await.api()?;
                 }
                 (Target::Artist(id), Relation::Like, false) => {
-                    client.remove_liked_artist(&RemoveLikedArtistOptions::new(uid, id.as_str())).await?;
+                    client.remove_liked_artist(&RemoveLikedArtistOptions::new(uid, id.as_str())).await.api()?;
                 }
                 (Target::Artist(id), Relation::Dislike, true) => {
-                    client.add_disliked_artist(&AddDislikedArtistOptions::new(uid, id.as_str())).await?;
+                    client.add_disliked_artist(&AddDislikedArtistOptions::new(uid, id.as_str())).await.api()?;
                 }
                 (Target::Artist(id), Relation::Dislike, false) => {
-                    client.remove_disliked_artist(&RemoveDislikedArtistOptions::new(uid, id.as_str())).await?;
+                    client.remove_disliked_artist(&RemoveDislikedArtistOptions::new(uid, id.as_str())).await.api()?;
                 }
                 (Target::Playlist(key), Relation::Like, true) => {
-                    client.add_liked_playlist(&AddLikedPlaylistOptions::new(uid, key.owner, key.kind)).await?;
+                    client.add_liked_playlist(&AddLikedPlaylistOptions::new(uid, key.owner, key.kind)).await.api()?;
                 }
                 (Target::Playlist(key), Relation::Like, false) => {
-                    client.remove_liked_playlist(&RemoveLikedPlaylistOptions::new(uid, key.owner, key.kind)).await?;
+                    client
+                        .remove_liked_playlist(&RemoveLikedPlaylistOptions::new(uid, key.owner, key.kind))
+                        .await
+                        .api()?;
                 }
                 (Target::Album(_) | Target::Playlist(_), Relation::Dislike, _) | (Target::Wave(_), _, _) => {
                     return Err(Error::Unsupported);
@@ -232,7 +238,7 @@ impl LibraryService for YandexService {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::fake::track;
+    use tactus_api::fake::track;
 
     #[test]
     fn builds_playlist_diffs() {

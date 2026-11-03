@@ -75,8 +75,8 @@ pub fn liked_keys<T>(value: &Value, parse: fn(&Value) -> Option<T>) -> Vec<T> {
     collect(result(value).as_array().map(Vec::as_slice).unwrap_or_default(), parse)
 }
 
-pub fn device_code(value: &Value) -> DeviceCode {
-    DeviceCode {
+pub fn device_code(value: &Value) -> crate::auth::DeviceCode {
+    crate::auth::DeviceCode {
         device_code: value.text("device_code").to_owned(),
         user_code: value.text("user_code").to_owned(),
         verification_url: value.text("verification_url").to_owned(),
