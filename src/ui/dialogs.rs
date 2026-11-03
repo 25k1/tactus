@@ -56,6 +56,37 @@ pub fn show_text(parent: &Frame, title: &str, text: &str) {
     dialog.destroy();
 }
 
+pub fn confirm_update(parent: &Frame, title: &str, message: &str, notes: &str) -> bool {
+    let dialog = Dialog::builder(parent, &caption(title))
+        .with_style(DialogStyle::DefaultDialogStyle | DialogStyle::ResizeBorder)
+        .with_size(560, 460)
+        .build();
+    let sizer = column();
+    let intro = label(&dialog, message);
+    intro.wrap(520);
+    sizer.add(&intro, 0, SizerFlag::Expand | SizerFlag::All, 8);
+    let heading = fl!("update-notes");
+    sizer.add(&label(&dialog, &heading), 0, SizerFlag::Left | SizerFlag::Right | SizerFlag::Top, 8);
+    let body = read_only_text(&dialog, &heading, -1);
+    let fallback = fl!("update-no-notes");
+    let notes = Some(notes.trim()).filter(|notes| !notes.is_empty()).unwrap_or(&fallback);
+    body.change_value(&view_model::windows_lines(notes));
+    sizer.add(&body, 1, SizerFlag::Expand | SizerFlag::All, 8);
+    let install = Button::builder(&dialog).with_id(ID_OK).with_label(&fl!("update-install")).build();
+    let later = Button::builder(&dialog).with_id(ID_CANCEL).with_label(&fl!("update-later")).build();
+    let buttons = row();
+    buttons.add(&install, 0, SizerFlag::Right, 8);
+    buttons.add(&later, 0, SizerFlag::Right, 0);
+    sizer.add_sizer(&buttons, 0, SizerFlag::AlignRight | SizerFlag::All, 8);
+    dialog.set_sizer(sizer, true);
+    dialog.set_escape_id(ID_CANCEL);
+    install.set_default();
+    body.set_focus();
+    let accepted = dialog.show_modal() == ID_OK;
+    dialog.destroy();
+    accepted
+}
+
 fn matches(text: &str, needle: &str) -> bool {
     let text = text.to_lowercase();
     needle.split_whitespace().all(|word| text.contains(word))

@@ -204,14 +204,11 @@ impl Ui {
     }
 
     fn offer_update(self: &Rc<Self>, release: tactus_core::update::Release) {
-        let mut message = crate::i18n::fl!(
+        let message = crate::i18n::fl!(
             "update-available",
             version = release.version.as_str(),
             current = tactus_core::update::CURRENT
         );
-        if !release.notes.trim().is_empty() {
-            message = format!("{message}\n\n{}", release.notes.trim());
-        }
         self.announce(
             Announcement::Errors,
             &crate::i18n::fl!("update-found", version = release.version.as_str()),
@@ -220,7 +217,7 @@ impl Ui {
         if !self.frame.is_shown() {
             self.raise_window();
         }
-        if dialogs::confirm(&self.frame, &message, &crate::i18n::fl!("menu-check-updates")) {
+        if dialogs::confirm_update(&self.frame, &crate::i18n::fl!("menu-check-updates"), &message, &release.notes) {
             self.set_status(&crate::i18n::fl!("update-downloading"));
             self.act(|player| player.install_update(release));
         }
