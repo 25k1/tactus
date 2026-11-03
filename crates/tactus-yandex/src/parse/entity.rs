@@ -100,7 +100,7 @@ pub fn playlist_key(value: &Value) -> Option<PlaylistKey> {
         uid => uid,
     };
     let kind = value.num("kind") as u32;
-    (owner != 0 && kind != 0).then_some(PlaylistKey { owner, kind })
+    (owner != 0 && kind != 0).then(|| PlaylistKey::new(owner, kind))
 }
 
 pub fn liked_playlist_key(value: &Value) -> Option<PlaylistKey> {

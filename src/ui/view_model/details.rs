@@ -31,7 +31,7 @@ pub fn now_playing_details(player: &Player) -> String {
     lines.join("\n")
 }
 
-pub fn track_info(info: &TrackInfo) -> String {
+pub fn track_info(info: &TrackInfo, link: Option<String>) -> String {
     let track = &info.track;
     let yes_no = |value: bool| if value { fl!("info-yes") } else { fl!("info-no") };
     let lyrics = match (info.synced_lyrics, info.lyrics) {
@@ -55,7 +55,7 @@ pub fn track_info(info: &TrackInfo) -> String {
         (fl!("info-published"), track.published.clone()),
         (fl!("info-isrc"), track.isrc.clone()),
         (fl!("info-disclaimer"), info.disclaimer.clone()),
-        (fl!("info-link"), track.link()),
+        (fl!("info-link"), link.unwrap_or_default()),
     ];
     fields
         .into_iter()

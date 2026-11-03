@@ -1,6 +1,6 @@
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct Account {
-    pub uid: u64,
+    pub id: String,
     pub login: String,
     pub name: String,
     pub has_plus: bool,

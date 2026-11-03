@@ -272,7 +272,7 @@ mod tests {
     fn parses_playlist_and_suggestions() {
         let page = playlist_page(&fixture("playlist"), Some(&fixture("playlist_recommendations")));
         let Some(Item::Playlist(playlist)) = &page.subject else { panic!("no playlist") };
-        assert_eq!(playlist.key, PlaylistKey { owner: 103372440, kind: 2131 });
+        assert_eq!(playlist.key, PlaylistKey::new(103372440, 2131));
         assert!(playlist.public);
         assert_eq!(section(&page, SectionKind::Tracks).unwrap().items.len(), 2);
         assert_eq!(section(&page, SectionKind::Suggestions).unwrap().items.len(), 2);

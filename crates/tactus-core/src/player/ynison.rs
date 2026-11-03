@@ -199,7 +199,7 @@ impl Player {
         let id = self.device_id().to_owned();
         self.send(Outgoing::Activate(id));
         self.request(
-            move |service, _| service.tracks(&ids),
+            move |service| service.tracks(&ids),
             move |player, tracks| {
                 player.queue.replace(tracks, index);
                 player.emit(Event::Queue);

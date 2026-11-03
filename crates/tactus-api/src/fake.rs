@@ -1,6 +1,7 @@
 use crate::error::{Error, Result};
 use crate::model::*;
 use crate::service::*;
+use crate::sync::Guard;
 use crate::{Capabilities, Login, LoginPrompt, Provider, ProviderKind};
 use std::collections::HashMap;
 use std::sync::Mutex;
@@ -50,22 +51,22 @@ impl FakeService {
     }
 
     fn record(&self, call: String) {
-        self.calls.lock().unwrap().push(call);
+        self.calls.guard().push(call);
     }
 
     pub fn calls(&self) -> Vec<String> {
-        self.calls.lock().unwrap().clone()
+        self.calls.guard().clone()
     }
 }
 
 impl AccountService for FakeService {
     fn account(&self) -> Result<Account> {
-        Ok(Account { uid: 1, login: "tester".into(), name: "Tester".into(), has_plus: true })
+        Ok(Account { id: "1".into(), login: "tester".into(), name: "Tester".into(), has_plus: true })
     }
 }
 
 impl CatalogService for FakeService {
-    fn page(&self, view: &View, _uid: u64) -> Result<Page> {
+    fn page(&self, view: &View) -> Result<Page> {
         self.record(format!("page {view:?}"));
         match self.pages.get(view) {
             Some(page) => Ok(page.clone()),
@@ -86,8 +87,8 @@ impl CatalogService for FakeService {
 
     fn find_playlist(&self, link: &PlaylistLink) -> Result<PlaylistKey> {
         match link {
-            PlaylistLink::Owner { owner, kind } => Ok(PlaylistKey { owner: owner.parse().unwrap_or(5), kind: *kind }),
-            PlaylistLink::Shared(_) => Ok(PlaylistKey { owner: 5, kind: 1 }),
+            PlaylistLink::Owner { owner, kind } => Ok(PlaylistKey::new(owner, kind)),
+            PlaylistLink::Shared(_) => Ok(PlaylistKey::new(5, 1)),
         }
     }
 
@@ -103,16 +104,16 @@ impl CatalogService for FakeService {
 }
 
 impl LibraryService for FakeService {
-    fn library(&self, _uid: u64) -> Result<Library> {
+    fn library(&self) -> Result<Library> {
         Ok(self.library.clone())
     }
 
-    fn playlists(&self, _uid: u64) -> Result<Vec<Playlist>> {
-        Ok(vec![Playlist { key: PlaylistKey { owner: 1, kind: 3 }, title: "Mine".into(), ..Playlist::default() }])
+    fn playlists(&self) -> Result<Vec<Playlist>> {
+        Ok(vec![Playlist { key: PlaylistKey::new(1, 3), title: "Mine".into(), ..Playlist::default() }])
     }
 
-    fn upload(&self, _uid: u64, kind: u32, name: &str, data: Vec<u8>) -> Result<()> {
-        self.record(format!("upload {kind} {name} {}", data.len()));
+    fn upload(&self, playlist: &PlaylistKey, name: &str, data: Vec<u8>) -> Result<()> {
+        self.record(format!("upload {} {name} {}", playlist.id, data.len()));
         Ok(())
     }
 
@@ -121,28 +122,28 @@ impl LibraryService for FakeService {
         Ok(())
     }
 
-    fn set_relation(&self, _uid: u64, target: &Target, relation: Relation, on: bool) -> Result<()> {
+    fn set_relation(&self, target: &Target, relation: Relation, on: bool) -> Result<()> {
         self.record(format!("{relation:?} {on} {target:?}"));
         Ok(())
     }
 
-    fn set_presave(&self, _uid: u64, album_id: &str, on: bool) -> Result<()> {
+    fn set_presave(&self, album_id: &str, on: bool) -> Result<()> {
         self.record(format!("presave {album_id} {on}"));
         Ok(())
     }
 
-    fn join_collective(&self, owner: u64, token: &str) -> Result<()> {
+    fn join_collective(&self, owner: &str, token: &str) -> Result<()> {
         self.record(format!("join {owner} {token}"));
         Ok(())
     }
 
-    fn create_playlist(&self, _uid: u64, title: &str, public: bool) -> Result<Playlist> {
+    fn create_playlist(&self, title: &str, public: bool) -> Result<Playlist> {
         self.record(format!("create {title} {public}"));
-        Ok(Playlist { key: PlaylistKey { owner: 1, kind: 9 }, title: title.to_owned(), public, ..Playlist::default() })
+        Ok(Playlist { key: PlaylistKey::new(1, 9), title: title.to_owned(), public, ..Playlist::default() })
     }
 
-    fn edit_playlist(&self, _uid: u64, kind: u32, edit: &PlaylistEdit) -> Result<()> {
-        self.record(format!("edit {kind} {edit:?}"));
+    fn edit_playlist(&self, playlist: &PlaylistKey, edit: &PlaylistEdit) -> Result<()> {
+        self.record(format!("edit {} {edit:?}", playlist.id));
         Ok(())
     }
 }

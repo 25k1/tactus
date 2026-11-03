@@ -30,17 +30,15 @@ impl Player {
         }
     }
 
-    fn fetcher(&self, id: &str) -> impl FnOnce(&dyn MusicService, u64) -> Result<Loaded> + Send + 'static {
+    fn fetcher(&self, id: &str) -> impl FnOnce(&dyn MusicService) -> Result<Loaded> + Send + 'static {
         let (local, quality, loader, id) =
             (self.offline.source(id), self.settings.stream_quality, self.loader.clone(), id.to_owned());
         let generated = tactus_api::is_generated(&id).then(|| self.generated_stream.clone());
-        move |service, _| {
+        move |service| {
             if let Some(slot) = generated {
                 let stream = service.generated_stream(&id)?;
                 let _ = service.generated_feedback(&id, &stream.id, tactus_api::StreamEvent::Started);
-                if let Ok(mut current) = slot.lock() {
-                    current.clone_from(&stream.id);
-                }
+                slot.guard().clone_from(&stream.id);
                 return loader(&tactus_api::AudioSource { url: stream.url, codec: tactus_api::Codec::Mp3 });
             }
             loader(&match local {
@@ -65,9 +63,9 @@ impl Player {
             return self.start_loaded(&track, loaded, Start::new(autoplay, Duration::from_millis(at), 1.0));
         }
         let (generation, fetch) = (self.generation, self.fetcher(&track.id));
-        let work = move |service: &dyn MusicService, uid| {
+        let work = move |service: &dyn MusicService| {
             std::thread::sleep(delay);
-            fetch(service, uid)
+            fetch(service)
         };
         self.spawn(work, move |player, result| {
             if player.generation != generation {
@@ -100,12 +98,11 @@ impl Player {
         if self.stream_retries.take().is_some() && !self.disconnected {
             self.notice(Notice::Online);
         }
-        self.emit(Event::Playback);
-        self.media_playback();
+        self.playback_changed();
         if start.playing && self.wave.contains(&track.id) {
             let (session, batch, track_id) =
                 (self.wave.session.clone(), self.wave.batch_of(&track.id), track.id.clone());
-            self.quiet(move |service, _| {
+            self.quiet(move |service| {
                 service.wave_feedback(&session, &batch, &tactus_api::WaveEvent::TrackStarted { track_id })
             });
         }
@@ -180,7 +177,7 @@ impl Player {
     pub(super) fn load_lyrics(&mut self, track: &Track) {
         let (id, generation) = (track.id.clone(), self.generation);
         self.spawn(
-            move |service, _| service.lyrics(&id),
+            move |service| service.lyrics(&id),
             move |player, result| {
                 if player.generation == generation {
                     player.lyrics = result.ok().flatten();
@@ -279,8 +276,7 @@ impl Player {
         } else if playing {
             return self.open_current(true, self.position_ms);
         }
-        self.emit(Event::Playback);
-        self.media_playback();
+        self.playback_changed();
     }
 
     pub fn toggle_play(&mut self) {
@@ -365,7 +361,7 @@ impl Player {
         self.session.remember_position(&track, self.position_ms);
         if seconds >= 1.0 {
             let play = Play { track: track.clone(), played_seconds: seconds as u32, from: PLAY_FROM.to_owned() };
-            self.quiet(move |service, uid| service.report_play(uid, &play));
+            self.quiet(move |service| service.report_play(&play));
         }
         if self.wave.contains(&track.id) {
             let (session, batch) = (self.wave.session.clone(), self.wave.batch_of(&track.id));
@@ -374,7 +370,7 @@ impl Player {
             } else {
                 tactus_api::WaveEvent::TrackFinished { track_id: track.id, seconds }
             };
-            self.quiet(move |service, _| service.wave_feedback(&session, &batch, &event));
+            self.quiet(move |service| service.wave_feedback(&session, &batch, &event));
         }
     }
 

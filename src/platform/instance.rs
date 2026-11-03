@@ -3,6 +3,7 @@ use std::net::{Ipv4Addr, TcpListener, TcpStream};
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
+use tactus_api::sync::Guard;
 use wxdragon::prelude::SingleInstanceChecker;
 
 const RAISE: &str = "tactus:raise";
@@ -99,16 +100,15 @@ pub fn listen() {
             let mut message = String::new();
             if stream.take(MESSAGE_LIMIT).read_to_string(&mut message).is_ok()
                 && let Some(request) = request(&message)
-                && let Ok(mut requests) = REQUESTS.lock()
             {
-                requests.push(request);
+                REQUESTS.guard().push(request);
             }
         }
     });
 }
 
 pub fn take_requests() -> Vec<Request> {
-    REQUESTS.lock().map(|mut requests| std::mem::take(&mut *requests)).unwrap_or_default()
+    std::mem::take(&mut *REQUESTS.guard())
 }
 
 #[cfg(test)]

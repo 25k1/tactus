@@ -45,11 +45,11 @@ impl Player {
         self.emit(Event::Library);
         let request = changes.clone();
         self.spawn(
-            move |service, uid| {
+            move |service| {
                 Ok(request
                     .into_iter()
                     .filter_map(|change| {
-                        service.set_relation(uid, &change.0, change.1, change.2).err().map(|error| (change, error))
+                        service.set_relation(&change.0, change.1, change.2).err().map(|error| (change, error))
                     })
                     .collect::<Vec<_>>())
             },
@@ -107,7 +107,7 @@ impl Player {
         self.emit(Event::Library);
         let id = album_id.clone();
         self.spawn(
-            move |service, uid| service.set_presave(uid, &id, on),
+            move |service| service.set_presave(&id, on),
             move |player, result| match result {
                 Ok(()) => {
                     player.notice(Notice::Presaved(on));
@@ -133,7 +133,7 @@ impl Player {
         self.library.set_pinned(&item, on);
         self.emit(Event::Library);
         self.spawn(
-            move |service, _| service.set_pin(&target, on),
+            move |service| service.set_pin(&target, on),
             move |player, result| match result {
                 Ok(()) => {
                     player.notice(Notice::Pinned(on));
@@ -165,7 +165,7 @@ impl Player {
             return;
         }
         self.request(
-            move |service, uid| service.create_playlist(uid, &title, public),
+            move |service| service.create_playlist(&title, public),
             move |player, playlist| {
                 player.notice(Notice::PlaylistCreated(playlist.title.clone()));
                 player.playlists.insert(0, playlist.clone());
@@ -202,20 +202,21 @@ impl Player {
 
     pub fn duplicate_playlist(&mut self, playlist: &Playlist, title: &str) {
         let title = title.to_owned();
-        self.with_page(View::Playlist(playlist.key), move |player, page| {
+        self.with_page(View::Playlist(playlist.key.clone()), move |player, page| {
             player.create_playlist(&title, false, page.tracks());
         });
     }
 
     pub(super) fn edit_playlist(&mut self, playlist: &Playlist, edit: PlaylistEdit, notice: Notice) {
-        let key = playlist.key;
+        let key = playlist.key.clone();
+        let service_key = key.clone();
         let deleting = edit == PlaylistEdit::Delete;
         let undo = match &edit {
             PlaylistEdit::Remove(removed) => Some(Undo::Playlist(playlist.clone(), removed.clone())),
             _ => None,
         };
         self.request(
-            move |service, uid| service.edit_playlist(uid, key.kind, &edit),
+            move |service| service.edit_playlist(&service_key, &edit),
             move |player, ()| {
                 player.notice(notice);
                 if let Some(undo) = undo {
@@ -223,7 +224,7 @@ impl Player {
                 }
                 if deleting {
                     player.playlists.retain(|playlist| playlist.key != key);
-                    player.pages.remove(&View::Playlist(key));
+                    player.pages.remove(&View::Playlist(key.clone()));
                 }
                 player.playlists_changed(key);
             },
@@ -231,13 +232,13 @@ impl Player {
     }
 
     pub fn upload(&mut self, playlist: &Playlist, files: Vec<std::path::PathBuf>) {
-        let key = playlist.key;
+        let (key, service_key) = (playlist.key.clone(), playlist.key.clone());
         self.spawn(
-            move |service, uid| {
+            move |service| {
                 let mut sent = 0;
                 for file in &files {
                     let name = file.file_name().map(|name| name.to_string_lossy().into_owned()).unwrap_or_default();
-                    service.upload(uid, key.kind, &name, std::fs::read(file)?)?;
+                    service.upload(&service_key, &name, std::fs::read(file)?)?;
                     sent += 1;
                 }
                 Ok(sent)

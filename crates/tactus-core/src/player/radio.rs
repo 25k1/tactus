@@ -24,7 +24,7 @@ impl Player {
 
     pub(super) fn load_wave_options(&mut self) {
         self.spawn(
-            |service, _| service.wave_settings(),
+            |service| service.wave_settings(),
             |player, result| match result {
                 Ok(options) => player.wave_options = Some(options),
                 Err(error) => log::warn(format_args!("wave settings: {error}")),
@@ -34,7 +34,7 @@ impl Player {
 
     pub fn play_last_wave(&mut self) {
         self.request(
-            |service, _| service.last_wave(),
+            |service| service.last_wave(),
             |player, last| {
                 let seeds = if last.seeds.is_empty() { player.my_wave() } else { last.seeds };
                 player.start_wave(seeds);
@@ -43,12 +43,12 @@ impl Player {
     }
 
     pub fn reset_last_wave(&mut self) {
-        self.request(|service, _| service.reset_last_wave(), |player, ()| player.notice(Notice::LastWaveReset));
+        self.request(|service| service.reset_last_wave(), |player, ()| player.notice(Notice::LastWaveReset));
     }
 
     pub(super) fn play_generated(&mut self, station: String) {
         self.request(
-            move |service, _| service.generated_stream(&station),
+            move |service| service.generated_stream(&station),
             |player, stream| player.play_tracks(vec![stream.track()], 0, &stream.title),
         );
     }
@@ -61,9 +61,9 @@ impl Player {
         let Some(station) = self.track.as_ref().map(|track| track.id.clone()).filter(|id| is_generated(id)) else {
             return;
         };
-        let stream = self.generated_stream.lock().map(|stream| stream.clone()).unwrap_or_default();
+        let stream = self.generated_stream.guard().clone();
         if !stream.is_empty() {
-            self.quiet(move |service, _| service.generated_feedback(&station, &stream, event));
+            self.quiet(move |service| service.generated_feedback(&station, &stream, event));
         }
     }
 
@@ -85,7 +85,7 @@ impl Player {
                 (Relation::Dislike, false) => WaveEvent::Undislike { track_id },
             };
             let (session, batch) = (self.wave.session.clone(), self.wave.batch_of(&track.id));
-            self.quiet(move |service, _| service.wave_feedback(&session, &batch, &event));
+            self.quiet(move |service| service.wave_feedback(&session, &batch, &event));
         }
     }
 }

@@ -129,7 +129,7 @@ impl ItemAction {
     }
 }
 
-#[derive(Clone, Copy, Debug, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub struct ListContext {
     pub in_queue: bool,
     pub own_playlist: Option<PlaylistKey>,
@@ -188,7 +188,7 @@ pub fn item_actions(player: &Player, entry: &Entry, context: &ListContext) -> Ve
             actions.push(None);
             actions.extend(relation_actions(player, &Target::Track(track.clone()), true));
             actions.push(Some(AddToPlaylist));
-            match (context.own_playlist, context.section) {
+            match (&context.own_playlist, context.section) {
                 (Some(_), Some(SectionKind::Suggestions)) => actions.push(Some(AddToThisPlaylist)),
                 (Some(_), _) => {
                     actions.push(Some(RemoveFromPlaylist));
@@ -259,7 +259,7 @@ pub fn item_actions(player: &Player, entry: &Entry, context: &ListContext) -> Ve
                     Some(Delete),
                 ]);
             } else {
-                actions.extend(relation_actions(player, &Target::Playlist(playlist.key), false));
+                actions.extend(relation_actions(player, &Target::Playlist(playlist.key.clone()), false));
             }
             actions.extend([pin_action(player, item), Some(Duplicate), Some(CopyLink)]);
         }
@@ -364,7 +364,7 @@ mod tests {
         let queued = actions(&player, Item::Track(track("1")), queue);
         assert!(queued.contains(&ItemAction::MoveDown) && !queued.contains(&ItemAction::MoveUp));
         let own = ListContext {
-            own_playlist: Some(PlaylistKey { owner: 1, kind: 3 }),
+            own_playlist: Some(PlaylistKey::new(1, 3)),
             section: Some(SectionKind::Suggestions),
             ..ListContext::default()
         };

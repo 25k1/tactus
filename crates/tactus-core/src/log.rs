@@ -3,6 +3,7 @@ use std::fs::OpenOptions;
 use std::io::Write;
 use std::path::PathBuf;
 use std::sync::Mutex;
+use tactus_api::sync::Guard;
 
 const LIMIT: u64 = 1024 * 1024;
 
@@ -16,11 +17,11 @@ pub enum Level {
 }
 
 pub fn init(path: PathBuf) {
-    *FILE.lock().unwrap_or_else(std::sync::PoisonError::into_inner) = Some(path);
+    *FILE.guard() = Some(path);
 }
 
 pub fn path() -> Option<PathBuf> {
-    FILE.lock().unwrap_or_else(std::sync::PoisonError::into_inner).clone()
+    FILE.guard().clone()
 }
 
 fn line(level: Level, message: &dyn Display) -> String {
@@ -28,7 +29,7 @@ fn line(level: Level, message: &dyn Display) -> String {
 }
 
 pub fn write(level: Level, message: impl Display) {
-    let guard = FILE.lock().unwrap_or_else(std::sync::PoisonError::into_inner);
+    let guard = FILE.guard();
     let Some(path) = guard.as_ref() else {
         return;
     };

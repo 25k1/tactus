@@ -66,9 +66,8 @@ impl Ui {
             RemoteCommand::PlayTrack { track_id } => self.act(|player| player.play_ids(vec![track_id])),
             RemoteCommand::PlayAlbum { album_id } => self.act(|player| player.play_view(View::Album(album_id))),
             RemoteCommand::PlayArtist { artist_id } => self.act(|player| player.play_view(View::Artist(artist_id))),
-            RemoteCommand::PlayPlaylist { owner_uid, kind } => {
-                let key = PlaylistKey { owner: owner_uid, kind };
-                self.act(|player| player.play_view(View::Playlist(key)));
+            RemoteCommand::PlayPlaylist { owner, id } => {
+                self.act(|player| player.play_view(View::Playlist(PlaylistKey { owner, id })));
             }
             RemoteCommand::StartWave { seeds } => {
                 let seeds = seeds.map(|seeds| wave::seeds(&seeds)).filter(|seeds| !seeds.is_empty());

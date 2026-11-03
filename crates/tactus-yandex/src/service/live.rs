@@ -15,7 +15,7 @@ fn sections(page: &Page) -> usize {
 #[ignore]
 fn anonymous_reads() {
     let service = YandexService::new("").unwrap();
-    let search = service.page(&View::Search("Metallica".into()), 0).unwrap();
+    let search = service.page(&View::Search("Metallica".into())).unwrap();
     assert!(!search.sections.is_empty());
     let album = search
         .sections
@@ -26,7 +26,7 @@ fn anonymous_reads() {
             _ => None,
         })
         .unwrap();
-    let tracks = service.page(&View::Album(album), 0).unwrap().tracks();
+    let tracks = service.page(&View::Album(album)).unwrap().tracks();
     assert!(!tracks.is_empty());
     report("lyrics", service.lyrics(&tracks[0].id), |lyrics| lyrics.as_ref().map_or(0, |lyrics| lyrics.lines.len()));
     for view in [
@@ -41,7 +41,7 @@ fn anonymous_reads() {
         View::Category("audibooks_fiction".into()),
         View::Label("6074020".into()),
     ] {
-        report(&format!("{view:?}"), service.page(&view, 0), sections);
+        report(&format!("{view:?}"), service.page(&view), sections);
     }
     report("search page 1", service.more(&View::Search("Metallica".into()), SectionKind::Tracks, 1), |paged| {
         paged.items.len() * 100 + usize::from(paged.next.is_some())
@@ -57,7 +57,7 @@ fn anonymous_reads() {
     report(
         "playlist by login",
         service.find_playlist(&PlaylistLink::Owner { owner: "yamusic-podcast".into(), kind: 1104 }),
-        |key| usize::from(key.owner == 970829816),
+        |key| usize::from(key.owner == "970829816"),
     );
     for (view, kind, page) in [
         (View::Genre("58e3c0796ebb3476087d190b".into()), SectionKind::Artists, 1),
@@ -84,10 +84,9 @@ fn signed_in_reads() {
         return;
     };
     let service = YandexService::new(token.trim()).unwrap();
-    let uid = service.account().unwrap().uid;
-    report("library", service.library(uid), |library| library.liked_tracks.len());
+    report("library", service.library(), |library| library.liked_tracks.len());
     report("settings", service.account_settings(), Vec::len);
-    report("playlists", service.playlists(uid), Vec::len);
+    report("playlists", service.playlists(), Vec::len);
     for view in [
         View::Waves,
         View::ForYou,
@@ -98,9 +97,9 @@ fn signed_in_reads() {
         View::Concerts(String::new()),
         View::Concerts("2".into()),
         View::Album("18031896".into()),
-        View::Playlist(PlaylistKey { owner: 103372440, kind: 1565 }),
+        View::Playlist(PlaylistKey::new(103372440, 1565)),
     ] {
-        report(&format!("{view:?}"), service.page(&view, uid), |page| {
+        report(&format!("{view:?}"), service.page(&view), |page| {
             page.sections.len() * 100
                 + page
                     .sections
@@ -120,20 +119,20 @@ fn signed_in_reads() {
     }
     report("concert locations", service.concert_locations(), Vec::len);
     report("signed track info", service.track_info("1710808"), |value| value.artists.len() * 100 + value.credits.len());
-    report("world chart positions", service.page(&View::Chart("world".into()), uid), |page| {
+    report("world chart positions", service.page(&View::Chart("world".into())), |page| {
         page.tracks().iter().filter(|track| track.chart.is_some()).count()
     });
-    if let Ok(page) = service.page(&View::ForYou, uid) {
+    if let Ok(page) = service.page(&View::ForYou) {
         let kinds: Vec<String> =
             page.sections.iter().map(|section| format!("{:?}:{}", section.kind, section.items.len())).collect();
         eprintln!("for you sections: {}", kinds.join(" "));
     }
-    report("artist facts", service.page(&View::Artist("3121".into()), uid), |page| match &page.subject {
+    report("artist facts", service.page(&View::Artist("3121".into())), |page| match &page.subject {
         Some(Item::Artist(artist)) => artist.listeners as usize,
         _ => 0,
     });
     report("queue", service.active_queue(), |queue| queue.as_ref().map_or(0, |queue| queue.track_ids.len()));
-    let chart = service.page(&View::ForYou, uid).map(|page| page.tracks()).unwrap_or_default();
+    let chart = service.page(&View::ForYou).map(|page| page.tracks()).unwrap_or_default();
     let lyrics = chart.iter().take(10).find_map(|track| service.lyrics(&track.id).ok().flatten());
     eprintln!(
         "lyrics: {} lines, synced {}",

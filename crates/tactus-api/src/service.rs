@@ -19,7 +19,7 @@ pub trait AccountService {
 }
 
 pub trait CatalogService {
-    fn page(&self, view: &View, uid: u64) -> Result<Page>;
+    fn page(&self, view: &View) -> Result<Page>;
 
     fn more(&self, _view: &View, _kind: SectionKind, _page: u32) -> Result<Paged> {
         Err(Error::Unsupported)
@@ -53,35 +53,35 @@ pub trait CatalogService {
 }
 
 pub trait LibraryService {
-    fn library(&self, uid: u64) -> Result<Library>;
+    fn library(&self) -> Result<Library>;
 
     fn set_pin(&self, _target: &Target, _on: bool) -> Result<()> {
         Err(Error::Unsupported)
     }
 
-    fn upload(&self, _uid: u64, _kind: u32, _name: &str, _data: Vec<u8>) -> Result<()> {
+    fn upload(&self, _playlist: &PlaylistKey, _name: &str, _data: Vec<u8>) -> Result<()> {
         Err(Error::Unsupported)
     }
 
-    fn playlists(&self, uid: u64) -> Result<Vec<Playlist>>;
+    fn playlists(&self) -> Result<Vec<Playlist>>;
 
-    fn set_relation(&self, _uid: u64, _target: &Target, _relation: Relation, _on: bool) -> Result<()> {
+    fn set_relation(&self, _target: &Target, _relation: Relation, _on: bool) -> Result<()> {
         Err(Error::Unsupported)
     }
 
-    fn set_presave(&self, _uid: u64, _album_id: &str, _on: bool) -> Result<()> {
+    fn set_presave(&self, _album_id: &str, _on: bool) -> Result<()> {
         Err(Error::Unsupported)
     }
 
-    fn join_collective(&self, _owner: u64, _token: &str) -> Result<()> {
+    fn join_collective(&self, _owner: &str, _token: &str) -> Result<()> {
         Err(Error::Unsupported)
     }
 
-    fn create_playlist(&self, _uid: u64, _title: &str, _public: bool) -> Result<Playlist> {
+    fn create_playlist(&self, _title: &str, _public: bool) -> Result<Playlist> {
         Err(Error::Unsupported)
     }
 
-    fn edit_playlist(&self, _uid: u64, _kind: u32, _edit: &PlaylistEdit) -> Result<()> {
+    fn edit_playlist(&self, _playlist: &PlaylistKey, _edit: &PlaylistEdit) -> Result<()> {
         Err(Error::Unsupported)
     }
 }
@@ -91,7 +91,7 @@ pub trait PlaybackService {
         Err(Error::Unsupported)
     }
 
-    fn report_play(&self, _uid: u64, _play: &Play) -> Result<()> {
+    fn report_play(&self, _play: &Play) -> Result<()> {
         Ok(())
     }
 

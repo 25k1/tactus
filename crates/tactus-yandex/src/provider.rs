@@ -3,7 +3,7 @@ use crate::service::YandexService;
 use std::sync::Arc;
 use std::time::Duration;
 use tactus_api::error::{Error, Result};
-use tactus_api::{Capabilities, Destination, Login, LoginPrompt, Provider, ProviderKind, Service};
+use tactus_api::{Capabilities, Destination, Item, Login, LoginPrompt, Provider, ProviderKind, Service};
 
 const CAPABILITIES: Capabilities = Capabilities::WAVE
     .union(Capabilities::GENERATED)
@@ -70,5 +70,9 @@ impl Provider for YandexProvider {
 
     fn destination(&self, link: &str) -> Option<Destination> {
         crate::link::destination(link)
+    }
+
+    fn share_link(&self, item: &Item) -> Option<String> {
+        crate::link::share(item)
     }
 }

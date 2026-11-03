@@ -1,6 +1,6 @@
 use crate::capabilities::Capabilities;
 use crate::error::Result;
-use crate::model::Destination;
+use crate::model::{Destination, Item};
 use crate::service::Service;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
@@ -42,5 +42,13 @@ pub trait Provider: Send + Sync {
     fn connect(&self, credentials: &str) -> Result<Service>;
     fn destination(&self, _link: &str) -> Option<Destination> {
         None
+    }
+
+    fn share_link(&self, item: &Item) -> Option<String> {
+        match item {
+            Item::Link(link) => Some(link.url.clone()),
+            Item::Concert(concert) => Some(concert.url.clone()),
+            _ => None,
+        }
     }
 }

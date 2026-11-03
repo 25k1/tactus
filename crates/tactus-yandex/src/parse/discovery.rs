@@ -70,7 +70,7 @@ pub fn landing_ids(value: &Value, key: &str) -> Vec<String> {
 
 pub fn landing_playlists(value: &Value) -> Vec<PlaylistKey> {
     collect(result(value).list("newPlaylists"), |value| {
-        Some(PlaylistKey { owner: value.num("uid"), kind: u32::try_from(value.num("kind")).ok()? })
+        Some(PlaylistKey::new(value.num("uid"), u32::try_from(value.num("kind")).ok()?))
     })
 }
 
@@ -122,7 +122,7 @@ mod tests {
         assert_eq!(page_of(&ids, 9).0, Vec::<u32>::new());
         let value = serde_json::json!({ "result": { "newReleases": [44278018, "44341242"], "newPlaylists": [{ "uid": 103372440, "kind": 1565 }] } });
         assert_eq!(landing_ids(&value, "newReleases"), ["44278018", "44341242"]);
-        assert_eq!(landing_playlists(&value), [PlaylistKey { owner: 103372440, kind: 1565 }]);
+        assert_eq!(landing_playlists(&value), [PlaylistKey::new(103372440, 1565)]);
     }
 
     #[test]

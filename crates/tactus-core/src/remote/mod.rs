@@ -7,6 +7,7 @@ use serde_json::{Value, json};
 pub use server::RemoteServer;
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::sync::{Arc, Mutex, MutexGuard};
+use tactus_api::sync::Guard;
 
 #[derive(Clone, Debug, PartialEq, Deserialize)]
 #[serde(tag = "command", rename_all = "camelCase", rename_all_fields = "camelCase")]
@@ -30,7 +31,7 @@ pub enum RemoteCommand {
     PlayTrack { track_id: String },
     PlayAlbum { album_id: String },
     PlayArtist { artist_id: String },
-    PlayPlaylist { owner_uid: u64, kind: u32 },
+    PlayPlaylist { owner: String, id: String },
     StartWave { seeds: Option<String> },
     PlayIndex { index: usize },
     RemoveFromQueue { index: usize },
@@ -70,7 +71,7 @@ impl RemoteHub {
     }
 
     fn snapshot(&self) -> MutexGuard<'_, Snapshot> {
-        self.snapshot.lock().unwrap_or_else(std::sync::PoisonError::into_inner)
+        self.snapshot.guard()
     }
 
     pub fn broadcast(&self, kind: &str, data: Value) {
@@ -116,7 +117,7 @@ impl RemoteHub {
     fn subscribe(&self) -> Receiver<String> {
         let (sender, receiver) = mpsc::channel();
         let _ = sender.send(json!({ "type": "status", "data": self.snapshot().status }).to_string());
-        self.clients.lock().unwrap_or_else(std::sync::PoisonError::into_inner).push(sender);
+        self.clients.guard().push(sender);
         receiver
     }
 
@@ -140,8 +141,8 @@ mod tests {
         );
         assert_eq!(parse(r#"{"command":"repeat","mode":"one"}"#), RemoteCommand::Repeat { mode: Some(Repeat::One) });
         assert_eq!(
-            parse(r#"{"command":"playPlaylist","ownerUid":5,"kind":3}"#),
-            RemoteCommand::PlayPlaylist { owner_uid: 5, kind: 3 }
+            parse(r#"{"command":"playPlaylist","owner":"5","id":"3"}"#),
+            RemoteCommand::PlayPlaylist { owner: "5".into(), id: "3".into() }
         );
         assert_eq!(
             parse(r#"{"command":"sleep","timer":{"minutes":30}}"#),

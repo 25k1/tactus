@@ -32,23 +32,24 @@ fn playlist_diff(edit: &PlaylistEdit) -> Option<Value> {
 }
 
 impl YandexService {
-    async fn playlist_revision(&self, uid: u64, kind: u32) -> Result<u64> {
-        let value = self.get(&format!("users/{uid}/playlists/{kind}"), &[]).await?;
+    async fn playlist_revision(&self, path: &str) -> Result<u64> {
+        let value = self.get(path, &[]).await?;
         Ok(parse::result(&value).num("revision"))
     }
 }
 
 impl YandexService {
-    pub(super) async fn presaves(&self, uid: u64) -> Result<Vec<Album>> {
+    pub(super) async fn presaves(&self) -> Result<Vec<Album>> {
+        let uid = self.uid().await?;
         let query = [("includeReleased", "false"), ("includeUpcoming", "true")];
         Ok(parse::presaves(&self.get(&format!("users/{uid}/presaves"), &query).await?))
     }
 }
 
 impl LibraryService for YandexService {
-    fn library(&self, uid: u64) -> Result<Library> {
-        let base = format!("users/{uid}");
+    fn library(&self) -> Result<Library> {
         net::block_on(async {
+            let base = format!("users/{}", self.uid().await?);
             let (liked, disliked, albums, artists, playlists, disliked_artists, pins, presaves) = tokio::join!(
                 self.get(&format!("{base}/likes/tracks"), &[]),
                 self.get(&format!("{base}/dislikes/tracks"), &[]),
@@ -57,7 +58,7 @@ impl LibraryService for YandexService {
                 self.get(&format!("{base}/likes/playlists"), &[]),
                 self.get(&format!("{base}/dislikes/artists"), &[]),
                 self.get("pins", &[]),
-                self.presaves(uid),
+                self.presaves(),
             );
             let ids = |value: Result<Value>, parse: fn(&Value) -> Option<String>| {
                 parse::liked_keys(&value.unwrap_or_default(), parse).into_iter().collect()
@@ -81,7 +82,10 @@ impl LibraryService for YandexService {
         let (kind, body) = match target {
             Target::Album(id) => ("album", json!({ "id": id })),
             Target::Artist(id) => ("artist", json!({ "id": id })),
-            Target::Playlist(key) => ("playlist", json!({ "uid": key.owner, "kind": key.kind })),
+            Target::Playlist(key) => {
+                let (owner, kind) = numeric_key(key)?;
+                ("playlist", json!({ "uid": owner, "kind": kind }))
+            }
             Target::Wave(seeds) => ("wave", json!({ "seeds": seeds })),
             Target::Track(_) => return Err(Error::Unsupported),
         };
@@ -90,9 +94,9 @@ impl LibraryService for YandexService {
         Ok(())
     }
 
-    fn upload(&self, uid: u64, kind: u32, name: &str, data: Vec<u8>) -> Result<()> {
+    fn upload(&self, playlist: &PlaylistKey, name: &str, data: Vec<u8>) -> Result<()> {
         net::block_on(async {
-            let (owner, playlist) = (uid.to_string(), format!("{uid}:{kind}"));
+            let (owner, playlist) = (self.uid().await?.to_string(), format!("{}:{}", playlist.owner, playlist.id));
             let query = [
                 ("uid", owner.as_str()),
                 ("playlist-id", playlist.as_str()),
@@ -120,14 +124,18 @@ impl LibraryService for YandexService {
         })
     }
 
-    fn playlists(&self, uid: u64) -> Result<Vec<Playlist>> {
-        Ok(parse::playlists(&net::block_on(self.get(&format!("users/{uid}/playlists/list"), &[]))?))
+    fn playlists(&self) -> Result<Vec<Playlist>> {
+        net::block_on(async {
+            let uid = self.uid().await?;
+            Ok(parse::playlists(&self.get(&format!("users/{uid}/playlists/list"), &[]).await?))
+        })
     }
 
-    fn set_relation(&self, uid: u64, target: &Target, relation: Relation, on: bool) -> Result<()> {
+    fn set_relation(&self, target: &Target, relation: Relation, on: bool) -> Result<()> {
         let client = &self.client;
         let album_id = |id: &str| id.parse::<u32>().map_err(|_| Error::NotFound(id.to_owned()));
         net::block_on(async {
+            let uid = self.uid().await?;
             match (target, relation, on) {
                 (Target::Track(track), Relation::Like, true) => {
                     client.add_liked_tracks(&AddLikedTracksOptions::new(uid, [track.id.as_str()])).await.api()?;
@@ -163,13 +171,12 @@ impl LibraryService for YandexService {
                     client.remove_disliked_artist(&RemoveDislikedArtistOptions::new(uid, id.as_str())).await.api()?;
                 }
                 (Target::Playlist(key), Relation::Like, true) => {
-                    client.add_liked_playlist(&AddLikedPlaylistOptions::new(uid, key.owner, key.kind)).await.api()?;
+                    let (owner, kind) = numeric_key(key)?;
+                    client.add_liked_playlist(&AddLikedPlaylistOptions::new(uid, owner, kind)).await.api()?;
                 }
                 (Target::Playlist(key), Relation::Like, false) => {
-                    client
-                        .remove_liked_playlist(&RemoveLikedPlaylistOptions::new(uid, key.owner, key.kind))
-                        .await
-                        .api()?;
+                    let (owner, kind) = numeric_key(key)?;
+                    client.remove_liked_playlist(&RemoveLikedPlaylistOptions::new(uid, owner, kind)).await.api()?;
                 }
                 (Target::Album(_) | Target::Playlist(_), Relation::Dislike, _) | (Target::Wave(_), _, _) => {
                     return Err(Error::Unsupported);
@@ -179,34 +186,36 @@ impl LibraryService for YandexService {
         })
     }
 
-    fn set_presave(&self, uid: u64, album_id: &str, on: bool) -> Result<()> {
-        let path = format!("users/{uid}/presaves/{}", if on { "add" } else { "remove" });
+    fn set_presave(&self, album_id: &str, on: bool) -> Result<()> {
         let mut form = vec![("albumId", album_id)];
         if on {
             form.push(("likeAfterRelease", "true"));
         }
-        net::block_on(self.post(&path, &form))?;
+        net::block_on(async {
+            let path = format!("users/{}/presaves/{}", self.uid().await?, if on { "add" } else { "remove" });
+            self.post(&path, &form).await
+        })?;
         Ok(())
     }
 
-    fn join_collective(&self, owner: u64, token: &str) -> Result<()> {
-        let owner = owner.to_string();
+    fn join_collective(&self, owner: &str, token: &str) -> Result<()> {
         let path = format!("playlists/collective/join?uid={owner}&token={}", encode_component(token));
         net::block_on(self.post(&path, &[]))?;
         Ok(())
     }
 
-    fn create_playlist(&self, uid: u64, title: &str, public: bool) -> Result<Playlist> {
+    fn create_playlist(&self, title: &str, public: bool) -> Result<Playlist> {
         let visibility = if public { "public" } else { "private" };
-        let value = net::block_on(
-            self.post(&format!("users/{uid}/playlists/create"), &[("title", title), ("visibility", visibility)]),
-        )?;
+        let value = net::block_on(async {
+            let path = format!("users/{}/playlists/create", self.uid().await?);
+            self.post(&path, &[("title", title), ("visibility", visibility)]).await
+        })?;
         parse::playlist(parse::result(&value)).ok_or_else(|| Error::Api("the playlist was not created".into()))
     }
 
-    fn edit_playlist(&self, uid: u64, kind: u32, edit: &PlaylistEdit) -> Result<()> {
-        let path = format!("users/{uid}/playlists/{kind}");
+    fn edit_playlist(&self, playlist: &PlaylistKey, edit: &PlaylistEdit) -> Result<()> {
         net::block_on(async {
+            let path = format!("users/{}/playlists/{}", self.uid().await?, playlist.id);
             match edit {
                 PlaylistEdit::Rename(title) => self.post(&format!("{path}/name"), &[("value", title.as_str())]).await?,
                 PlaylistEdit::Visibility(public) => {
@@ -222,7 +231,7 @@ impl LibraryService for YandexService {
                 | PlaylistEdit::Restore(_)
                 | PlaylistEdit::Move { .. } => {
                     let diff = playlist_diff(edit).ok_or(Error::Unsupported)?;
-                    let (diff, revision) = (diff.to_string(), self.playlist_revision(uid, kind).await?.to_string());
+                    let (diff, revision) = (diff.to_string(), self.playlist_revision(&path).await?.to_string());
                     self.post(
                         &format!("{path}/change-relative"),
                         &[("diff", diff.as_str()), ("revision", revision.as_str())],

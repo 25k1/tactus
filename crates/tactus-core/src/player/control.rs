@@ -25,7 +25,7 @@ impl Player {
     }
 
     pub fn play_ids(&mut self, ids: Vec<String>) {
-        self.request(move |service, _| service.tracks(&ids), |player, tracks| player.play_tracks(tracks, 0, "various"));
+        self.request(move |service| service.tracks(&ids), |player, tracks| player.play_tracks(tracks, 0, "various"));
     }
 
     pub fn play_index(&mut self, index: usize) {
@@ -102,8 +102,7 @@ impl Player {
         self.audio.stop();
         self.stream_retries = None;
         self.playing = false;
-        self.emit(Event::Playback);
-        self.media_playback();
+        self.playback_changed();
     }
 
     pub fn start_wave(&mut self, seeds: Vec<String>) {
@@ -118,7 +117,7 @@ impl Player {
     pub(super) fn begin_wave(&mut self, seeds: Vec<String>, autoplay: bool) {
         let request = seeds.clone();
         self.request(
-            move |service, _| service.start_wave(&request),
+            move |service| service.start_wave(&request),
             move |player, batch| {
                 let (session, batch_id) = (batch.session.clone(), batch.batch.clone());
                 player.wave.begin(seeds, session.clone());
@@ -128,7 +127,7 @@ impl Player {
                 if autoplay {
                     player.notice(Notice::WaveStarted);
                 }
-                player.quiet(move |service, _| {
+                player.quiet(move |service| {
                     service.wave_feedback(&session, &batch_id, &tactus_api::WaveEvent::RadioStarted)
                 });
                 player.open_current(autoplay, 0);
@@ -152,7 +151,7 @@ impl Player {
         let ids = self.queue.ids();
         let recent = ids[ids.len().saturating_sub(wave::QUEUE_LIMIT)..].to_vec();
         self.spawn(
-            move |service, _| service.wave_tracks(&session, &recent),
+            move |service| service.wave_tracks(&session, &recent),
             |player, result| {
                 player.wave.fetching = false;
                 let play = std::mem::take(&mut player.wave.play_when_ready);
@@ -176,7 +175,7 @@ impl Player {
     pub(super) fn continue_wave(&mut self, seeds: Vec<String>) {
         let request = seeds.clone();
         self.request(
-            move |service, _| service.start_wave(&request),
+            move |service| service.start_wave(&request),
             move |player, batch| {
                 player.wave.begin(seeds, batch.session.clone());
                 let tracks = player.wave.accept(batch, &player.library.disliked_tracks);
@@ -198,7 +197,7 @@ impl Player {
         }
         let (tracks, index, context) = (self.queue.tracks().to_vec(), self.queue.index(), context.to_owned());
         self.spawn(
-            move |service, _| service.create_queue(&tracks, index, &context),
+            move |service| service.create_queue(&tracks, index, &context),
             |player, result| match result {
                 Ok(id) => player.remote_queue = Some(id),
                 Err(error) => log::warn(format_args!("queue sync: {error}")),
@@ -209,7 +208,7 @@ impl Player {
     pub(super) fn sync_queue_position(&mut self) {
         if let (true, false, Some(id)) = (self.settings.sync_queue, self.settings.ynison, self.remote_queue.clone()) {
             let index = self.queue.index();
-            self.quiet(move |service, _| service.update_queue_position(&id, index));
+            self.quiet(move |service| service.update_queue_position(&id, index));
         }
     }
 }

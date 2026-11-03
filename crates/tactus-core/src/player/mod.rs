@@ -31,6 +31,7 @@ use std::sync::mpsc::{self, Receiver, Sender};
 use std::time::{Duration, Instant};
 use tactus_api::error::{Error, ErrorKind, Failure, Result};
 use tactus_api::net;
+use tactus_api::sync::Guard;
 use tactus_api::{
     Account, AccountOption, AccountSettings, Item, Library, Lyrics, MusicService, Page, Play, Playlist, PlaylistEdit,
     PlaylistKey, Provider, Relation, Section, SectionKind, Service, Target, Track, View,
@@ -212,10 +213,6 @@ impl Player {
         self.service.is_some()
     }
 
-    pub fn uid(&self) -> u64 {
-        self.account.as_ref().map_or(0, |account| account.uid)
-    }
-
     pub fn take_events(&mut self) -> Vec<Event> {
         std::mem::take(&mut self.events)
     }
@@ -245,15 +242,14 @@ impl Player {
     fn spawn<T, W, D>(&mut self, work: W, done: D)
     where
         T: Send + 'static,
-        W: FnOnce(&dyn MusicService, u64) -> Result<T> + Send + 'static,
+        W: FnOnce(&dyn MusicService) -> Result<T> + Send + 'static,
         D: FnOnce(&mut Player, Result<T>) + Send + 'static,
     {
         let Some(service) = self.service.clone() else {
             self.fail(Error::SignedOut);
             return;
         };
-        let uid = self.uid();
-        self.background(move || work(service.as_ref(), uid), done);
+        self.background(move || work(service.as_ref()), done);
     }
 
     fn background<T, W, D>(&mut self, work: W, done: D)
@@ -276,7 +272,7 @@ impl Player {
     fn request<T, W, D>(&mut self, work: W, done: D)
     where
         T: Send + 'static,
-        W: FnOnce(&dyn MusicService, u64) -> Result<T> + Send + 'static,
+        W: FnOnce(&dyn MusicService) -> Result<T> + Send + 'static,
         D: FnOnce(&mut Player, T) + Send + 'static,
     {
         self.spawn(work, move |player, result| match result {
@@ -285,7 +281,7 @@ impl Player {
         });
     }
 
-    fn quiet(&mut self, work: impl FnOnce(&dyn MusicService, u64) -> Result<()> + Send + 'static) {
+    fn quiet(&mut self, work: impl FnOnce(&dyn MusicService) -> Result<()> + Send + 'static) {
         if self.service.is_some() {
             self.spawn(work, |_, result| {
                 if let Err(error) = result {

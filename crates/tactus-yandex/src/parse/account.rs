@@ -9,7 +9,7 @@ pub fn account(value: &Value) -> Account {
         .find(|name| !name.is_empty())
         .unwrap_or_default()
         .to_owned();
-    Account { uid: account.num("uid"), login, name, has_plus: value.at("plus").flag("hasPlus") }
+    Account { id: account.id("uid"), login, name, has_plus: value.at("plus").flag("hasPlus") }
 }
 
 pub fn account_settings(value: &Value) -> AccountSettings {
@@ -92,7 +92,7 @@ mod tests {
     #[test]
     fn parses_account() {
         let account = account(&fixture("account_status"));
-        assert_eq!(account.uid, 1000);
+        assert_eq!(account.id, "1000");
         assert_eq!(account.name, "Listener");
         assert!(account.has_plus);
     }
@@ -110,9 +110,7 @@ mod tests {
         assert_eq!(pins.len(), 3);
         assert!(matches!(&pins[0], Item::Album(album) if album.id == "39611356"));
         assert!(matches!(&pins[1], Item::Artist(artist) if artist.name == "Metallica"));
-        assert!(
-            matches!(&pins[2], Item::Playlist(playlist) if playlist.key == PlaylistKey { owner: 103372440, kind: 2131 })
-        );
+        assert!(matches!(&pins[2], Item::Playlist(playlist) if playlist.key == PlaylistKey::new(103372440, 2131)));
     }
 
     #[test]

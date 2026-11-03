@@ -71,7 +71,7 @@ pub(crate) fn player_with(settings: Settings) -> (Player, MockOutput) {
         Player::with_output(settings, Arc::new(FakeProvider(fake().clone())), Box::new(output.clone()), mock::loader());
     player.persist = false;
     player.service = Some(fake().clone());
-    player.account = Some(Account { uid: 1, ..Account::default() });
+    player.account = Some(Account { id: "1".into(), ..Account::default() });
     (player, output)
 }
 

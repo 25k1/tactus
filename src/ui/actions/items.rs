@@ -35,7 +35,7 @@ impl Ui {
         ListContext {
             in_queue: *self.location.borrow() == Location::Section(Section::Queue),
             own_playlist: match &content.subject {
-                Some(Item::Playlist(playlist)) if player.is_own(playlist) => Some(playlist.key),
+                Some(Item::Playlist(playlist)) if player.is_own(playlist) => Some(playlist.key.clone()),
                 _ => None,
             },
             section: content.sections.get(self.browser.section_index()).map(|section| section.kind),
@@ -145,9 +145,7 @@ impl Ui {
             ItemAction::CopyLink => {
                 let links: Vec<String> = picked
                     .iter()
-                    .filter_map(|(_, entry)| {
-                        entry.item().and_then(Item::link).or_else(|| entry.track().map(Track::link))
-                    })
+                    .filter_map(|(_, entry)| self.player.borrow().share_link(entry.item(), entry.track()))
                     .collect();
                 self.copy(&links.join("\r\n"));
             }
@@ -300,9 +298,7 @@ impl Ui {
             (ItemAction::TrackInfo, _) if let Some(track) = track => {
                 self.act(|player| player.request_track_info(track));
             }
-            (ItemAction::CopyLink, _)
-                if let Some(link) = item.and_then(Item::link).or_else(|| track.map(Track::link)) =>
-            {
+            (ItemAction::CopyLink, _) if let Some(link) = self.player.borrow().share_link(item, track) => {
                 self.copy(&link);
             }
             (ItemAction::Rename, Some(Item::Playlist(playlist))) => {

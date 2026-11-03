@@ -2,7 +2,7 @@ use super::*;
 
 impl AccountService for YandexService {
     fn account(&self) -> Result<Account> {
-        Ok(parse::account(&net::block_on(self.get("account/status", &[]))?))
+        net::block_on(self.fetch_account())
     }
 
     fn account_settings(&self) -> Result<AccountSettings> {

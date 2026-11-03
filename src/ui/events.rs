@@ -123,7 +123,7 @@ impl Ui {
                     dialogs::show_text(
                         &self.frame,
                         &crate::i18n::fl!("menu-track-info"),
-                        &view_model::track_info(&info),
+                        &view_model::track_info(&info, self.player.borrow().share_link(None, Some(&info.track))),
                     );
                 }
                 Event::ConcertLocations(locations) => self.choose_concert_location(&locations),

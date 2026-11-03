@@ -10,6 +10,7 @@ pub mod net;
 mod provider;
 pub mod proxy;
 mod service;
+pub mod sync;
 
 pub use capabilities::Capabilities;
 pub use model::*;

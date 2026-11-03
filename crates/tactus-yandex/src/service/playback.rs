@@ -24,7 +24,8 @@ impl PlaybackService for YandexService {
         })
     }
 
-    fn report_play(&self, uid: u64, play: &Play) -> Result<()> {
+    fn report_play(&self, play: &Play) -> Result<()> {
+        let uid = net::block_on(self.uid())?;
         let now = chrono::Utc::now();
         let length = (play.track.duration_ms / 1000) as u32;
         let mut options = PlayAudioOptions::new(play.from.clone())

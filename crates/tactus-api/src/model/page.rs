@@ -146,7 +146,7 @@ impl View {
         Some(match item {
             Item::Album(album) => View::Album(album.id.clone()),
             Item::Artist(artist) => View::Artist(artist.id.clone()),
-            Item::Playlist(playlist) => View::Playlist(playlist.key),
+            Item::Playlist(playlist) => View::Playlist(playlist.key.clone()),
             Item::Tag(tag) => View::Tag(tag.id.clone()),
             Item::Genre(genre) => View::Genre(genre.id.clone()),
             Item::Category(category) => View::Category(category.id.clone()),

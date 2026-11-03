@@ -48,6 +48,14 @@ impl Player {
         self.provider.destination(link)
     }
 
+    pub fn share_link(&self, item: Option<&Item>, track: Option<&Track>) -> Option<String> {
+        match (item, track) {
+            (Some(item), _) => self.provider.share_link(item),
+            (None, Some(track)) => self.provider.share_link(&Item::Track(track.clone())),
+            (None, None) => None,
+        }
+    }
+
     pub(super) fn finish_login(&mut self, token: &str) {
         self.login = LoginState::Idle;
         if let Err(error) = settings::save_token(token) {
@@ -112,7 +120,7 @@ impl Player {
     pub(super) fn initialize(&mut self) {
         self.last_connect = Some(Instant::now());
         self.spawn(
-            |service, _| service.account(),
+            |service| service.account(),
             |player, result| {
                 let account = match result {
                     Ok(account) => account,
@@ -143,7 +151,7 @@ impl Player {
                 player.refresh_library();
                 player.refresh_playlists();
                 player.spawn(
-                    |service, _| service.account_settings(),
+                    |service| service.account_settings(),
                     |player, result| {
                         if let Ok(settings) = result {
                             player.account_settings = settings;
@@ -171,7 +179,7 @@ impl Player {
             self.open_current(autoplay, session.position_ms);
         } else if self.settings.sync_queue {
             self.spawn(
-                |service, _| {
+                |service| {
                     let Some(queue) = service.active_queue()? else {
                         return Ok(None);
                     };
@@ -194,7 +202,7 @@ impl Player {
 
     pub fn refresh_library(&mut self) {
         self.spawn(
-            |service, uid| service.library(uid),
+            |service| service.library(),
             |player, result| match result {
                 Ok(library) => {
                     player.library = library;
@@ -207,7 +215,7 @@ impl Player {
 
     pub fn refresh_playlists(&mut self) {
         self.spawn(
-            |service, uid| service.playlists(uid),
+            |service| service.playlists(),
             |player, result| {
                 if let Ok(playlists) = result {
                     player.playlists = playlists;
@@ -218,12 +226,12 @@ impl Player {
     }
 
     pub fn is_own(&self, playlist: &Playlist) -> bool {
-        self.uid() != 0 && playlist.key.owner == self.uid()
+        self.account.as_ref().is_some_and(|account| !account.id.is_empty() && playlist.key.owner == account.id)
     }
 
     pub fn set_account_option(&mut self, option: AccountOption, enabled: bool) {
         self.request(
-            move |service, _| service.set_account_option(option, enabled),
+            move |service| service.set_account_option(option, enabled),
             move |player, ()| {
                 match player.account_settings.iter_mut().find(|(candidate, _)| *candidate == option) {
                     Some(entry) => entry.1 = enabled,
@@ -241,11 +249,11 @@ impl Player {
             return;
         }
         self.request(
-            move |service, _| service.consume_promo_code(&code),
+            move |service| service.consume_promo_code(&code),
             |player, status| {
                 player.notice(Notice::Promo(status));
                 player.request(
-                    |service, _| service.account(),
+                    |service| service.account(),
                     |player, account| {
                         player.account = Some(account);
                         player.emit(Event::Account);

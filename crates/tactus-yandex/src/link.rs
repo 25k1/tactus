@@ -1,6 +1,7 @@
-use tactus_api::{Destination, PlaylistKey, PlaylistLink, View};
+use tactus_api::{Destination, Item, PlaylistKey, PlaylistLink, View};
 
 const SCHEME: &str = "yandexmusic://";
+const WEB: &str = "https://music.yandex.ru";
 
 fn query_value(query: &str, key: &str) -> Option<String> {
     query
@@ -29,7 +30,7 @@ pub fn destination(link: &str) -> Option<Destination> {
     let destination = parse_path(path)?;
     match (destination, query_value(query, "token")) {
         (Destination::View(View::Playlist(key)), Some(token)) => Some(Destination::Join {
-            playlist: PlaylistLink::Owner { owner: key.owner.to_string(), kind: key.kind },
+            playlist: PlaylistLink::Owner { kind: key.id.parse().unwrap_or_default(), owner: key.owner },
             token,
         }),
         (Destination::Playlist(playlist), Some(token)) => Some(Destination::Join { playlist, token }),
@@ -46,7 +47,7 @@ fn parse_path(path: &str) -> Option<Destination> {
         ["users", owner, "playlists", kind, ..] => {
             let kind = kind.parse().ok()?;
             return Some(match owner.parse() {
-                Ok(owner) => Destination::View(View::Playlist(PlaylistKey { owner, kind })),
+                Ok::<u64, _>(owner) => Destination::View(View::Playlist(PlaylistKey::new(owner, kind))),
                 Err(_) => Destination::Playlist(PlaylistLink::Owner { owner: (*owner).to_owned(), kind }),
             });
         }
@@ -62,6 +63,22 @@ fn parse_path(path: &str) -> Option<Destination> {
         _ => return None,
     };
     Some(Destination::View(view))
+}
+
+pub fn share(item: &Item) -> Option<String> {
+    Some(match item {
+        Item::Track(track) if track.album_id.is_empty() => format!("{WEB}/track/{}", track.id),
+        Item::Track(track) => format!("{WEB}/album/{}/track/{}", track.album_id, track.id),
+        Item::Album(album) => format!("{WEB}/album/{}", album.id),
+        Item::Artist(artist) => format!("{WEB}/artist/{}", artist.id),
+        Item::Playlist(playlist) => format!("{WEB}/users/{}/playlists/{}", playlist.key.owner, playlist.key.id),
+        Item::Tag(tag) => format!("{WEB}/tag/{}", tag.id),
+        Item::Category(category) => format!("{WEB}/non-music/category/{}", category.id),
+        Item::Chart(_) => format!("{WEB}/chart"),
+        Item::Link(link) => link.url.clone(),
+        Item::Concert(concert) => concert.url.clone(),
+        Item::Station(_) | Item::Genre(_) => return None,
+    })
 }
 
 #[cfg(test)]
@@ -92,7 +109,7 @@ mod tests {
         assert_eq!(view("https://music.yandex.ru/label/6074020"), Some(View::Label("6074020".into())));
         assert_eq!(
             view("https://music.yandex.ru/users/970829816/playlists/1104"),
-            Some(View::Playlist(PlaylistKey { owner: 970829816, kind: 1104 }))
+            Some(View::Playlist(PlaylistKey::new(970829816, 1104)))
         );
     }
 
@@ -143,5 +160,13 @@ mod tests {
         ] {
             assert_eq!(destination(link), None, "{link}");
         }
+    }
+
+    #[test]
+    fn shares_round_trip_through_the_parser() {
+        let track = Item::Track(tactus_api::fake::track("456"));
+        let link = share(&track).unwrap();
+        assert_eq!(link, "https://music.yandex.ru/album/70/track/456");
+        assert_eq!(destination(&link), Some(Destination::View(View::Track("456".into()))));
     }
 }

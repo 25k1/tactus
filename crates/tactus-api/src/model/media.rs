@@ -1,14 +1,18 @@
 use super::*;
 
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct PlaylistKey {
-    pub owner: u64,
-    pub kind: u32,
+    pub owner: String,
+    pub id: String,
 }
 
 impl PlaylistKey {
-    pub fn seed(self) -> String {
-        format!("playlist:{}_{}", self.owner, self.kind)
+    pub fn new(owner: impl ToString, id: impl ToString) -> Self {
+        Self { owner: owner.to_string(), id: id.to_string() }
+    }
+
+    pub fn seed(&self) -> String {
+        format!("playlist:{}_{}", self.owner, self.id)
     }
 }
 
@@ -62,14 +66,6 @@ pub struct Loudness {
 impl Track {
     pub fn full_title(&self) -> String {
         if self.version.is_empty() { self.title.clone() } else { format!("{} ({})", self.title, self.version) }
-    }
-
-    pub fn link(&self) -> String {
-        if self.album_id.is_empty() {
-            format!("https://music.yandex.ru/track/{}", self.id)
-        } else {
-            format!("https://music.yandex.ru/album/{}/track/{}", self.album_id, self.id)
-        }
     }
 }
 
@@ -220,28 +216,11 @@ impl Item {
             Item::Track(track) => Target::Track(track.clone()),
             Item::Album(album) => Target::Album(album.id.clone()),
             Item::Artist(artist) => Target::Artist(artist.id.clone()),
-            Item::Playlist(playlist) => Target::Playlist(playlist.key),
+            Item::Playlist(playlist) => Target::Playlist(playlist.key.clone()),
             Item::Station(station) => Target::Wave(station.seed.clone()),
             Item::Tag(_) | Item::Genre(_) | Item::Category(_) | Item::Link(_) | Item::Chart(_) | Item::Concert(_) => {
                 return None;
             }
-        })
-    }
-
-    pub fn link(&self) -> Option<String> {
-        Some(match self {
-            Item::Track(track) => track.link(),
-            Item::Album(album) => format!("https://music.yandex.ru/album/{}", album.id),
-            Item::Artist(artist) => format!("https://music.yandex.ru/artist/{}", artist.id),
-            Item::Playlist(playlist) => {
-                format!("https://music.yandex.ru/users/{}/playlists/{}", playlist.key.owner, playlist.key.kind)
-            }
-            Item::Tag(tag) => format!("https://music.yandex.ru/tag/{}", tag.id),
-            Item::Category(category) => format!("https://music.yandex.ru/non-music/category/{}", category.id),
-            Item::Link(link) => link.url.clone(),
-            Item::Chart(_) => "https://music.yandex.ru/chart".to_owned(),
-            Item::Concert(concert) => concert.url.clone(),
-            Item::Station(_) | Item::Genre(_) => return None,
         })
     }
 

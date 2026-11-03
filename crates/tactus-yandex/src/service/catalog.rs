@@ -28,8 +28,8 @@ impl YandexService {
         }
     }
 
-    async fn collection(&self, uid: u64) -> Result<Page> {
-        let base = format!("users/{uid}");
+    async fn collection(&self) -> Result<Page> {
+        let base = format!("users/{}", self.uid().await?);
         let (liked, disliked, albums, artists, playlists, disliked_artists, pins) = tokio::join!(
             self.get(&format!("{base}/likes/tracks"), &[]),
             self.get(&format!("{base}/dislikes/tracks"), &[]),
@@ -54,7 +54,7 @@ impl YandexService {
         if !pinned.is_empty() {
             page.sections.insert(0, Section::new(SectionKind::Pinned, "", pinned));
         }
-        let presaved: Vec<Item> = self.presaves(uid).await.unwrap_or_default().into_iter().map(Item::Album).collect();
+        let presaved: Vec<Item> = self.presaves().await.unwrap_or_default().into_iter().map(Item::Album).collect();
         if !presaved.is_empty() {
             page.sections.push(Section::new(SectionKind::Presaves, "", presaved));
         }
@@ -91,10 +91,14 @@ impl YandexService {
         Ok(page)
     }
 
-    async fn playlist(&self, key: PlaylistKey, uid: u64) -> Result<Page> {
-        let path = format!("users/{}/playlists/{}", key.owner, key.kind);
+    async fn playlist(&self, key: &PlaylistKey) -> Result<Page> {
+        let path = format!("users/{}/playlists/{}", key.owner, key.id);
         let suggestions = async {
-            if key.owner == uid { self.get(&format!("{path}/recommendations"), &[]).await.ok() } else { None }
+            if key.owner == self.uid().await.unwrap_or_default().to_string() {
+                self.get(&format!("{path}/recommendations"), &[]).await.ok()
+            } else {
+                None
+            }
         };
         let (playlist, suggestions) = tokio::join!(self.get(&path, &[("rich-tracks", "true")]), suggestions);
         let playlist = playlist?;
@@ -134,18 +138,18 @@ impl YandexService {
 }
 
 impl CatalogService for YandexService {
-    fn page(&self, view: &View, uid: u64) -> Result<Page> {
+    fn page(&self, view: &View) -> Result<Page> {
         net::block_on(async {
             Ok::<_, Error>(match view {
                 View::Search(query) => self.search(query).await?,
                 View::Waves => parse::waves(&self.get("landing-blocks/waves", &[]).await?),
                 View::ForYou => self.for_you().await?,
-                View::Collection => self.collection(uid).await?,
+                View::Collection => self.collection().await?,
                 View::Playlists => Page {
                     sections: vec![Section::new(
                         SectionKind::Playlists,
                         "",
-                        parse::playlists(&self.get(&format!("users/{uid}/playlists/list"), &[]).await?)
+                        parse::playlists(&self.get(&format!("users/{}/playlists/list", self.uid().await?), &[]).await?)
                             .into_iter()
                             .map(Item::Playlist)
                             .collect(),
@@ -208,7 +212,7 @@ impl CatalogService for YandexService {
                     page
                 }
                 View::Artist(id) => self.artist(id).await?,
-                View::Playlist(key) => self.playlist(*key, uid).await?,
+                View::Playlist(key) => self.playlist(key).await?,
                 View::Track(id) => {
                     let (full, similar) = tokio::join!(
                         self.get(&format!("tracks/{id}/full-info"), &[]),
@@ -338,7 +342,7 @@ impl CatalogService for YandexService {
         let path = match target {
             Target::Album(id) => format!("albums/{id}/trailer"),
             Target::Artist(id) => format!("artists/{id}/trailer"),
-            Target::Playlist(key) => format!("users/{}/playlists/{}/trailer", key.owner, key.kind),
+            Target::Playlist(key) => format!("users/{}/playlists/{}/trailer", key.owner, key.id),
             Target::Track(track) => format!("tracks/{}/trailer", track.id),
             Target::Wave(_) => return Err(Error::Unsupported),
         };

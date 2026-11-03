@@ -86,7 +86,7 @@ impl Library {
         if let Target::Playlist(key) = target {
             if relation == Relation::Like {
                 if on {
-                    self.liked_playlists.insert(*key);
+                    self.liked_playlists.insert(key.clone());
                 } else {
                     self.liked_playlists.remove(key);
                 }

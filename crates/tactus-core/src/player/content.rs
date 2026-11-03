@@ -73,7 +73,7 @@ impl Player {
         let key = view.clone();
         let target = view.clone();
         self.spawn(
-            move |service, uid| service.page(&key, uid),
+            move |service| service.page(&key),
             move |player, result| {
                 let state = match result {
                     Ok(page) => PageState::Ready(page),
@@ -112,7 +112,7 @@ impl Player {
         }
         let (key, target) = (view.clone(), view.clone());
         self.spawn(
-            move |service, _| service.more(&key, kind, next),
+            move |service| service.more(&key, kind, next),
             move |player, result| {
                 player.loading_more.remove(&(target.clone(), section));
                 let paged = match result {
@@ -150,7 +150,7 @@ impl Player {
         }
         let key = view.clone();
         self.request(
-            move |service, uid| service.page(&key, uid),
+            move |service| service.page(&key),
             move |player, page| {
                 player.pages.insert(view.clone(), PageState::Ready(page.clone()));
                 player.emit(Event::Page(view));
@@ -166,7 +166,7 @@ impl Player {
         }
         let query = text.clone();
         self.spawn(
-            move |service, _| service.suggestions(&query),
+            move |service| service.suggestions(&query),
             move |player, result| {
                 if let Ok(suggestions) = result {
                     player.emit(Event::Suggestions(text, suggestions));
@@ -177,16 +177,16 @@ impl Player {
 
     pub fn open_playlist_link(&mut self, link: tactus_api::PlaylistLink) {
         self.request(
-            move |service, _| service.find_playlist(&link),
+            move |service| service.find_playlist(&link),
             |player, key| player.emit(Event::Open(View::Playlist(key))),
         );
     }
 
     pub fn join_playlist(&mut self, link: tactus_api::PlaylistLink, token: String) {
         self.request(
-            move |service, _| {
+            move |service| {
                 let key = service.find_playlist(&link)?;
-                service.join_collective(key.owner, &token)?;
+                service.join_collective(&key.owner, &token)?;
                 Ok(key)
             },
             |player, key| {
@@ -199,14 +199,14 @@ impl Player {
 
     pub fn play_trailer(&mut self, target: Target) {
         self.request(
-            move |service, _| service.trailer(&target),
+            move |service| service.trailer(&target),
             |player, tracks| player.play_tracks(tracks, 0, "trailer"),
         );
     }
 
     pub fn request_concert_locations(&mut self) {
         self.request(
-            |service, _| service.concert_locations(),
+            |service| service.concert_locations(),
             |player, locations| {
                 player.emit(Event::ConcertLocations(locations));
             },
@@ -224,7 +224,7 @@ impl Player {
     pub fn request_track_info(&mut self, track: &Track) {
         let id = track.id.clone();
         self.request(
-            move |service, _| service.track_info(&id),
+            move |service| service.track_info(&id),
             |player, info| player.emit(Event::TrackInfo(Box::new(info))),
         );
     }

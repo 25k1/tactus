@@ -58,7 +58,7 @@ fn undoing_a_dislike_restores_the_like() {
 #[test]
 fn undoes_playlist_removals_after_they_succeed() {
     let mut player = player();
-    let playlist = Playlist { key: PlaylistKey { owner: 1, kind: 4 }, ..Playlist::default() };
+    let playlist = Playlist { key: PlaylistKey::new(1, 4), ..Playlist::default() };
     let removed = vec![(1, track("p1")), (3, track("p3"))];
     player.change_playlist(&playlist, PlaylistEdit::Remove(removed.clone()));
     let events = settle(&mut player);
@@ -90,7 +90,7 @@ fn uploads_files_into_a_playlist() {
     let mut player = player();
     let file = std::env::temp_dir().join(format!("tactus-upload-{}.mp3", std::process::id()));
     std::fs::write(&file, b"ID3").unwrap();
-    let playlist = Playlist { key: PlaylistKey { owner: 1, kind: 6 }, ..Playlist::default() };
+    let playlist = Playlist { key: PlaylistKey::new(1, 6), ..Playlist::default() };
     player.upload(&playlist, vec![file.clone()]);
     let events = settle(&mut player);
     std::fs::remove_file(&file).unwrap();
@@ -123,7 +123,7 @@ fn joins_collective_playlists_and_plays_trailers() {
     player.join_playlist(tactus_api::PlaylistLink::Owner { owner: "42".into(), kind: 7 }, "secret".into());
     let events = settle(&mut player);
     assert!(events.contains(&Event::Notice(Notice::JoinedPlaylist)));
-    assert!(events.contains(&Event::Open(View::Playlist(PlaylistKey { owner: 42, kind: 7 }))));
+    assert!(events.contains(&Event::Open(View::Playlist(PlaylistKey::new(42, 7)))));
     assert!(fake().calls().contains(&"join 42 secret".to_owned()));
     player.play_trailer(Target::Artist("3121".into()));
     settle(&mut player);

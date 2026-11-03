@@ -8,6 +8,7 @@ use tactus_api::error::{Error, Result};
 use tactus_api::model::*;
 use tactus_api::net;
 use tactus_api::proxy::encode_component;
+use tactus_api::sync::Guard;
 use tactus_api::*;
 use yandex_music::api::account::consume_promo_code::ConsumePromoCodeOptions;
 use yandex_music::api::album::add_liked_album::AddLikedAlbumOptions;
@@ -60,6 +61,12 @@ impl<T> ClientResult<T> for std::result::Result<T, ClientError> {
 pub struct YandexService {
     http: reqwest::Client,
     client: YandexMusicClient,
+    uid: std::sync::Mutex<Option<u64>>,
+}
+
+fn numeric_key(key: &PlaylistKey) -> Result<(u64, u32)> {
+    let invalid = || Error::NotFound(format!("playlist {}:{}", key.owner, key.id));
+    Ok((key.owner.parse().map_err(|_| invalid())?, key.id.parse().map_err(|_| invalid())?))
 }
 
 async fn send(request: RequestBuilder) -> Result<Value> {
@@ -97,7 +104,28 @@ impl YandexService {
         }
         let http = net::builder(headers).build()?;
         let client = YandexMusicClient::builder(token).custom_client(http.clone()).build().api()?;
-        Ok(Self { http, client })
+        Ok(Self { http, client, uid: std::sync::Mutex::default() })
+    }
+
+    fn cached_uid(&self) -> Option<u64> {
+        *self.uid.guard()
+    }
+
+    fn remember_account(&self, account: &Account) {
+        *self.uid.guard() = account.id.parse().ok();
+    }
+
+    async fn fetch_account(&self) -> Result<Account> {
+        let account = parse::account(&self.get("account/status", &[]).await?);
+        self.remember_account(&account);
+        Ok(account)
+    }
+
+    async fn uid(&self) -> Result<u64> {
+        match self.cached_uid() {
+            Some(uid) => Ok(uid),
+            None => Ok(self.fetch_account().await?.id.parse().unwrap_or_default()),
+        }
     }
 
     fn get(&self, path: &str, query: &[(&str, &str)]) -> impl Future<Output = Result<Value>> + use<> {
@@ -146,7 +174,7 @@ impl YandexService {
         if keys.is_empty() {
             return Ok(Vec::new());
         }
-        let ids: Vec<String> = keys.iter().map(|key| format!("{}:{}", key.owner, key.kind)).collect();
+        let ids: Vec<String> = keys.iter().map(|key| format!("{}:{}", key.owner, key.id)).collect();
         let ids = ids.join(",");
         Ok(parse::playlists(&self.post("playlists/list", &[("playlist-ids", ids.as_str())]).await?))
     }

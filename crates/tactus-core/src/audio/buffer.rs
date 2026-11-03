@@ -7,6 +7,7 @@ use std::sync::{Arc, Condvar, Mutex, MutexGuard, Weak};
 use std::time::Duration;
 use tactus_api::error::{Error, Result};
 use tactus_api::net;
+use tactus_api::sync::Guard;
 
 const RESUME_DELAYS: [Duration; 3] = [Duration::from_secs(1), Duration::from_secs(3), Duration::from_secs(10)];
 
@@ -46,7 +47,7 @@ impl Buffer {
     }
 
     fn lock(&self) -> MutexGuard<'_, State> {
-        self.state.lock().unwrap_or_else(std::sync::PoisonError::into_inner)
+        self.state.guard()
     }
 
     fn update(&self, change: impl FnOnce(&mut State)) {

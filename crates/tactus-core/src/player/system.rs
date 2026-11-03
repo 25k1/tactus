@@ -40,6 +40,11 @@ impl Player {
         self.media(MediaCommand::Playback { playing: self.playing, position_ms: self.position_ms });
     }
 
+    pub(super) fn playback_changed(&mut self) {
+        self.emit(Event::Playback);
+        self.media_playback();
+    }
+
     pub fn update_settings(&mut self, update: impl FnOnce(&mut Settings)) {
         let old = self.settings.clone();
         update(&mut self.settings);
