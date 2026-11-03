@@ -100,6 +100,7 @@ impl Player {
 
     pub(super) fn halt(&mut self) {
         self.audio.stop();
+        self.stream_retries = None;
         self.playing = false;
         self.emit(Event::Playback);
         self.media_playback();

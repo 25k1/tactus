@@ -1,3 +1,4 @@
+use super::buffer::Cancel;
 use super::equalizer::{self, Equalizer, Gains};
 use super::tempo::{Speed, Tempo};
 use super::{Buffer, Loaded, Output, Start};
@@ -51,7 +52,17 @@ struct Voice {
     position_ms: Arc<AtomicU64>,
     gain: f32,
     replay: Option<(Arc<Buffer>, Codec)>,
+    cancel: Option<Cancel>,
     ramp: Option<Ramp>,
+}
+
+impl Drop for Voice {
+    fn drop(&mut self) {
+        self.sink.stop();
+        if let Some(cancel) = &self.cancel {
+            cancel.cancel();
+        }
+    }
 }
 
 impl Voice {
@@ -113,7 +124,7 @@ impl RodioOutput {
             self.stream = Some(open_stream(&self.device)?);
         }
         let stream = self.stream.as_ref().ok_or_else(|| Error::Audio("no audio output".into()))?;
-        let Loaded { mut source, replay } = track;
+        let Loaded { mut source, replay, cancel } = track;
         let at = if !start.at.is_zero() && source.try_seek(start.at).is_ok() { start.at } else { Duration::ZERO };
         let position_ms = Arc::new(AtomicU64::new(at.as_millis() as u64));
         let sink = Player::connect_new(stream.mixer());
@@ -121,7 +132,7 @@ impl RodioOutput {
         let tempo = Tempo::new(source, self.speed.clone(), position_ms.clone(), at);
         sink.append(Equalizer::new(tempo, self.equalizer.clone()));
         let ramp = (!start.fade.is_zero()).then(|| Ramp::new(0.0, 1.0, start.fade, Then::Keep));
-        let voice = Voice { sink, position_ms, gain: start.gain, replay, ramp };
+        let voice = Voice { sink, position_ms, gain: start.gain, replay, cancel, ramp };
         voice.apply(self.volume);
         if start.playing {
             voice.sink.play();
@@ -133,9 +144,7 @@ impl RodioOutput {
         let Some(mut voice) = self.current.take() else {
             return;
         };
-        if fade.is_zero() {
-            voice.sink.stop();
-        } else {
+        if !fade.is_zero() {
             voice.ramp = Some(Ramp::new(voice.level(), 0.0, fade, Then::Stop));
             self.outgoing.push(voice);
         }
@@ -161,7 +170,7 @@ impl Output for RodioOutput {
 
     fn stop(&mut self) {
         self.retire(Duration::ZERO);
-        self.outgoing.drain(..).for_each(|voice| voice.sink.stop());
+        self.outgoing.clear();
     }
 
     fn is_loaded(&self) -> bool {
@@ -196,6 +205,10 @@ impl Output for RodioOutput {
 
     fn finished(&self) -> bool {
         self.current.as_ref().is_some_and(|voice| voice.sink.empty())
+    }
+
+    fn failed(&self) -> bool {
+        self.current.as_ref().and_then(|voice| voice.replay.as_ref()).is_some_and(|(buffer, _)| buffer.failed())
     }
 
     fn set_volume(&mut self, volume: u8) {
@@ -238,11 +251,7 @@ impl Output for RodioOutput {
         let volume = self.volume;
         self.outgoing.retain(|voice| {
             voice.apply(volume);
-            let done = voice.ramp.is_none_or(|ramp| ramp.done());
-            if done {
-                voice.sink.stop();
-            }
-            !done
+            voice.ramp.is_some_and(|ramp| !ramp.done())
         });
         if let Some(voice) = &mut self.current {
             voice.apply(volume);

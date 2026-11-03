@@ -13,6 +13,7 @@ pub struct State {
     pub playing: bool,
     pub position: Duration,
     pub finished: bool,
+    pub failed: bool,
     pub volume: u8,
     pub speed: f32,
     pub gains: Gains,
@@ -35,6 +36,7 @@ impl MockOutput {
         state.playing = start.playing;
         state.position = start.at;
         state.finished = false;
+        state.failed = false;
     }
 }
 
@@ -74,6 +76,10 @@ impl Output for MockOutput {
 
     fn finished(&self) -> bool {
         self.0.borrow().finished
+    }
+
+    fn failed(&self) -> bool {
+        self.0.borrow().failed
     }
 
     fn set_volume(&mut self, volume: u8) {

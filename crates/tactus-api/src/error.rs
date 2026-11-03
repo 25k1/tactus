@@ -84,6 +84,10 @@ impl Error {
         }
     }
 
+    pub fn is_transient(&self) -> bool {
+        matches!(self.kind(), ErrorKind::Network | ErrorKind::Server | ErrorKind::RateLimited)
+    }
+
     pub fn failure(&self) -> Failure {
         Failure { kind: self.kind(), detail: self.to_string() }
     }
@@ -118,5 +122,14 @@ mod tests {
         let failure = Error::NotFound("album 5".into()).failure();
         assert_eq!(failure, Failure { kind: ErrorKind::NotFound, detail: "album 5 was not found".into() });
         assert_eq!(Error::Expired.kind(), ErrorKind::Expired);
+    }
+
+    #[test]
+    fn only_connection_and_server_trouble_is_transient() {
+        let status = |status| Error::Status { status, message: String::new() };
+        assert!(status(503).is_transient());
+        assert!(status(429).is_transient());
+        assert!(!status(403).is_transient());
+        assert!(!Error::Audio("bad frame".into()).is_transient());
     }
 }

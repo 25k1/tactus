@@ -45,7 +45,7 @@ tactus-core = { path = "crates/tactus-core" }
 tactus-voice = { path = "crates/tactus-voice" }
 yandex-music = "0.7"
 reqwest = { version = "0.13", default-features = false, features = ["default-tls", "system-proxy", "socks", "json", "form", "query"] }
-tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 thiserror = { version = "2", default-features = false }

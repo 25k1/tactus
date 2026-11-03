@@ -45,6 +45,11 @@ const SAVE_INTERVAL: Duration = Duration::from_secs(15);
 const FINISH_GUARD: Duration = Duration::from_secs(2);
 const EPISODE_CHECK_INTERVAL: Duration = Duration::from_secs(3 * 60 * 60);
 const RECONNECT_INTERVAL: Duration = Duration::from_secs(30);
+#[cfg(not(test))]
+const STREAM_RETRY_DELAYS: [Duration; 4] =
+    [Duration::from_secs(2), Duration::from_secs(5), Duration::from_secs(10), Duration::from_secs(30)];
+#[cfg(test)]
+const STREAM_RETRY_DELAYS: [Duration; 4] = [Duration::from_millis(1); 4];
 pub const SEEK_STEP_MS: i64 = 10_000;
 pub const VOLUME_STEP: i16 = 5;
 pub const SPEED_STEP: f32 = 0.1;
@@ -108,6 +113,7 @@ pub struct Player {
     generation: u64,
     login_generation: u64,
     prefetched: Option<(String, Loaded)>,
+    stream_retries: Option<usize>,
     prefetching: Option<String>,
     loading_more: HashSet<(View, usize)>,
     undo: Vec<Undo>,
@@ -175,6 +181,7 @@ impl Player {
             generation: 0,
             login_generation: 0,
             prefetched: None,
+            stream_retries: None,
             prefetching: None,
             loading_more: HashSet::new(),
             undo: Vec::new(),

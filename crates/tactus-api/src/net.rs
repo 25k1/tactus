@@ -48,6 +48,10 @@ pub fn spawn<F: Future<Output = ()> + Send + 'static>(future: F) {
     RUNTIME.spawn(future);
 }
 
+pub async fn sleep(duration: Duration) {
+    tokio::time::sleep(duration).await;
+}
+
 pub fn spawn_blocking(task: impl FnOnce() + Send + 'static) {
     RUNTIME.spawn_blocking(task);
 }
@@ -59,6 +63,8 @@ pub fn builder(mut headers: HeaderMap) -> reqwest::ClientBuilder {
     let builder = reqwest::Client::builder()
         .user_agent(concat!("Tactus/", env!("CARGO_PKG_VERSION")))
         .connect_timeout(Duration::from_secs(15))
+        .read_timeout(Duration::from_secs(20))
+        .tcp_keepalive(Duration::from_secs(30))
         .default_headers(headers);
     match active_proxy().and_then(|proxy| reqwest::Proxy::all(proxy.url()).ok()) {
         Some(proxy) => builder.proxy(proxy),

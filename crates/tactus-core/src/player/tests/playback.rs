@@ -38,6 +38,22 @@ fn advances_when_a_track_finishes_and_repeats_one() {
 }
 
 #[test]
+fn reopens_a_dropped_stream_at_the_same_position() {
+    let (mut player, output) = player_with(Settings::default());
+    player.play_tracks(tracks(&["1", "2"]), 0, "test");
+    settle(&mut player);
+    at(&output, 42);
+    output.0.borrow_mut().failed = true;
+    let events = finish_track(&mut player, &output);
+    assert_eq!(player.track.as_ref().unwrap().id, "1");
+    assert!(player.playing && player.stream_retries.is_none());
+    let last = *output.0.borrow().starts.last().unwrap();
+    assert_eq!(last.at, Duration::from_secs(42));
+    let notices: Vec<&Event> = events.iter().filter(|event| matches!(event, Event::Notice(_))).collect();
+    assert_eq!(notices, [&Event::Notice(Notice::Offline), &Event::Notice(Notice::Online)]);
+}
+
+#[test]
 fn crossfades_into_the_prefetched_track() {
     let settings = Settings { crossfade: 5, ..Settings::default() };
     let (mut player, output) = player_with(settings);

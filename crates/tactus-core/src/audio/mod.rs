@@ -9,7 +9,7 @@ mod tempo;
 mod ts;
 
 pub use buffer::Buffer;
-use buffer::Reader;
+use buffer::{Cancel, Reader};
 pub use equalizer::{BANDS, Gains, Preset};
 pub use output::RodioOutput;
 use rodio::cpal::traits::{DeviceTrait, HostTrait};
@@ -28,15 +28,23 @@ pub type Track = Box<dyn Source + Send>;
 pub struct Loaded {
     source: Track,
     replay: Option<(Arc<Buffer>, Codec)>,
+    cancel: Option<Cancel>,
 }
 
 impl Loaded {
     pub fn from_source(source: Track) -> Self {
-        Self { source, replay: None }
+        Self { source, replay: None, cancel: None }
     }
 
     fn reload((buffer, codec): (Arc<Buffer>, Codec)) -> Result<Loaded> {
-        Ok(Loaded { source: Box::new(decode(&buffer, codec)?), replay: Some((buffer, codec)) })
+        let reader = buffer.reader();
+        let cancel = reader.cancel();
+        let source = decode(reader, &buffer, codec)?;
+        Ok(Loaded { source: Box::new(source), replay: Some((buffer, codec)), cancel: Some(cancel) })
+    }
+
+    pub fn failed(&self) -> bool {
+        self.replay.as_ref().is_some_and(|(buffer, _)| buffer.failed())
     }
 }
 
@@ -65,6 +73,7 @@ pub trait Output {
     fn position(&self) -> Duration;
     fn seek(&mut self, position: Duration);
     fn finished(&self) -> bool;
+    fn failed(&self) -> bool;
     fn set_volume(&mut self, volume: u8);
     fn set_speed(&mut self, speed: f32);
     fn set_equalizer(&mut self, gains: &Gains);
@@ -73,8 +82,8 @@ pub trait Output {
     fn tick(&mut self);
 }
 
-fn decode(buffer: &Arc<Buffer>, codec: Codec) -> Result<Decoder<Reader>> {
-    let mut builder = Decoder::builder().with_data(buffer.reader()).with_hint(codec.extension()).with_seekable(true);
+fn decode(reader: Reader, buffer: &Buffer, codec: Codec) -> Result<Decoder<Reader>> {
+    let mut builder = Decoder::builder().with_data(reader).with_hint(codec.extension()).with_seekable(true);
     if let Some(total) = buffer.total() {
         builder = builder.with_byte_len(total);
     }
@@ -86,8 +95,7 @@ pub fn load(source: &AudioSource) -> Result<Loaded> {
         Some(path) => Buffer::complete(std::fs::read(path)?),
         None => Buffer::fetch(source.url.clone()),
     };
-    let decoder = decode(&buffer, source.codec)?;
-    Ok(Loaded { source: Box::new(decoder), replay: Some((buffer, source.codec)) })
+    Loaded::reload((buffer, source.codec))
 }
 
 pub fn loader() -> Loader {

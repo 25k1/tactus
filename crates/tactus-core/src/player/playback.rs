@@ -25,7 +25,7 @@ impl Player {
 
     fn take_prefetched(&mut self, id: &str) -> Option<Loaded> {
         match self.prefetched.take() {
-            Some((prefetched, loaded)) if prefetched == id => Some(loaded),
+            Some((prefetched, loaded)) if prefetched == id && !loaded.failed() => Some(loaded),
             _ => None,
         }
     }
@@ -51,6 +51,10 @@ impl Player {
     }
 
     pub(super) fn open_current(&mut self, autoplay: bool, at_ms: u64) {
+        self.open_after(Duration::ZERO, autoplay, at_ms);
+    }
+
+    fn open_after(&mut self, delay: Duration, autoplay: bool, at_ms: u64) {
         let Some(track) = self.queue.current().cloned() else {
             return;
         };
@@ -60,8 +64,12 @@ impl Player {
         if let Some(loaded) = self.take_prefetched(&track.id) {
             return self.start_loaded(&track, loaded, Start::new(autoplay, Duration::from_millis(at), 1.0));
         }
-        let generation = self.generation;
-        self.spawn(self.fetcher(&track.id), move |player, result| {
+        let (generation, fetch) = (self.generation, self.fetcher(&track.id));
+        let work = move |service: &dyn MusicService, uid| {
+            std::thread::sleep(delay);
+            fetch(service, uid)
+        };
+        self.spawn(work, move |player, result| {
             if player.generation != generation {
                 return;
             }
@@ -69,7 +77,9 @@ impl Player {
                 Ok(loaded) => {
                     player.start_loaded(&track, loaded, Start::new(autoplay, Duration::from_millis(at), 1.0));
                 }
+                Err(error) if error.is_transient() && player.playing => player.retry_stream(at),
                 Err(error) => {
+                    player.stream_retries = None;
                     player.playing = false;
                     player.emit(Event::Playback);
                     player.fail(error);
@@ -87,6 +97,9 @@ impl Player {
         }
         self.started = Instant::now();
         self.playing = start.playing;
+        if self.stream_retries.take().is_some() && !self.disconnected {
+            self.notice(Notice::Online);
+        }
         self.emit(Event::Playback);
         self.media_playback();
         if start.playing && self.wave.contains(&track.id) {
@@ -195,7 +208,7 @@ impl Player {
             return;
         }
         if self.audio.finished() && self.started.elapsed() > FINISH_GUARD {
-            return self.advance(false);
+            return if self.audio.failed() { self.retry_stream(position) } else { self.advance(false) };
         }
         if let Some(index) = self.crossfade_target(position) {
             return self.crossfade(index);
@@ -204,6 +217,16 @@ impl Player {
             self.fetch_wave(false);
         }
         self.prefetch(position);
+    }
+
+    fn retry_stream(&mut self, at_ms: u64) {
+        let attempt = self.stream_retries.unwrap_or_default();
+        if attempt == 0 && !self.disconnected {
+            self.notice(Notice::Offline);
+        }
+        self.stream_retries = Some(attempt + 1);
+        let delay = STREAM_RETRY_DELAYS[attempt.min(STREAM_RETRY_DELAYS.len() - 1)];
+        self.open_after(delay, true, at_ms);
     }
 
     pub(super) fn prefetch(&mut self, position: u64) {
