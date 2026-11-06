@@ -24,7 +24,6 @@ use yandex_music::api::track::add_liked_tracks::AddLikedTracksOptions;
 use yandex_music::api::track::get_download_info::GetDownloadInfoOptions;
 use yandex_music::api::track::get_file_info::{Codec as FileCodec, GetFileInfoOptions};
 use yandex_music::api::track::get_lyrics::GetLyricsOptions;
-use yandex_music::api::track::play_audio::PlayAudioOptions;
 use yandex_music::api::track::remove_disliked_tracks::RemoveDislikedTracksOptions;
 use yandex_music::api::track::remove_liked_tracks::RemoveLikedTracksOptions;
 use yandex_music::error::ClientError;

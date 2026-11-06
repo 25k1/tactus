@@ -27,20 +27,10 @@ impl PlaybackService for YandexService {
 
     fn report_play(&self, play: &Play) -> Result<()> {
         let uid = net::block_on(self.uid())?;
-        let now = chrono::Utc::now();
-        let length = (play.track.duration_ms / 1000) as u32;
-        let mut options = PlayAudioOptions::new(play.from.clone())
-            .track_id(play.track.id.clone())
-            .uid(uid)
-            .track_length_seconds(length)
-            .total_played_seconds(play.played_seconds)
-            .end_position_seconds(play.played_seconds.min(length))
-            .timestamp(now)
-            .client_now(now);
-        if !play.track.album_id.is_empty() {
-            options = options.album_id(play.track.album_id.clone());
-        }
-        net::block_on(self.client.play_audio(&options)).api()
+        let form = play_form(play, uid, chrono::Utc::now());
+        let form: Vec<(&str, &str)> = form.iter().map(|(key, value)| (*key, value.as_str())).collect();
+        net::block_on(self.post("play-audio", &form))?;
+        Ok(())
     }
 
     fn start_wave(&self, seeds: &[String]) -> Result<WaveBatch> {
@@ -149,5 +139,46 @@ impl PlaybackService for YandexService {
                 .header("X-Yandex-Music-Device", DEVICE),
         ))?;
         Ok(())
+    }
+}
+
+fn play_form(play: &Play, uid: u64, now: chrono::DateTime<chrono::Utc>) -> Vec<(&'static str, String)> {
+    let length = (play.track.duration_ms / 1000) as u32;
+    let timestamp = now.to_rfc3339_opts(chrono::SecondsFormat::Millis, true);
+    let mut form = vec![
+        ("track-id", play.track.id.clone()),
+        ("from", play.from.clone()),
+        ("from-cache", "false".to_owned()),
+        ("play-id", String::new()),
+        ("uid", uid.to_string()),
+        ("timestamp", timestamp.clone()),
+        ("client-now", timestamp),
+        ("track-length-seconds", length.to_string()),
+        ("total-played-seconds", play.played_seconds.to_string()),
+        ("end-position-seconds", play.played_seconds.min(length).to_string()),
+    ];
+    if !play.track.album_id.is_empty() {
+        form.push(("album-id", play.track.album_id.clone()));
+    }
+    form
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn reports_plays_as_a_form() {
+        let track = Track { id: "42".into(), album_id: "7".into(), duration_ms: 185_500, ..Track::default() };
+        let play = Play { track, played_seconds: 200, from: "desktop".into() };
+        let now = chrono::DateTime::from_timestamp(1_700_000_000, 0).unwrap();
+        let form = play_form(&play, 9, now);
+        let value = |key: &str| form.iter().find(|(name, _)| *name == key).map(|(_, value)| value.as_str());
+        assert_eq!(value("track-id"), Some("42"));
+        assert_eq!(value("album-id"), Some("7"));
+        assert_eq!(value("uid"), Some("9"));
+        assert_eq!(value("track-length-seconds"), Some("185"));
+        assert_eq!(value("end-position-seconds"), Some("185"));
+        assert_eq!(value("timestamp"), Some("2023-11-14T22:13:20.000Z"));
     }
 }
