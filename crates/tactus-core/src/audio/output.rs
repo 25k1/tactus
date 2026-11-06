@@ -1,4 +1,3 @@
-use super::buffer::Cancel;
 use super::equalizer::{self, Equalizer, Gains};
 use super::tempo::{Speed, Tempo};
 use super::{Buffer, Loaded, Output, Start};
@@ -9,6 +8,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{Duration, Instant};
 use tactus_api::Codec;
 use tactus_api::error::{Error, Result};
+use tactus_stream::Cancel;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Then {

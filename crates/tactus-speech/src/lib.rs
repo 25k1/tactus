@@ -4,6 +4,12 @@ pub struct Speech {
     backend: Option<Backend<'static>>,
 }
 
+impl Default for Speech {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Speech {
     pub fn new() -> Self {
         let backend = Prism::new().ok().and_then(|prism| {

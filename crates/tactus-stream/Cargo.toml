@@ -1,0 +1,14 @@
+[package]
+name = "tactus-stream"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+tactus-api.workspace = true
+reqwest.workspace = true
+rodio.workspace = true
+
+[lints]
+workspace = true

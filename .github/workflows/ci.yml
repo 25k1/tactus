@@ -35,24 +35,40 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           save-if: ${{ github.ref == 'refs/heads/main' }}
-      - name: Take the version from the tag
-        if: startsWith(github.ref, 'refs/tags/v')
-        shell: pwsh
-        env:
-          TAG: ${{ github.ref_name }}
-        run: |
-          if ($env:TAG -notmatch '^v(\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?)$') { throw "Tag $env:TAG is not a version like v1.2.3" }
-          (Get-Content Cargo.toml -Raw) -replace '(?m)^version = "[^"]*"', "version = `"$($Matches[1])`"" | Set-Content Cargo.toml -NoNewline
-          cargo update --workspace
+      - uses: ./.github/actions/version
       - run: cargo build --release --locked
       - uses: actions/upload-artifact@v7
         with:
           name: tactus
           path: target/release/tactus.exe
 
+  winamp:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: i686-pc-windows-msvc
+      - uses: ./.github/actions/msvc
+        with:
+          arch: amd64_x86
+      - uses: ilammy/setup-nasm@v1
+      - uses: ./.github/actions/version
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: winamp
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - run: cargo build --profile plugin --locked --target i686-pc-windows-msvc -p tactus-winamp-in -p tactus-winamp-gen
+      - uses: actions/upload-artifact@v7
+        with:
+          name: winamp
+          path: |
+            target/i686-pc-windows-msvc/plugin/in_yandex.dll
+            target/i686-pc-windows-msvc/plugin/gen_yandex.dll
+
   release:
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [check, build]
+    needs: [check, build, winamp]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -67,6 +83,10 @@ jobs:
         with:
           name: tactus
           path: dist
+      - uses: actions/download-artifact@v8
+        with:
+          name: winamp
+          path: winamp
       - name: Write the release notes
         run: |
           git fetch --force --tags --quiet
@@ -84,6 +104,7 @@ jobs:
       - name: Publish
         run: |
           zip -j "dist/tactus-$TAG-windows-x64.zip" dist/tactus.exe README.md LICENSE
+          zip -j "dist/tactus-$TAG-winamp-plugins.zip" winamp/in_yandex.dll winamp/gen_yandex.dll README.md LICENSE
           options=()
           if [[ "$TAG" == *-* ]]; then options+=(--prerelease); fi
           if [ -n "$PREVIOUS" ]; then options+=(--notes-start-tag "$PREVIOUS"); fi

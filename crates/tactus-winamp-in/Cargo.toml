@@ -1,0 +1,20 @@
+[package]
+name = "tactus-winamp-in"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[lib]
+name = "in_yandex"
+crate-type = ["cdylib"]
+
+[dependencies]
+tactus-api.workspace = true
+tactus-stream.workspace = true
+tactus-winamp.workspace = true
+serde_json.workspace = true
+windows-sys = { workspace = true, features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging"] }
+
+[lints]
+workspace = true

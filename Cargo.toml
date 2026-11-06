@@ -42,6 +42,9 @@ unused_self = "warn"
 [workspace.dependencies]
 tactus-api = { path = "crates/tactus-api" }
 tactus-core = { path = "crates/tactus-core" }
+tactus-stream = { path = "crates/tactus-stream" }
+tactus-speech = { path = "crates/tactus-speech" }
+tactus-winamp = { path = "crates/tactus-winamp" }
 tactus-voice = { path = "crates/tactus-voice" }
 tactus-yandex = { path = "crates/tactus-yandex" }
 yandex-music = "0.7"
@@ -51,12 +54,14 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 thiserror = { version = "2", default-features = false }
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
-rodio = { version = "0.23", default-features = false, features = ["playback", "mp3", "flac"] }
+rodio = { version = "0.23", default-features = false, features = ["mp3", "flac"] }
 sonic-rs-sys = "0.1.9"
 souvlaki = { version = "0.8", default-features = false }
 tungstenite = { version = "0.30", default-features = false, features = ["handshake"] }
 httparse = { version = "1", default-features = false }
 base64 = "0.23"
+prismer = { version = "0.1.4", features = ["static"] }
+windows-sys = "0.61"
 proptest = { version = "1", default-features = false, features = ["std"] }
 
 [package]
@@ -71,12 +76,12 @@ tactus-api.workspace = true
 tactus-core.workspace = true
 serde_json.workspace = true
 wxdragon = { version = "0.9.23", default-features = false }
-prismer = { version = "0.1.4", features = ["static"] }
+tactus-speech.workspace = true
 i18n-embed = { version = "0.16", features = ["fluent-system", "desktop-requester"] }
 i18n-embed-fl = "0.10"
 rust-embed = "8"
 windows = { version = "0.62", features = ["Data_Xml_Dom", "UI_Notifications"] }
-windows-sys = { version = "0.61", features = [
+windows-sys = { workspace = true, features = [
     "Win32_Foundation",
     "Win32_System_Registry",
     "Win32_System_Threading",
@@ -104,6 +109,10 @@ lto = true
 codegen-units = 1
 strip = true
 panic = "abort"
+
+[profile.plugin]
+inherits = "release"
+panic = "unwind"
 
 [profile.release.package]
 rodio.opt-level = 3

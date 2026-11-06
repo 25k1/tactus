@@ -1,5 +1,10 @@
 name: MSVC
-description: Import the Visual Studio x64 developer environment, including its bundled CMake and Ninja
+description: Import the Visual Studio developer environment, including its bundled CMake and Ninja
+
+inputs:
+  arch:
+    description: The vcvarsall architecture, such as x64, or amd64_x86 for 32-bit builds
+    default: x64
 
 runs:
   using: composite
@@ -12,7 +17,7 @@ runs:
         Get-ChildItem env: | ForEach-Object { $before[$_.Name] = $_.Value }
         $known = $env:PATH -split ';'
         $paths = [System.Collections.Generic.List[string]]::new()
-        cmd /c "`"$vs\VC\Auxiliary\Build\vcvars64.bat`" >nul && set" | ForEach-Object {
+        cmd /c "`"$vs\VC\Auxiliary\Build\vcvarsall.bat`" ${{ inputs.arch }} >nul && set" | ForEach-Object {
           if ($_ -notmatch '^([^=]+)=(.*)$') { return }
           $name, $value = $Matches[1], $Matches[2]
           if ($name -eq 'PATH') {

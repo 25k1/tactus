@@ -2593,12 +2593,12 @@ dependencies = [
  "embed-resource",
  "i18n-embed",
  "i18n-embed-fl",
- "prismer",
  "proptest",
  "rust-embed",
  "serde_json",
  "tactus-api",
  "tactus-core",
+ "tactus-speech",
  "windows 0.62.2",
  "windows-sys 0.61.2",
  "wxdragon",
@@ -2632,9 +2632,26 @@ dependencies = [
  "sonic-rs-sys",
  "souvlaki",
  "tactus-api",
+ "tactus-stream",
  "tactus-voice",
  "tactus-yandex",
  "tungstenite",
+]
+
+[[package]]
+name = "tactus-speech"
+version = "0.1.0"
+dependencies = [
+ "prismer",
+]
+
+[[package]]
+name = "tactus-stream"
+version = "0.1.0"
+dependencies = [
+ "reqwest",
+ "rodio",
+ "tactus-api",
 ]
 
 [[package]]
@@ -2644,6 +2661,41 @@ dependencies = [
  "cpal",
  "proptest",
  "serde_json",
+ "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "tactus-winamp"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "serde",
+ "serde_json",
+ "tactus-api",
+ "tactus-speech",
+ "tactus-yandex",
+ "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "tactus-winamp-gen"
+version = "0.1.0"
+dependencies = [
+ "serde_json",
+ "tactus-api",
+ "tactus-winamp",
+ "tactus-yandex",
+ "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "tactus-winamp-in"
+version = "0.1.0"
+dependencies = [
+ "serde_json",
+ "tactus-api",
+ "tactus-stream",
+ "tactus-winamp",
  "windows-sys 0.61.2",
 ]
 

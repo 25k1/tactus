@@ -1,4 +1,3 @@
-mod buffer;
 pub mod equalizer;
 #[cfg(test)]
 pub mod mock;
@@ -6,18 +5,16 @@ mod output;
 #[allow(unsafe_code)]
 mod sonic;
 mod tempo;
-mod ts;
 
-pub use buffer::Buffer;
-use buffer::{Cancel, Reader};
 pub use equalizer::{BANDS, Gains, Preset};
 pub use output::RodioOutput;
+use rodio::Source;
 use rodio::cpal::traits::{DeviceTrait, HostTrait};
-use rodio::{Decoder, Source};
 use std::sync::Arc;
 use std::time::Duration;
-use tactus_api::error::{Error, Result};
+use tactus_api::error::Result;
 use tactus_api::{AudioSource, Codec, Loudness};
+use tactus_stream::{Buffer, Cancel};
 
 const TARGET_LOUDNESS: f32 = -14.0;
 const PEAK_CEILING: f32 = -1.0;
@@ -37,10 +34,8 @@ impl Loaded {
     }
 
     fn reload((buffer, codec): (Arc<Buffer>, Codec)) -> Result<Loaded> {
-        let reader = buffer.reader();
-        let cancel = reader.cancel();
-        let source = decode(reader, &buffer, codec)?;
-        Ok(Loaded { source: Box::new(source), replay: Some((buffer, codec)), cancel: Some(cancel) })
+        let opened = tactus_stream::open(&buffer, codec)?;
+        Ok(Loaded { source: Box::new(opened.decoder), replay: Some((buffer, codec)), cancel: Some(opened.cancel) })
     }
 
     pub fn failed(&self) -> bool {
@@ -82,20 +77,8 @@ pub trait Output {
     fn tick(&mut self);
 }
 
-fn decode(reader: Reader, buffer: &Buffer, codec: Codec) -> Result<Decoder<Reader>> {
-    let mut builder = Decoder::builder().with_data(reader).with_hint(codec.extension()).with_seekable(true);
-    if let Some(total) = buffer.total() {
-        builder = builder.with_byte_len(total);
-    }
-    builder.build().map_err(|error| Error::Audio(error.to_string()))
-}
-
 pub fn load(source: &AudioSource) -> Result<Loaded> {
-    let buffer = match source.url.strip_prefix("file:") {
-        Some(path) => Buffer::complete(std::fs::read(path)?),
-        None => Buffer::fetch(source.url.clone(), tactus_api::net::client_for(source.proxy.as_ref())),
-    };
-    Loaded::reload((buffer, source.codec))
+    Loaded::reload((tactus_stream::fetch(source)?, source.codec))
 }
 
 pub fn loader() -> Loader {

@@ -1,4 +1,4 @@
-use super::ts::{Demuxer, segments};
+use crate::ts::{Demuxer, segments};
 use reqwest::StatusCode;
 use reqwest::header::RANGE;
 use std::io::{self, Read, Seek, SeekFrom};

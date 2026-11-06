@@ -21,7 +21,6 @@ mod wave_settings;
 mod widgets;
 
 use crate::platform::hotkeys::{HotkeyEvent, Hotkeys};
-use crate::speech::Speech;
 use bar::PlayerBar;
 use browser::Browser;
 use command::Command;
@@ -40,6 +39,7 @@ use tactus_core::hotkey::{GlobalAction, Hotkey};
 use tactus_core::player::{LoginState, Player};
 use tactus_core::remote::{RemoteCommand, RemoteHub, RemoteServer};
 use tactus_core::settings::{Settings, Theme};
+use tactus_speech::Speech;
 use view_model::Content;
 use widgets::*;
 use wxdragon::appearance::Appearance;

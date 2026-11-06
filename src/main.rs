@@ -2,7 +2,6 @@
 
 mod i18n;
 mod platform;
-mod speech;
 mod ui;
 
 fn main() {
